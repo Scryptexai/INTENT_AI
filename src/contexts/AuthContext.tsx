@@ -102,7 +102,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      // Use production domain intent.sbs for redirect
+      const isProd = window.location.hostname === "intent.sbs" || window.location.hostname === "www.intent.sbs";
+      const redirectUrl = isProd
+        ? "https://intent.sbs/"
+        : `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
