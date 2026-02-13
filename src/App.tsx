@@ -11,6 +11,7 @@ import BranchingOnboarding from "./pages/BranchingOnboarding";
 import PathDetail from "./pages/PathDetail";
 import Workspace from "./pages/Workspace";
 import Auth from "./pages/Auth";
+import AuthCallback from "./pages/AuthCallback";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -59,6 +60,8 @@ const App = () => (
             />
             <Route path="/login" element={<Auth />} />
             <Route path="/signup" element={<Auth />} />
+            <Route path="/oauth/*" element={<AuthCallback />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route 
               path="/dashboard" 
               element={
