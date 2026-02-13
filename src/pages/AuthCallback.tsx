@@ -2,7 +2,8 @@
  * AuthCallback — Handles OAuth redirect from Supabase
  * 
  * Supabase redirects here after Google OAuth completes.
- * This page detects the session from URL hash/params and redirects to /dashboard.
+ * For implicit flow, tokens arrive in the URL hash (#access_token=...).
+ * The Supabase client auto-detects these via onAuthStateChange.
  */
 
 import { useEffect } from "react";
@@ -14,37 +15,49 @@ const AuthCallback = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleCallback = async () => {
-      try {
-        // Supabase automatically picks up the auth tokens from URL hash
-        const { data: { session }, error } = await supabase.auth.getSession();
+    // Listen for auth state change — Supabase JS auto-detects tokens from URL hash
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          navigate("/dashboard", { replace: true });
+        }
+      }
+    );
+
+    // Also check if there's already a session (token might already be processed)
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate("/dashboard", { replace: true });
+        return;
+      }
+
+      // If URL has hash params, Supabase will process them automatically
+      // via onAuthStateChange above. If not, redirect to login after timeout.
+      if (!window.location.hash.includes("access_token")) {
+        // No tokens in URL — check if we have a code param (PKCE flow)
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
         
-        if (error) {
-          console.error("Auth callback error:", error);
-          navigate("/login", { replace: true });
-          return;
+        if (code) {
+          // PKCE flow — exchange code for session
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error) {
+            navigate("/dashboard", { replace: true });
+            return;
+          }
         }
 
-        if (session) {
-          // Successfully authenticated — go to dashboard
-          navigate("/dashboard", { replace: true });
-        } else {
-          // No session found — might still be loading, wait a moment
-          setTimeout(async () => {
-            const { data: { session: retrySession } } = await supabase.auth.getSession();
-            if (retrySession) {
-              navigate("/dashboard", { replace: true });
-            } else {
-              navigate("/login", { replace: true });
-            }
-          }, 1500);
-        }
-      } catch {
-        navigate("/login", { replace: true });
+        // No tokens and no code — wait briefly then redirect to login
+        setTimeout(() => {
+          navigate("/login", { replace: true });
+        }, 3000);
       }
     };
 
-    handleCallback();
+    checkSession();
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   return (
