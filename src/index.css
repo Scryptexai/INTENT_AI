@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── INTENT Design System: Monochrome Depth ─── */
+    /* Deep charcoal foundation */
+    --background: 222 22% 5%;
+    --foreground: 210 20% 92%;
+
+    /* Surface layers (panels, not cards) */
+    --surface-deep: 222 20% 7%;
+    --surface: 222 18% 9%;
+    --surface-light: 220 16% 12%;
+    --surface-raised: 220 14% 15%;
+
+    --card: 222 18% 9%;
+    --card-foreground: 210 20% 92%;
+
+    --popover: 222 18% 9%;
+    --popover-foreground: 210 20% 92%;
+
+    /* Neutral steel — not a "brand color" */
+    --primary: 210 16% 60%;
+    --primary-foreground: 222 22% 5%;
+
+    /* Signal colors — only for decisions */
+    --accent-signal: 38 80% 55%;
+    --accent-confirm: 160 50% 45%;
+    --accent-alert: 350 70% 55%;
+
+    --secondary: 220 14% 18%;
+    --secondary-foreground: 210 20% 80%;
+
+    --muted: 220 14% 14%;
+    --muted-foreground: 220 12% 45%;
+
+    --accent: 220 14% 16%;
+    --accent-foreground: 210 20% 80%;
+
+    --destructive: 350 70% 55%;
+    --destructive-foreground: 210 20% 95%;
+
+    /* Structural borders — thin, architectural */
+    --border: 220 14% 13%;
+    --border-subtle: 220 14% 10%;
+    --input: 220 14% 13%;
+    --ring: 210 16% 50%;
+
+    /* Sharp, architectural — no rounded bubbles */
+    --radius: 0.25rem;
+
+    --sidebar-background: 222 22% 4%;
+    --sidebar-foreground: 220 12% 55%;
+    --sidebar-primary: 210 16% 60%;
+    --sidebar-primary-foreground: 222 22% 5%;
+    --sidebar-accent: 220 14% 10%;
+    --sidebar-accent-foreground: 220 12% 70%;
+    --sidebar-border: 220 14% 10%;
+    --sidebar-ring: 210 16% 50%;
+
+    /* Semantic */
+    --success: 160 50% 45%;
+    --warning: 38 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  /* ─── Axis System ─── */
+  .axis-line {
+    @apply w-px bg-border;
+  }
+  .axis-line-h {
+    @apply h-px bg-border;
+  }
+
+  /* ─── Surface panels (replaces cards) ─── */
+  .panel {
+    @apply bg-card border border-border;
+  }
+  .panel-raised {
+    background: hsl(var(--surface-raised));
+    @apply border border-border;
+  }
+
+  /* Legacy compat */
+  .glass {
+    @apply bg-card/80 border border-border;
+  }
+  .glass-strong {
+    @apply bg-card border border-border;
+  }
+
+  /* ─── Text: no gradients ─── */
+  .gradient-text {
+    @apply text-foreground;
+  }
+  .gradient-text-primary {
+    @apply text-foreground;
+  }
+
+  /* ─── Border: structural ─── */
+  .gradient-border {
+    @apply border border-border;
+  }
+
+  /* ─── No glow ─── */
+  .glow-purple,
+  .glow-cyan,
+  .glow-pink {
+    box-shadow: none;
+  }
+
+  /* ─── Command Buttons (flat, sharp, not "buttony") ─── */
+  .cmd-primary {
+    @apply inline-flex items-center gap-2 text-sm font-medium
+           bg-transparent text-foreground
+           border border-foreground/20
+           px-5 py-2.5
+           transition-all duration-150;
+  }
+  .cmd-primary:hover {
+    @apply border-foreground/50 text-foreground;
+  }
+
+  .cmd-action {
+    @apply inline-flex items-center gap-2 text-sm font-medium
+           bg-foreground/5 text-foreground
+           border border-foreground/10
+           px-5 py-2.5
+           transition-all duration-150;
+  }
+  .cmd-action:hover {
+    @apply bg-foreground/10 border-foreground/20;
+  }
+
+  .cmd-ghost {
+    @apply inline-flex items-center gap-2 text-sm font-medium
+           text-muted-foreground
+           px-3 py-2
+           transition-all duration-150;
+  }
+  .cmd-ghost:hover {
+    @apply text-foreground;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* Legacy button compat */
+  .btn-gradient {
+    @apply cmd-primary;
+  }
+  .btn-gradient:hover {
+    @apply border-foreground/50;
+    box-shadow: none;
+  }
+  .btn-outline-glow {
+    @apply cmd-action;
+  }
+  .btn-outline-glow:hover {
+    @apply bg-foreground/10;
+  }
+
+  /* ─── No card hover lift — subtle border shift only ─── */
+  .card-hover {
+    @apply transition-all duration-150;
+  }
+  .card-hover:hover {
+    @apply border-muted-foreground/30;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ─── Section spacing: generous, architectural ─── */
+  .section-spacing {
+    @apply py-24 md:py-32;
+  }
+
+  /* ─── Background: clean flat, no mesh blobs ─── */
+  .mesh-gradient {
+    background: hsl(var(--background));
+  }
+}
+
+/* Scrollbar — thin, structural */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

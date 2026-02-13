@@ -1,0 +1,6208 @@
+{
+  "date": "2026-02-12T14:02:37.338Z",
+  "profileCount": 107,
+  "passedTests": 15,
+  "failedTests": 0,
+  "totalTests": 15,
+  "validations": [
+    {
+      "name": "V1: Valid Path Assignment",
+      "passed": true,
+      "details": "ALL 107 profiles got valid paths"
+    },
+    {
+      "name": "V2: All 6 Economic Models Covered",
+      "passed": true,
+      "details": "6/6 models covered: skill_service, audience_based, digital_product, commerce_arbitrage, data_research, automation_builder"
+    },
+    {
+      "name": "V3: Path Distribution Balance",
+      "passed": true,
+      "details": "Distribution: micro_service=43(40%), arbitrage_skill=7(7%), freelance_upgrade=29(27%), niche_content=24(22%), digital_product=4(4%)"
+    },
+    {
+      "name": "V4: Segment Diversity",
+      "passed": true,
+      "details": "7 unique segments: low_capital_experimenter, risk_taker, long_term_builder, audience_builder, skill_leverager, service_executor, zero_capital_builder"
+    },
+    {
+      "name": "V5: Profile Fingerprint Uniqueness",
+      "passed": true,
+      "details": "104/107 unique fingerprints (3 duplicates)"
+    },
+    {
+      "name": "V6: Branching Workflow Uniqueness",
+      "passed": true,
+      "details": "70/107 unique workflow IDs"
+    },
+    {
+      "name": "V7: Niche Resolution Success",
+      "passed": true,
+      "details": "ALL 107 profiles resolved to valid niches"
+    },
+    {
+      "name": "V8: Keyword Diversity Across Niches",
+      "passed": true,
+      "details": "55/107 unique keyword sets"
+    },
+    {
+      "name": "V9: Trend Score Variation",
+      "passed": true,
+      "details": "37 unique scores, range 19–57 (spread=38)"
+    },
+    {
+      "name": "V10: Lifecycle Stage Diversity",
+      "passed": true,
+      "details": "5 lifecycle stages present: emerging, peak, saturating, early_growth, declining"
+    },
+    {
+      "name": "V11: Constraint Engine Differentiation",
+      "passed": true,
+      "details": "9 unique elimination patterns"
+    },
+    {
+      "name": "V12: Edge Case — Absolute Zero User",
+      "passed": true,
+      "details": "Zero user got path: micro_service, segment: low_capital_experimenter"
+    },
+    {
+      "name": "V13: Edge Case — All Max User",
+      "passed": true,
+      "details": "Max user got path: freelance_upgrade, segment: risk_taker, eliminated: 0"
+    },
+    {
+      "name": "V14: Platform Variation Creates Different Workflows",
+      "passed": true,
+      "details": "6/6 unique workflows for same niche, different platforms"
+    },
+    {
+      "name": "V15: Deep Drill Niche Differentiation",
+      "passed": true,
+      "details": "5 unique niches from 20 deep-drill profiles"
+    }
+  ],
+  "results": [
+    {
+      "id": 1,
+      "name": "skill_service/writing/copywriting",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "skill_service__writing__copywriting__fiverr",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|writing|copywriting|fiverr|micro_service|low_capital_experimenter|skill.copywriting|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "skill_service/design/branding",
+      "path": "arbitrage_skill",
+      "alt": "micro_service",
+      "segment": "low_capital_experimenter",
+      "workflow": "skill_service__design__branding__upwork",
+      "niche": "skill.design",
+      "keywords": [
+        "AI design tool",
+        "branding",
+        "jasa desain",
+        "thumbnail designer"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|design|branding|upwork|arbitrage_skill|low_capital_experimenter|skill.design|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "AI design tool",
+          "opportunity": 19,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa desain",
+          "opportunity": 32,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "thumbnail designer",
+          "opportunity": 20,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "branding",
+          "opportunity": 41,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "skill_service/video/short_form",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "risk_taker",
+      "workflow": "skill_service__video__short_form__linkedin",
+      "niche": "skill.video",
+      "keywords": [
+        "AI video editing",
+        "jasa edit video",
+        "short form",
+        "video editor freelance"
+      ],
+      "eliminated": [],
+      "fingerprint": "skill_service|video|short_form|linkedin|freelance_upgrade|risk_taker|skill.video|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "jasa edit video",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "video editor freelance",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI video editing",
+          "opportunity": 28,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "short form",
+          "opportunity": 42,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "audience_based/content_creator/education",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "audience_based__content_creator__education__youtube",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "audience_based|content_creator|education|youtube|micro_service|low_capital_experimenter|audience.education|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "audience_based/micro_influencer/local_influencer",
+      "path": "niche_content",
+      "alt": "arbitrage_skill",
+      "segment": "low_capital_experimenter",
+      "workflow": "audience_based__micro_influencer__local_influencer__tiktok",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "entrepreneurship tips",
+        "local influencer",
+        "micro influencer",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|micro_influencer|local_influencer|tiktok|niche_content|low_capital_experimenter|audience.business|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "local influencer",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "audience_based/niche_page/curated_page",
+      "path": "digital_product",
+      "alt": "niche_content",
+      "segment": "risk_taker",
+      "workflow": "audience_based__niche_page__curated_page__instagram",
+      "niche": "audience.tech",
+      "keywords": [
+        "AI automation tools",
+        "AI news",
+        "AI tools terbaik",
+        "ChatGPT tips",
+        "Claude AI vs ChatGPT",
+        "belajar coding",
+        "curated page",
+        "niche page",
+        "software review",
+        "teknologi terbaru",
+        "tutorial JavaScript",
+        "web development"
+      ],
+      "eliminated": [],
+      "fingerprint": "audience_based|niche_page|curated_page|instagram|digital_product|risk_taker|audience.tech|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "teknologi terbaru",
+          "opportunity": 41,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "AI news",
+          "opportunity": 39,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "software review",
+          "opportunity": 30,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ChatGPT tips",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI automation tools",
+          "opportunity": 30,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Claude AI vs ChatGPT",
+          "opportunity": 32,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "AI tools terbaik",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "belajar coding",
+          "opportunity": 26,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "tutorial JavaScript",
+          "opportunity": 42,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "web development",
+          "opportunity": 52,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "curated page",
+          "opportunity": 39,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "niche page",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "digital_product/ebook/how_to_guide",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "digital_product__ebook__how_to_guide__gumroad",
+      "niche": "skill.copywriting.ads",
+      "keywords": [
+        "AI ads copy",
+        "Google ads copywriter",
+        "how to guide",
+        "jasa iklan Facebook"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "digital_product|ebook|how_to_guide|gumroad|micro_service|low_capital_experimenter|skill.copywriting.ads|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 28,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 25,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "how to guide",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "digital_product/template/canva_template",
+      "path": "micro_service",
+      "alt": "niche_content",
+      "segment": "low_capital_experimenter",
+      "workflow": "digital_product__template__canva_template__lemon_squeezy",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template",
+        "canva template premium",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|canva_template|lemon_squeezy|micro_service|low_capital_experimenter|product.template|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "canva template",
+          "opportunity": 55,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "digital_product/prompt_pack/dev_prompts",
+      "path": "digital_product",
+      "alt": "freelance_upgrade",
+      "segment": "risk_taker",
+      "workflow": "digital_product__prompt_pack__dev_prompts__notion_market",
+      "niche": "product.prompt_pack",
+      "keywords": [
+        "AI prompt marketplace",
+        "Midjourney prompts",
+        "dev prompts",
+        "jual prompt ChatGPT",
+        "prompt pack"
+      ],
+      "eliminated": [],
+      "fingerprint": "digital_product|prompt_pack|dev_prompts|notion_market|digital_product|risk_taker|product.prompt_pack|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "jual prompt ChatGPT",
+          "opportunity": 39,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Midjourney prompts",
+          "opportunity": 55,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI prompt marketplace",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dev prompts",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "prompt pack",
+          "opportunity": 44,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "commerce_arbitrage/dropship/fashion_dropship",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "commerce_arbitrage__dropship__fashion_dropship__shopee",
+      "niche": "commerce_arbitrage",
+      "keywords": [
+        "POD platform",
+        "arbitrase digital",
+        "bisnis online",
+        "cara dropshipping",
+        "dropship murah",
+        "dropshipping Indonesia",
+        "fashion dropship",
+        "jual kaos custom",
+        "jual lisensi digital",
+        "lifetime deal",
+        "print on demand Indonesia",
+        "resell software",
+        "supplier dropship"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "commerce_arbitrage|dropship|fashion_dropship|shopee|micro_service|low_capital_experimenter|commerce_arbitrage|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dropshipping Indonesia",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "arbitrase digital",
+          "opportunity": 25,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "dropship murah",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 32,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion dropship",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "commerce_arbitrage/print_on_demand/accessories_pod",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "low_capital_experimenter",
+      "workflow": "commerce_arbitrage__print_on_demand__accessories_pod__tokopedia",
+      "niche": "commerce.print_on_demand",
+      "keywords": [
+        "POD platform",
+        "accessories pod",
+        "jual kaos custom",
+        "print on demand",
+        "print on demand Indonesia"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|print_on_demand|accessories_pod|tokopedia|micro_service|low_capital_experimenter|commerce.print_on_demand|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "accessories pod",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "commerce_arbitrage/affiliate/health_affiliate",
+      "path": "arbitrage_skill",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "commerce_arbitrage__affiliate__health_affiliate__tiktok_shop_plat",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "health affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [],
+      "fingerprint": "commerce_arbitrage|affiliate|health_affiliate|tiktok_shop_plat|arbitrage_skill|risk_taker|commerce.digital_resell|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "health affiliate",
+          "opportunity": 21,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "data_research/trend_researcher/tech_trends",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "data_research__trend_researcher__tech_trends__substack_dr",
+      "niche": "data_research",
+      "keywords": [
+        "data analysis",
+        "market research",
+        "riset pasar",
+        "tech trends",
+        "trend researcher"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "data_research|trend_researcher|tech_trends|substack_dr|micro_service|low_capital_experimenter|data_research|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "riset pasar",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "data analysis",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "market research",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "tech trends",
+          "opportunity": 35,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "trend researcher",
+          "opportunity": 57,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "data_research/market_analyst/opportunity_mapping",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "low_capital_experimenter",
+      "workflow": "data_research__market_analyst__opportunity_mapping__twitter_dr",
+      "niche": "data_research",
+      "keywords": [
+        "data analysis",
+        "market analyst",
+        "market research",
+        "opportunity mapping",
+        "riset pasar"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|market_analyst|opportunity_mapping|twitter_dr|micro_service|low_capital_experimenter|data_research|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "riset pasar",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "data analysis",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "market research",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "opportunity mapping",
+          "opportunity": 34,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "market analyst",
+          "opportunity": 30,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "data_research/crypto_analyst/defi_analysis",
+      "path": "digital_product",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "data_research__crypto_analyst__defi_analysis__linkedin_dr",
+      "niche": "audience.finance.crypto",
+      "keywords": [
+        "DeFi yield farming",
+        "bitcoin halving",
+        "crypto Indonesia 2026",
+        "crypto analyst",
+        "defi analysis"
+      ],
+      "eliminated": [],
+      "fingerprint": "data_research|crypto_analyst|defi_analysis|linkedin_dr|digital_product|risk_taker|audience.finance.crypto|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "crypto Indonesia 2026",
+          "opportunity": 28,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bitcoin halving",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "DeFi yield farming",
+          "opportunity": 40,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "defi analysis",
+          "opportunity": 47,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "crypto analyst",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "automation_builder/nocode_builder/internal_tools",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "automation_builder__nocode_builder__internal_tools__upwork_auto",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "internal tools",
+        "no-code automation",
+        "nocode builder"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "automation_builder|nocode_builder|internal_tools|upwork_auto|micro_service|low_capital_experimenter|automation_builder|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "internal tools",
+          "opportunity": 51,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "nocode builder",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "automation_builder/zapier_automation/ops_automation",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "low_capital_experimenter",
+      "workflow": "automation_builder__zapier_automation__ops_automation__linkedin_auto",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "no-code automation",
+        "ops automation",
+        "zapier automation"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|zapier_automation|ops_automation|linkedin_auto|micro_service|low_capital_experimenter|automation_builder|t2|c1|r2|s1|a1",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ops automation",
+          "opportunity": 21,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "zapier automation",
+          "opportunity": 55,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "automation_builder/crm_setup/startup_crm",
+      "path": "micro_service",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "automation_builder__crm_setup__startup_crm__direct_auto",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "crm setup",
+        "no-code automation",
+        "startup crm"
+      ],
+      "eliminated": [],
+      "fingerprint": "automation_builder|crm_setup|startup_crm|direct_auto|micro_service|risk_taker|automation_builder|t3|c2|r3|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "startup crm",
+          "opportunity": 42,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "crm setup",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "ctx_variation_1",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "skill_service__writing__copywriting__fiverr",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|writing|copywriting|fiverr|micro_service|low_capital_experimenter|skill.copywriting|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "ctx_variation_2",
+      "path": "niche_content",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "audience_based__micro_influencer__local_influencer__tiktok",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "entrepreneurship tips",
+        "local influencer",
+        "micro influencer",
+        "startup Indonesia"
+      ],
+      "eliminated": [],
+      "fingerprint": "audience_based|micro_influencer|local_influencer|tiktok|niche_content|risk_taker|audience.business|t4|c3|r4|s4|a4",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "local influencer",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "ctx_variation_3",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "long_term_builder",
+      "workflow": "commerce_arbitrage__affiliate__health_affiliate__tiktok_shop_plat",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "health affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|health_affiliate|tiktok_shop_plat|micro_service|long_term_builder|commerce.digital_resell|t1|c3|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "health affiliate",
+          "opportunity": 21,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "ctx_variation_4",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "digital_product__course_mini__skill_course__udemy",
+      "niche": "product.course",
+      "keywords": [
+        "cara buat kursus",
+        "course mini",
+        "kursus online Indonesia",
+        "platform e-learning",
+        "skill course"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|course_mini|skill_course|udemy|niche_content|audience_builder|product.course|t4|c0|r4|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "kursus online Indonesia",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cara buat kursus",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "platform e-learning",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "skill course",
+          "opportunity": 40,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "course mini",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "ctx_variation_5",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__marketing__ads_management__tokopedia_jasa",
+      "niche": "skill.copywriting.email",
+      "keywords": [
+        "AI email marketing",
+        "ads management",
+        "cold email AI",
+        "email copywriter"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|marketing|ads_management|tokopedia_jasa|freelance_upgrade|skill_leverager|skill.copywriting.email|t2|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 26,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ads management",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "ctx_variation_6",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "audience_based__micro_influencer__b2b_influencer__podcast",
+      "niche": "audience.business",
+      "keywords": [
+        "b2b influencer",
+        "bisnis online",
+        "entrepreneurship tips",
+        "micro influencer",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "audience_based|micro_influencer|b2b_influencer|podcast|micro_service|low_capital_experimenter|audience.business|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "b2b influencer",
+          "opportunity": 25,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "ctx_variation_7",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "risk_taker",
+      "workflow": "commerce_arbitrage__dropship__fashion_dropship__tokopedia",
+      "niche": "commerce_arbitrage",
+      "keywords": [
+        "POD platform",
+        "arbitrase digital",
+        "bisnis online",
+        "cara dropshipping",
+        "dropship murah",
+        "dropshipping Indonesia",
+        "fashion dropship",
+        "jual kaos custom",
+        "jual lisensi digital",
+        "lifetime deal",
+        "print on demand Indonesia",
+        "resell software",
+        "supplier dropship"
+      ],
+      "eliminated": [],
+      "fingerprint": "commerce_arbitrage|dropship|fashion_dropship|tokopedia|micro_service|risk_taker|commerce_arbitrage|t4|c3|r4|s4|a4",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dropshipping Indonesia",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "arbitrase digital",
+          "opportunity": 25,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "dropship murah",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 32,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion dropship",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "ctx_variation_8",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "digital_product__template__figma_template__lemon_squeezy",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "figma template",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|figma_template|lemon_squeezy|freelance_upgrade|service_executor|product.template|t3|c0|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "figma template",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "ctx_variation_9",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "audience_builder",
+      "workflow": "skill_service__video__short_form__direct_client",
+      "niche": "skill.video",
+      "keywords": [
+        "AI video editing",
+        "jasa edit video",
+        "short form",
+        "video editor freelance"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|video|short_form|direct_client|micro_service|audience_builder|skill.video|t1|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "jasa edit video",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "video editor freelance",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI video editing",
+          "opportunity": 28,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "short form",
+          "opportunity": 42,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "ctx_variation_10",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "zero_capital_builder",
+      "workflow": "audience_based__micro_influencer__niche_micro__twitter_x",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "entrepreneurship tips",
+        "micro influencer",
+        "niche micro",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|micro_influencer|niche_micro|twitter_x|niche_content|zero_capital_builder|audience.business|t2|c0|r4|s1|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "niche micro",
+          "opportunity": 20,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "ctx_variation_11",
+      "path": "micro_service",
+      "alt": "freelance_upgrade",
+      "segment": "service_executor",
+      "workflow": "commerce_arbitrage__tiktok_shop__fashion_tiktok__shopee",
+      "niche": "commerce.dropship",
+      "keywords": [
+        "cara dropshipping",
+        "dropship murah",
+        "fashion tiktok",
+        "supplier dropship",
+        "tiktok shop"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|tiktok_shop|fashion_tiktok|shopee|micro_service|service_executor|commerce.dropship|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "dropship murah",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 55,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion tiktok",
+          "opportunity": 53,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tiktok shop",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "ctx_variation_12",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "digital_product__saas_micro__niche_tool__etsy_digital",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "niche tool",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "saas micro",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "digital_product|saas_micro|niche_tool|etsy_digital|micro_service|risk_taker|product.template|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "niche tool",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "saas micro",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "ctx_variation_13",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "service_executor",
+      "workflow": "skill_service__writing__script_writing__linkedin",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "script writing",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|writing|script_writing|linkedin|freelance_upgrade|service_executor|skill.copywriting|t3|c1|r2|s3|a2",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "script writing",
+          "opportunity": 42,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 32,
+      "name": "ctx_variation_14",
+      "path": "niche_content",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "audience_based__micro_influencer__local_influencer__tiktok",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "entrepreneurship tips",
+        "local influencer",
+        "micro influencer",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "digital_product"
+      ],
+      "fingerprint": "audience_based|micro_influencer|local_influencer|tiktok|niche_content|risk_taker|audience.business|t2|c2|r3|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "local influencer",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 33,
+      "name": "ctx_variation_15",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "commerce_arbitrage__affiliate__gadget_affiliate__own_store",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "gadget affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|gadget_affiliate|own_store|niche_content|audience_builder|commerce.digital_resell|t4|c0|r2|s1|a4",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "gadget affiliate",
+          "opportunity": 33,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "name": "ctx_variation_16",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "skill_leverager",
+      "workflow": "digital_product__course_mini__skill_course__udemy",
+      "niche": "product.course",
+      "keywords": [
+        "cara buat kursus",
+        "course mini",
+        "kursus online Indonesia",
+        "platform e-learning",
+        "skill course"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "digital_product|course_mini|skill_course|udemy|micro_service|skill_leverager|product.course|t1|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "kursus online Indonesia",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cara buat kursus",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "platform e-learning",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "skill course",
+          "opportunity": 40,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "course mini",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "name": "ctx_variation_17",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "risk_taker",
+      "workflow": "skill_service__marketing__ads_management__upwork",
+      "niche": "skill.copywriting.email",
+      "keywords": [
+        "AI email marketing",
+        "ads management",
+        "cold email AI",
+        "email copywriter"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|marketing|ads_management|upwork|micro_service|risk_taker|skill.copywriting.email|t3|c2|r3|s0|a3",
+      "trendScores": [
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 26,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ads management",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "name": "ctx_variation_18",
+      "path": "niche_content",
+      "alt": "freelance_upgrade",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__micro_influencer__b2b_influencer__podcast",
+      "niche": "audience.business",
+      "keywords": [
+        "b2b influencer",
+        "bisnis online",
+        "entrepreneurship tips",
+        "micro influencer",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|micro_influencer|b2b_influencer|podcast|niche_content|skill_leverager|audience.business|t2|c1|r1|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "b2b influencer",
+          "opportunity": 25,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "name": "ctx_variation_19",
+      "path": "micro_service",
+      "alt": "freelance_upgrade",
+      "segment": "service_executor",
+      "workflow": "commerce_arbitrage__dropship__fashion_dropship__amazon",
+      "niche": "commerce_arbitrage",
+      "keywords": [
+        "POD platform",
+        "arbitrase digital",
+        "bisnis online",
+        "cara dropshipping",
+        "dropship murah",
+        "dropshipping Indonesia",
+        "fashion dropship",
+        "jual kaos custom",
+        "jual lisensi digital",
+        "lifetime deal",
+        "print on demand Indonesia",
+        "resell software",
+        "supplier dropship"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|dropship|fashion_dropship|amazon|micro_service|service_executor|commerce_arbitrage|t4|c3|r1|s3|a2",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dropshipping Indonesia",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "arbitrase digital",
+          "opportunity": 25,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "dropship murah",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 32,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion dropship",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "name": "ctx_variation_20",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "zero_capital_builder",
+      "workflow": "digital_product__template__figma_template__lemon_squeezy",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "figma template",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "digital_product|template|figma_template|lemon_squeezy|micro_service|zero_capital_builder|product.template|t1|c0|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "figma template",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 39,
+      "name": "deep_skill_service_writing_copywriting",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__writing__copywriting__fiverr",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|writing|copywriting|fiverr|freelance_upgrade|skill_leverager|skill.copywriting|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 40,
+      "name": "deep_skill_service_writing_seo_content",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__writing__seo_content__upwork",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "seo content",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|writing|seo_content|upwork|freelance_upgrade|skill_leverager|skill.copywriting|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "seo content",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 41,
+      "name": "deep_skill_service_writing_script_writing",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__writing__script_writing__linkedin",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "script writing",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|writing|script_writing|linkedin|freelance_upgrade|skill_leverager|skill.copywriting|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "script writing",
+          "opportunity": 42,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "name": "deep_skill_service_writing_technical_writing",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__writing__technical_writing__direct_client",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter",
+        "technical writing"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|writing|technical_writing|direct_client|freelance_upgrade|skill_leverager|skill.copywriting|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "technical writing",
+          "opportunity": 39,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "name": "deep_skill_service_design_ui_ux",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__design__ui_ux__fiverr",
+      "niche": "skill.design",
+      "keywords": [
+        "AI design tool",
+        "jasa desain",
+        "thumbnail designer",
+        "ui ux"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|design|ui_ux|fiverr|freelance_upgrade|skill_leverager|skill.design|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI design tool",
+          "opportunity": 19,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa desain",
+          "opportunity": 32,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "thumbnail designer",
+          "opportunity": 20,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ui ux",
+          "opportunity": 23,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 44,
+      "name": "deep_skill_service_design_branding",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__design__branding__upwork",
+      "niche": "skill.design",
+      "keywords": [
+        "AI design tool",
+        "branding",
+        "jasa desain",
+        "thumbnail designer"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|design|branding|upwork|freelance_upgrade|skill_leverager|skill.design|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI design tool",
+          "opportunity": 19,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa desain",
+          "opportunity": 32,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "thumbnail designer",
+          "opportunity": 20,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "branding",
+          "opportunity": 41,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 45,
+      "name": "deep_skill_service_design_social_media_design",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__design__social_media_design__linkedin",
+      "niche": "skill.design",
+      "keywords": [
+        "AI design tool",
+        "jasa desain",
+        "social media design",
+        "thumbnail designer"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|design|social_media_design|linkedin|freelance_upgrade|skill_leverager|skill.design|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI design tool",
+          "opportunity": 19,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa desain",
+          "opportunity": 32,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "thumbnail designer",
+          "opportunity": 20,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media design",
+          "opportunity": 34,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "name": "deep_skill_service_design_thumbnail_design",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__design__thumbnail_design__direct_client",
+      "niche": "skill.design",
+      "keywords": [
+        "AI design tool",
+        "jasa desain",
+        "thumbnail design",
+        "thumbnail designer"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|design|thumbnail_design|direct_client|freelance_upgrade|skill_leverager|skill.design|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "AI design tool",
+          "opportunity": 19,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa desain",
+          "opportunity": 32,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "thumbnail designer",
+          "opportunity": 20,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "thumbnail design",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    },
+    {
+      "id": 47,
+      "name": "deep_audience_based_content_creator_education",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__youtube",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|youtube|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 48,
+      "name": "deep_audience_based_content_creator_gaming_content",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__gaming_content__tiktok",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "edukasi online",
+        "gaming content",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|gaming_content|tiktok|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "gaming content",
+          "opportunity": 37,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 49,
+      "name": "deep_audience_based_content_creator_finance_content",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__finance_content__instagram",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "edukasi online",
+        "finance content",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|finance_content|instagram|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "finance content",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "name": "deep_audience_based_content_creator_health_content",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__health_content__twitter_x",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "edukasi online",
+        "health content",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|health_content|twitter_x|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "health content",
+          "opportunity": 33,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 51,
+      "name": "deep_digital_product_template_notion_template",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__template__notion_template__gumroad",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|notion_template|gumroad|freelance_upgrade|skill_leverager|product.template|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "notion template",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 52,
+      "name": "deep_digital_product_template_canva_template",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__template__canva_template__lemon_squeezy",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template",
+        "canva template premium",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|canva_template|lemon_squeezy|freelance_upgrade|skill_leverager|product.template|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "canva template",
+          "opportunity": 55,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 53,
+      "name": "deep_digital_product_template_spreadsheet_template",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__template__spreadsheet_template__notion_market",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "spreadsheet template",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|spreadsheet_template|notion_market|freelance_upgrade|skill_leverager|product.template|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "spreadsheet template",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 54,
+      "name": "deep_digital_product_template_figma_template",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__template__figma_template__udemy",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "figma template",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|template|figma_template|udemy|freelance_upgrade|skill_leverager|product.template|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "figma template",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 55,
+      "name": "deep_commerce_arbitrage_affiliate_software_affiliate",
+      "path": "arbitrage_skill",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "commerce_arbitrage__affiliate__software_affiliate__shopee",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software",
+        "software affiliate"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|software_affiliate|shopee|arbitrage_skill|skill_leverager|commerce.digital_resell|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "software affiliate",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 56,
+      "name": "deep_commerce_arbitrage_affiliate_education_affiliate",
+      "path": "arbitrage_skill",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "commerce_arbitrage__affiliate__education_affiliate__tokopedia",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "education affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|education_affiliate|tokopedia|arbitrage_skill|skill_leverager|commerce.digital_resell|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "education affiliate",
+          "opportunity": 32,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "name": "deep_commerce_arbitrage_affiliate_health_affiliate",
+      "path": "arbitrage_skill",
+      "alt": "niche_content",
+      "segment": "skill_leverager",
+      "workflow": "commerce_arbitrage__affiliate__health_affiliate__tiktok_shop_plat",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "health affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|health_affiliate|tiktok_shop_plat|arbitrage_skill|skill_leverager|commerce.digital_resell|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "health affiliate",
+          "opportunity": 21,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 58,
+      "name": "deep_commerce_arbitrage_affiliate_finance_affiliate",
+      "path": "arbitrage_skill",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "commerce_arbitrage__affiliate__finance_affiliate__amazon",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "finance affiliate",
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|affiliate|finance_affiliate|amazon|arbitrage_skill|skill_leverager|commerce.digital_resell|t3|c1|r2|s2|a1",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "finance affiliate",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 59,
+      "name": "platform_youtube",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__youtube",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|youtube|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "name": "platform_tiktok",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__tiktok",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|tiktok|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "name": "platform_instagram",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__instagram",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|instagram|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 62,
+      "name": "platform_twitter_x",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__twitter_x",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|twitter_x|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 63,
+      "name": "platform_substack",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__substack",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|substack|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "name": "platform_podcast",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "audience_based__content_creator__education__podcast",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|podcast|niche_content|skill_leverager|audience.education|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 65,
+      "name": "edge_absolute_zero",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "low_capital_experimenter",
+      "workflow": "skill_service__writing__copywriting__fiverr",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|writing|copywriting|fiverr|micro_service|low_capital_experimenter|skill.copywriting|t1|c0|r1|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 66,
+      "name": "edge_all_max",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "risk_taker",
+      "workflow": "automation_builder__nocode_builder__internal_tools__upwork_auto",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "internal tools",
+        "no-code automation",
+        "nocode builder"
+      ],
+      "eliminated": [],
+      "fingerprint": "automation_builder|nocode_builder|internal_tools|upwork_auto|freelance_upgrade|risk_taker|automation_builder|t4|c3|r4|s4|a4",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "internal tools",
+          "opportunity": 51,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "nocode builder",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 67,
+      "name": "edge_high_risk_no_skill",
+      "path": "micro_service",
+      "alt": "niche_content",
+      "segment": "zero_capital_builder",
+      "workflow": "commerce_arbitrage__dropship__fashion_dropship__shopee",
+      "niche": "commerce_arbitrage",
+      "keywords": [
+        "POD platform",
+        "arbitrase digital",
+        "bisnis online",
+        "cara dropshipping",
+        "dropship murah",
+        "dropshipping Indonesia",
+        "fashion dropship",
+        "jual kaos custom",
+        "jual lisensi digital",
+        "lifetime deal",
+        "print on demand Indonesia",
+        "resell software",
+        "supplier dropship"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|dropship|fashion_dropship|shopee|micro_service|zero_capital_builder|commerce_arbitrage|t2|c0|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dropshipping Indonesia",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "arbitrase digital",
+          "opportunity": 25,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "dropship murah",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 32,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion dropship",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "name": "edge_expert_no_time",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "skill_leverager",
+      "workflow": "skill_service__writing__copywriting__fiverr",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|writing|copywriting|fiverr|micro_service|skill_leverager|skill.copywriting|t1|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 69,
+      "name": "edge_big_audience_beginner",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "audience_based__content_creator__education__youtube",
+      "niche": "audience.education",
+      "keywords": [
+        "content creator",
+        "education",
+        "edukasi online",
+        "tips belajar",
+        "tutorial"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|content_creator|education|youtube|niche_content|audience_builder|audience.education|t2|c0|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "tips belajar",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "edukasi online",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "tutorial",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "education",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content creator",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 70,
+      "name": "edge_money_no_skill_no_time",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "commerce_arbitrage__dropship__fashion_dropship__shopee",
+      "niche": "commerce_arbitrage",
+      "keywords": [
+        "POD platform",
+        "arbitrase digital",
+        "bisnis online",
+        "cara dropshipping",
+        "dropship murah",
+        "dropshipping Indonesia",
+        "fashion dropship",
+        "jual kaos custom",
+        "jual lisensi digital",
+        "lifetime deal",
+        "print on demand Indonesia",
+        "resell software",
+        "supplier dropship"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "commerce_arbitrage|dropship|fashion_dropship|shopee|micro_service|risk_taker|commerce_arbitrage|t1|c3|r3|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "dropshipping Indonesia",
+          "opportunity": 34,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "arbitrase digital",
+          "opportunity": 25,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "dropship murah",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "print on demand Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual kaos custom",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "POD platform",
+          "opportunity": 32,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "fashion dropship",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "name": "edge_skilled_cautious",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "data_research__trend_researcher__tech_trends__substack_dr",
+      "niche": "data_research",
+      "keywords": [
+        "data analysis",
+        "market research",
+        "riset pasar",
+        "tech trends",
+        "trend researcher"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|trend_researcher|tech_trends|substack_dr|freelance_upgrade|service_executor|data_research|t3|c0|r1|s4|a1",
+      "trendScores": [
+        {
+          "keyword": "riset pasar",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "data analysis",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "market research",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "tech trends",
+          "opportunity": 35,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "trend researcher",
+          "opportunity": 57,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 72,
+      "name": "edge_student",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "long_term_builder",
+      "workflow": "digital_product__ebook__how_to_guide__gumroad",
+      "niche": "skill.copywriting.ads",
+      "keywords": [
+        "AI ads copy",
+        "Google ads copywriter",
+        "how to guide",
+        "jasa iklan Facebook"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|ebook|how_to_guide|gumroad|niche_content|long_term_builder|skill.copywriting.ads|t4|c0|r2|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 31,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 28,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 25,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "how to guide",
+          "opportunity": 31,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "name": "xmodel_skill_service_broke_expert",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "skill_service__ai_operator__ai_content_op__tokopedia_jasa",
+      "niche": "skill.data_analysis",
+      "keywords": [
+        "Google Sheets automation",
+        "ai content op",
+        "ai operator",
+        "freelance data analyst",
+        "jasa analisis data"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|ai_operator|ai_content_op|tokopedia_jasa|freelance_upgrade|service_executor|skill.data_analysis|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "freelance data analyst",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa analisis data",
+          "opportunity": 26,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Google Sheets automation",
+          "opportunity": 30,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai content op",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai operator",
+          "opportunity": 38,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 74,
+      "name": "xmodel_skill_service_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "skill_service__ai_operator__ai_content_op__tokopedia_jasa",
+      "niche": "skill.data_analysis",
+      "keywords": [
+        "Google Sheets automation",
+        "ai content op",
+        "ai operator",
+        "freelance data analyst",
+        "jasa analisis data"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "skill_service|ai_operator|ai_content_op|tokopedia_jasa|micro_service|risk_taker|skill.data_analysis|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "freelance data analyst",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa analisis data",
+          "opportunity": 26,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Google Sheets automation",
+          "opportunity": 30,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai content op",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai operator",
+          "opportunity": 38,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 75,
+      "name": "xmodel_skill_service_influencer_noSkill",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "audience_builder",
+      "workflow": "skill_service__ai_operator__ai_content_op__tokopedia_jasa",
+      "niche": "skill.data_analysis",
+      "keywords": [
+        "Google Sheets automation",
+        "ai content op",
+        "ai operator",
+        "freelance data analyst",
+        "jasa analisis data"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|ai_operator|ai_content_op|tokopedia_jasa|micro_service|audience_builder|skill.data_analysis|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "freelance data analyst",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa analisis data",
+          "opportunity": 26,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Google Sheets automation",
+          "opportunity": 30,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai content op",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai operator",
+          "opportunity": 38,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "name": "xmodel_audience_based_broke_expert",
+      "path": "micro_service",
+      "alt": "niche_content",
+      "segment": "service_executor",
+      "workflow": "audience_based__community_builder__paid_community__podcast",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "community builder",
+        "entrepreneurship tips",
+        "paid community",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|community_builder|paid_community|podcast|micro_service|service_executor|audience.business|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "paid community",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "community builder",
+          "opportunity": 33,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "name": "xmodel_audience_based_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "audience_based__community_builder__paid_community__podcast",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "community builder",
+        "entrepreneurship tips",
+        "paid community",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "audience_based|community_builder|paid_community|podcast|micro_service|risk_taker|audience.business|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "paid community",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "community builder",
+          "opportunity": 33,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 78,
+      "name": "xmodel_audience_based_influencer_noSkill",
+      "path": "niche_content",
+      "alt": "arbitrage_skill",
+      "segment": "audience_builder",
+      "workflow": "audience_based__community_builder__paid_community__podcast",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "community builder",
+        "entrepreneurship tips",
+        "paid community",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|community_builder|paid_community|podcast|niche_content|audience_builder|audience.business|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "paid community",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "community builder",
+          "opportunity": 33,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "xmodel_digital_product_broke_expert",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "digital_product__saas_micro__niche_tool__etsy_digital",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "niche tool",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "saas micro",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|saas_micro|niche_tool|etsy_digital|freelance_upgrade|service_executor|product.template|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "niche tool",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "saas micro",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "name": "xmodel_digital_product_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "digital_product__saas_micro__niche_tool__etsy_digital",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "niche tool",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "saas micro",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "digital_product|saas_micro|niche_tool|etsy_digital|micro_service|risk_taker|product.template|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "niche tool",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "saas micro",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "name": "xmodel_digital_product_influencer_noSkill",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "audience_builder",
+      "workflow": "digital_product__saas_micro__niche_tool__etsy_digital",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "niche tool",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template gratis",
+        "saas micro",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|saas_micro|niche_tool|etsy_digital|micro_service|audience_builder|product.template|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "niche tool",
+          "opportunity": 32,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "saas micro",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "xmodel_commerce_arbitrage_broke_expert",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "commerce_arbitrage__digital_resell__license_resell__own_store",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "digital resell",
+        "jual lisensi digital",
+        "license resell",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|digital_resell|license_resell|own_store|freelance_upgrade|service_executor|commerce.digital_resell|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "license resell",
+          "opportunity": 43,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "digital resell",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "xmodel_commerce_arbitrage_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "commerce_arbitrage__digital_resell__license_resell__own_store",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "digital resell",
+        "jual lisensi digital",
+        "license resell",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "commerce_arbitrage|digital_resell|license_resell|own_store|micro_service|risk_taker|commerce.digital_resell|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "license resell",
+          "opportunity": 43,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "digital resell",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "xmodel_commerce_arbitrage_influencer_noSkill",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "audience_builder",
+      "workflow": "commerce_arbitrage__digital_resell__license_resell__own_store",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "digital resell",
+        "jual lisensi digital",
+        "license resell",
+        "lifetime deal",
+        "resell software"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|digital_resell|license_resell|own_store|micro_service|audience_builder|commerce.digital_resell|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "license resell",
+          "opportunity": 43,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "digital resell",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "xmodel_data_research_broke_expert",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "data_research__ai_curator__ai_research_curator__medium",
+      "niche": "audience.tech.ai_tools",
+      "keywords": [
+        "AI automation tools",
+        "AI tools terbaik",
+        "ChatGPT tips",
+        "Claude AI vs ChatGPT",
+        "ai curator",
+        "ai research curator"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|ai_curator|ai_research_curator|medium|freelance_upgrade|service_executor|audience.tech.ai_tools|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "ChatGPT tips",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI automation tools",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Claude AI vs ChatGPT",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI tools terbaik",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai research curator",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai curator",
+          "opportunity": 50,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "name": "xmodel_data_research_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "data_research__ai_curator__ai_research_curator__medium",
+      "niche": "audience.tech.ai_tools",
+      "keywords": [
+        "AI automation tools",
+        "AI tools terbaik",
+        "ChatGPT tips",
+        "Claude AI vs ChatGPT",
+        "ai curator",
+        "ai research curator"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "data_research|ai_curator|ai_research_curator|medium|micro_service|risk_taker|audience.tech.ai_tools|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "ChatGPT tips",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI automation tools",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Claude AI vs ChatGPT",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI tools terbaik",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai research curator",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai curator",
+          "opportunity": 50,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "name": "xmodel_data_research_influencer_noSkill",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "data_research__ai_curator__ai_research_curator__medium",
+      "niche": "audience.tech.ai_tools",
+      "keywords": [
+        "AI automation tools",
+        "AI tools terbaik",
+        "ChatGPT tips",
+        "Claude AI vs ChatGPT",
+        "ai curator",
+        "ai research curator"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|ai_curator|ai_research_curator|medium|niche_content|audience_builder|audience.tech.ai_tools|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "ChatGPT tips",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI automation tools",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Claude AI vs ChatGPT",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI tools terbaik",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai research curator",
+          "opportunity": 24,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai curator",
+          "opportunity": 50,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "name": "xmodel_automation_builder_broke_expert",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "automation_builder__funnel_builder__launch_funnel__productized",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "funnel builder",
+        "launch funnel",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|funnel_builder|launch_funnel|productized|freelance_upgrade|service_executor|automation_builder|t4|c0|r1|s4|a0",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "launch funnel",
+          "opportunity": 27,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "funnel builder",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "name": "xmodel_automation_builder_rich_beginner",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "risk_taker",
+      "workflow": "automation_builder__funnel_builder__launch_funnel__productized",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "funnel builder",
+        "launch funnel",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "automation_builder|funnel_builder|launch_funnel|productized|micro_service|risk_taker|automation_builder|t1|c3|r4|s0|a0",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "launch funnel",
+          "opportunity": 27,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "funnel builder",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "name": "xmodel_automation_builder_influencer_noSkill",
+      "path": "micro_service",
+      "alt": "niche_content",
+      "segment": "audience_builder",
+      "workflow": "automation_builder__funnel_builder__launch_funnel__productized",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "funnel builder",
+        "launch funnel",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|funnel_builder|launch_funnel|productized|micro_service|audience_builder|automation_builder|t2|c1|r2|s0|a4",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "launch funnel",
+          "opportunity": 27,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "funnel builder",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "exhaust_skill_service_development",
+      "path": "micro_service",
+      "alt": "digital_product",
+      "segment": "audience_builder",
+      "workflow": "skill_service__development__web_dev__direct_client",
+      "niche": "skill.data_analysis",
+      "keywords": [
+        "Google Sheets automation",
+        "development",
+        "freelance data analyst",
+        "jasa analisis data",
+        "web dev"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|development|web_dev|direct_client|micro_service|audience_builder|skill.data_analysis|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "freelance data analyst",
+          "opportunity": 29,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa analisis data",
+          "opportunity": 26,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Google Sheets automation",
+          "opportunity": 30,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "web dev",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "development",
+          "opportunity": 30,
+          "lifecycle": "declining"
+        }
+      ]
+    },
+    {
+      "id": 92,
+      "name": "exhaust_skill_service_marketing",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "skill_service__marketing__ads_management__tokopedia_jasa",
+      "niche": "skill.copywriting.email",
+      "keywords": [
+        "AI email marketing",
+        "ads management",
+        "cold email AI",
+        "email copywriter"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|marketing|ads_management|tokopedia_jasa|freelance_upgrade|skill_leverager|skill.copywriting.email|t2|c1|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 26,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ads management",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "exhaust_audience_based_community_builder",
+      "path": "arbitrage_skill",
+      "alt": "digital_product",
+      "segment": "audience_builder",
+      "workflow": "audience_based__community_builder__discord_community__twitter_x",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "community builder",
+        "discord community",
+        "entrepreneurship tips",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|community_builder|discord_community|twitter_x|arbitrage_skill|audience_builder|audience.business|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "discord community",
+          "opportunity": 28,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "community builder",
+          "opportunity": 33,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "exhaust_digital_product_course_mini",
+      "path": "niche_content",
+      "alt": "digital_product",
+      "segment": "audience_builder",
+      "workflow": "digital_product__course_mini__skill_course__udemy",
+      "niche": "product.course",
+      "keywords": [
+        "cara buat kursus",
+        "course mini",
+        "kursus online Indonesia",
+        "platform e-learning",
+        "skill course"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|course_mini|skill_course|udemy|niche_content|audience_builder|product.course|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "kursus online Indonesia",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cara buat kursus",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "platform e-learning",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "skill course",
+          "opportunity": 40,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "course mini",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "name": "exhaust_digital_product_membership",
+      "path": "micro_service",
+      "alt": "freelance_upgrade",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__membership__content_membership__own_website",
+      "niche": "product.course",
+      "keywords": [
+        "cara buat kursus",
+        "content membership",
+        "kursus online Indonesia",
+        "platform e-learning"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|membership|content_membership|own_website|micro_service|skill_leverager|product.course|t2|c1|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "kursus online Indonesia",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cara buat kursus",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "platform e-learning",
+          "opportunity": 35,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "content membership",
+          "opportunity": 38,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 96,
+      "name": "exhaust_commerce_arbitrage_amazon_kdp",
+      "path": "micro_service",
+      "alt": "arbitrage_skill",
+      "segment": "audience_builder",
+      "workflow": "commerce_arbitrage__amazon_kdp__low_content__amazon",
+      "niche": "product.ebook",
+      "keywords": [
+        "amazon kdp",
+        "cara buat ebook",
+        "ebook Indonesia",
+        "jual ebook online",
+        "low content"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|amazon_kdp|low_content|amazon|micro_service|audience_builder|product.ebook|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "cara buat ebook",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jual ebook online",
+          "opportunity": 37,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "ebook Indonesia",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "low content",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "amazon kdp",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "name": "exhaust_commerce_arbitrage_tiktok_shop",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "commerce_arbitrage__tiktok_shop__beauty_tiktok__own_store",
+      "niche": "commerce.dropship",
+      "keywords": [
+        "beauty tiktok",
+        "cara dropshipping",
+        "dropship murah",
+        "supplier dropship",
+        "tiktok shop"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "commerce_arbitrage|tiktok_shop|beauty_tiktok|own_store|niche_content|skill_leverager|commerce.dropship|t2|c1|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "dropship murah",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "supplier dropship",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "cara dropshipping",
+          "opportunity": 55,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "beauty tiktok",
+          "opportunity": 37,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "tiktok shop",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "name": "exhaust_data_research_newsletter_writer",
+      "path": "digital_product",
+      "alt": "niche_content",
+      "segment": "audience_builder",
+      "workflow": "data_research__newsletter_writer__curated_newsletter__own_blog",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "curated newsletter",
+        "entrepreneurship tips",
+        "newsletter writer",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|newsletter_writer|curated_newsletter|own_blog|digital_product|audience_builder|audience.business|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "curated newsletter",
+          "opportunity": 25,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "newsletter writer",
+          "opportunity": 31,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "name": "exhaust_data_research_ai_curator",
+      "path": "freelance_upgrade",
+      "alt": "niche_content",
+      "segment": "skill_leverager",
+      "workflow": "data_research__ai_curator__ai_tools_curator__medium",
+      "niche": "audience.tech.ai_tools",
+      "keywords": [
+        "AI automation tools",
+        "AI tools terbaik",
+        "ChatGPT tips",
+        "Claude AI vs ChatGPT",
+        "ai curator",
+        "ai tools curator"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "data_research|ai_curator|ai_tools_curator|medium|freelance_upgrade|skill_leverager|audience.tech.ai_tools|t2|c1|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "ChatGPT tips",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI automation tools",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Claude AI vs ChatGPT",
+          "opportunity": 47,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI tools terbaik",
+          "opportunity": 39,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "ai tools curator",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai curator",
+          "opportunity": 50,
+          "lifecycle": "peak"
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "name": "exhaust_automation_builder_ai_workflow",
+      "path": "micro_service",
+      "alt": "digital_product",
+      "segment": "audience_builder",
+      "workflow": "automation_builder__ai_workflow__content_pipeline__make_marketplace",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "ai workflow",
+        "bot Telegram",
+        "content pipeline",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|ai_workflow|content_pipeline|make_marketplace|micro_service|audience_builder|automation_builder|t3|c2|r2|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content pipeline",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai workflow",
+          "opportunity": 53,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "name": "exhaust_automation_builder_funnel_builder",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "skill_leverager",
+      "workflow": "automation_builder__funnel_builder__lead_gen_funnel__productized",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "bot Telegram",
+        "funnel builder",
+        "lead gen funnel",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|funnel_builder|lead_gen_funnel|productized|freelance_upgrade|skill_leverager|automation_builder|t2|c1|r3|s3|a1",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "lead gen funnel",
+          "opportunity": 45,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "funnel builder",
+          "opportunity": 50,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "mismatch_skill_as_commerce",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "service_executor",
+      "workflow": "skill_service__affiliate__software_affiliate__fiverr",
+      "niche": "commerce.digital_resell",
+      "keywords": [
+        "jual lisensi digital",
+        "lifetime deal",
+        "resell software",
+        "software affiliate"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "skill_service|affiliate|software_affiliate|fiverr|freelance_upgrade|service_executor|commerce.digital_resell|t3|c0|r2|s3|a0",
+      "trendScores": [
+        {
+          "keyword": "resell software",
+          "opportunity": 34,
+          "lifecycle": "declining"
+        },
+        {
+          "keyword": "lifetime deal",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual lisensi digital",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "software affiliate",
+          "opportunity": 37,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "mismatch_audience_as_automation",
+      "path": "niche_content",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "audience_based__ai_workflow__content_pipeline__youtube",
+      "niche": "automation_builder",
+      "keywords": [
+        "Make.com",
+        "Zapier",
+        "ai workflow",
+        "bot Telegram",
+        "content pipeline",
+        "no-code automation"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "audience_based|ai_workflow|content_pipeline|youtube|niche_content|audience_builder|automation_builder|t2|c1|r1|s1|a3",
+      "trendScores": [
+        {
+          "keyword": "no-code automation",
+          "opportunity": 36,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Zapier",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "Make.com",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "bot Telegram",
+          "opportunity": 45,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "content pipeline",
+          "opportunity": 38,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "ai workflow",
+          "opportunity": 53,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 104,
+      "name": "mismatch_commerce_as_data",
+      "path": "micro_service",
+      "alt": "high_risk_speculative",
+      "segment": "risk_taker",
+      "workflow": "commerce_arbitrage__market_analyst__competitive_analysis__shopee",
+      "niche": "data_research",
+      "keywords": [
+        "competitive analysis",
+        "data analysis",
+        "market analyst",
+        "market research",
+        "riset pasar"
+      ],
+      "eliminated": [],
+      "fingerprint": "commerce_arbitrage|market_analyst|competitive_analysis|shopee|micro_service|risk_taker|data_research|t4|c2|r3|s2|a0",
+      "trendScores": [
+        {
+          "keyword": "riset pasar",
+          "opportunity": 46,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "data analysis",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "market research",
+          "opportunity": 40,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "competitive analysis",
+          "opportunity": 42,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "market analyst",
+          "opportunity": 30,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 105,
+      "name": "mismatch_data_as_product",
+      "path": "micro_service",
+      "alt": null,
+      "segment": "skill_leverager",
+      "workflow": "data_research__template__notion_template__substack_dr",
+      "niche": "product.template",
+      "keywords": [
+        "Figma template",
+        "Notion template",
+        "canva template premium",
+        "jual template canva",
+        "notion AI workspace",
+        "notion productivity",
+        "notion template",
+        "notion template gratis",
+        "template bisnis"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "freelance_upgrade",
+        "high_risk_speculative",
+        "niche_content"
+      ],
+      "fingerprint": "data_research|template|notion_template|substack_dr|micro_service|skill_leverager|product.template|t1|c0|r1|s4|a1",
+      "trendScores": [
+        {
+          "keyword": "template bisnis",
+          "opportunity": 36,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "Notion template",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "Figma template",
+          "opportunity": 56,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "notion template gratis",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "notion AI workspace",
+          "opportunity": 20,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "notion productivity",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "canva template premium",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jual template canva",
+          "opportunity": 52,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "notion template",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        }
+      ]
+    },
+    {
+      "id": 106,
+      "name": "mismatch_product_as_skill",
+      "path": "freelance_upgrade",
+      "alt": "digital_product",
+      "segment": "skill_leverager",
+      "workflow": "digital_product__writing__copywriting__gumroad",
+      "niche": "skill.copywriting",
+      "keywords": [
+        "AI ads copy",
+        "AI copywriting",
+        "AI email marketing",
+        "Google ads copywriter",
+        "cold email AI",
+        "copywriter freelance",
+        "email copywriter",
+        "jasa caption Instagram",
+        "jasa copywriting",
+        "jasa iklan Facebook",
+        "social media copywriter"
+      ],
+      "eliminated": [
+        "high_risk_speculative"
+      ],
+      "fingerprint": "digital_product|writing|copywriting|gumroad|freelance_upgrade|skill_leverager|skill.copywriting|t3|c1|r2|s2|a2",
+      "trendScores": [
+        {
+          "keyword": "AI copywriting",
+          "opportunity": 46,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa copywriting",
+          "opportunity": 44,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "copywriter freelance",
+          "opportunity": 50,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "AI email marketing",
+          "opportunity": 34,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "cold email AI",
+          "opportunity": 53,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "email copywriter",
+          "opportunity": 44,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "jasa iklan Facebook",
+          "opportunity": 34,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "Google ads copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "AI ads copy",
+          "opportunity": 43,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "jasa caption Instagram",
+          "opportunity": 42,
+          "lifecycle": "emerging"
+        },
+        {
+          "keyword": "social media copywriter",
+          "opportunity": 41,
+          "lifecycle": "early_growth"
+        }
+      ]
+    },
+    {
+      "id": 107,
+      "name": "mismatch_automation_as_audience",
+      "path": "freelance_upgrade",
+      "alt": "micro_service",
+      "segment": "audience_builder",
+      "workflow": "automation_builder__micro_influencer__niche_micro__upwork_auto",
+      "niche": "audience.business",
+      "keywords": [
+        "bisnis online",
+        "entrepreneurship tips",
+        "micro influencer",
+        "niche micro",
+        "startup Indonesia"
+      ],
+      "eliminated": [
+        "arbitrage_skill",
+        "digital_product",
+        "high_risk_speculative"
+      ],
+      "fingerprint": "automation_builder|micro_influencer|niche_micro|upwork_auto|freelance_upgrade|audience_builder|audience.business|t2|c0|r3|s3|a4",
+      "trendScores": [
+        {
+          "keyword": "bisnis online",
+          "opportunity": 19,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "startup Indonesia",
+          "opportunity": 54,
+          "lifecycle": "early_growth"
+        },
+        {
+          "keyword": "entrepreneurship tips",
+          "opportunity": 31,
+          "lifecycle": "saturating"
+        },
+        {
+          "keyword": "niche micro",
+          "opportunity": 20,
+          "lifecycle": "peak"
+        },
+        {
+          "keyword": "micro influencer",
+          "opportunity": 22,
+          "lifecycle": "saturating"
+        }
+      ]
+    }
+  ]
+}
