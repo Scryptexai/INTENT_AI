@@ -9,7 +9,6 @@ import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import BranchingOnboarding from "./pages/BranchingOnboarding";
 import PathDetail from "./pages/PathDetail";
-import Workspace from "./pages/Workspace";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import Dashboard from "./pages/Dashboard";
@@ -54,7 +53,7 @@ const App = () => (
               path="/workspace" 
               element={
                 <ProtectedRoute>
-                  <Workspace />
+                  <Dashboard />
                 </ProtectedRoute>
               } 
             />

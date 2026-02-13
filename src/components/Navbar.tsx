@@ -14,7 +14,6 @@ import {
 const navItems = [
   { label: "Mulai", path: "/onboarding" },
   { label: "Dashboard", path: "/dashboard" },
-  { label: "Workspace", path: "/workspace" },
 ];
 
 const Navbar = () => {

@@ -413,15 +413,13 @@ const BranchingOnboarding = () => {
 
     if (error || !profileId) {
       console.error("Failed to save profile:", error);
-      setAiWhyText(buildFallbackWhyText(result));
-      setPhase("result");
+      navigate("/dashboard");
       return;
     }
 
     const primaryPath = getPathTemplate(legacyPathId);
     if (!primaryPath) {
-      setAiWhyText(buildFallbackWhyText(result));
-      setPhase("result");
+      navigate("/dashboard");
       return;
     }
 
@@ -429,27 +427,23 @@ const BranchingOnboarding = () => {
     const aiGate = canUseAIPersonalization(userPlan);
     if (!aiGate.allowed) {
       setProcessingStep("Membuat rekomendasi...");
-      setAiWhyText(buildFallbackWhyText(result));
       // Start pipeline even without AI personalization
       if (hasAnyDataSource()) {
         runFullPipeline(legacyPathId, result.niche, result.subSector).catch((err) =>
           console.warn("[BranchingOnboarding] Background pipeline failed:", err)
         );
       }
-      setPhase("result");
+      navigate("/dashboard");
       return;
     }
 
     // AI Personalization
     setProcessingStep("AI sedang menganalisis profil kamu...");
 
-    const [whyText, niche] = await Promise.all([
+    await Promise.all([
       generateAIWhyText(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
       generateAINicheSuggestion(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
     ]);
-
-    setAiWhyText(whyText || buildFallbackWhyText(result));
-    setAiNiche(niche || "");
 
     // Fire-and-forget: start fetching market data in background
     // so Dashboard has data when user arrives
@@ -459,7 +453,7 @@ const BranchingOnboarding = () => {
       );
     }
 
-    setPhase("result");
+    navigate("/dashboard");
   };
 
   const buildFallbackWhyText = (result: BranchingProfileResult): string => {

@@ -1,26 +1,32 @@
 /**
- * Dashboard — User's personal mission control
- * ==============================================
- * Data source: Supabase (NOT localStorage)
- * Shows: active path, progress, AI insights, weekly checkpoint
+ * Dashboard — Unified Workspace Command Center
+ * ===============================================
+ * Single-page workspace: roadmap + market data + generators + tasks.
+ * After profiling → user lands HERE directly.
+ * No intermediate result page. Everything in one place.
+ *
+ * Design: structural monochrome, axis-driven, no cards/glass.
  */
 
 import Navbar from "@/components/Navbar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard, Map, CalendarCheck, RotateCcw, LogOut, Loader2,
-  CheckCircle2, Circle, ChevronRight, Compass, Settings, CreditCard,
-  Brain, Sparkles, MessageSquare, Crown, Zap,
+  LayoutDashboard, Map, RotateCcw, LogOut, Loader2,
+  CheckCircle2, Circle, ChevronRight, ChevronDown,
+  Brain, Sparkles, MessageSquare, Zap, Copy, Check, RefreshCw,
+  ExternalLink, BookOpen, Wrench, Layout, Compass, Star,
+  ArrowUpRight, ArrowDownRight, Minus, CalendarCheck,
 } from "lucide-react";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { getPathTemplate } from "@/utils/pathTemplates";
-import type { PathTemplate } from "@/utils/pathTemplates";
+import type { PathTemplate, TaskDetail, TaskResource } from "@/utils/pathTemplates";
 import type { PathId } from "@/utils/profilingConfig";
 import {
   loadActiveProfile,
   loadTaskProgress,
+  toggleTaskCompletion,
   resetProfile,
   saveWeeklyCheckpoint,
   loadPreviousCheckpoints,
@@ -42,20 +48,62 @@ import {
 } from "@/components/RiskControlBanner";
 import {
   getPathMarketFocus,
+  loadPathSignals,
   type PathMarketFocus,
+  type MarketSignal,
 } from "@/services/marketSignalService";
-import { MarketFocusCard, PathHeatBadge } from "@/components/MarketSignalBadge";
+import { MarketFocusCard } from "@/components/MarketSignalBadge";
 import { runFullPipeline } from "@/services/trendPipelineScheduler";
 import { hasAnyDataSource } from "@/services/trendDataFetcher";
+import {
+  generateContent,
+  getAvailableGenerators,
+  GENERATOR_LABELS,
+  type GeneratorType,
+  type GeneratorInput,
+} from "@/services/workspaceGenerator";
+import ContentCalendarView from "@/components/ContentCalendar";
+import TrendIntelligenceDashboard from "@/components/TrendIntelligenceDashboard";
+import { toast } from "sonner";
 
-const menuItems = [
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+function TrendIcon({ direction, className = "w-3 h-3" }: { direction: string; className?: string }) {
+  switch (direction) {
+    case "rising": return <ArrowUpRight className={`${className} text-foreground/70`} />;
+    case "falling": return <ArrowDownRight className={`${className} text-muted-foreground/50`} />;
+    default: return <Minus className={`${className} text-muted-foreground/40`} />;
+  }
+}
+
+function resourceIcon(type: TaskResource["type"]) {
+  switch (type) {
+    case "tool": return <Wrench className="w-3 h-3" />;
+    case "template": return <Layout className="w-3 h-3" />;
+    case "guide": return <BookOpen className="w-3 h-3" />;
+    case "platform": return <Compass className="w-3 h-3" />;
+    case "example": return <Star className="w-3 h-3" />;
+    default: return <ExternalLink className="w-3 h-3" />;
+  }
+}
+
+// ============================================================================
+// TAB NAV
+// ============================================================================
+
+const tabs = [
   { icon: LayoutDashboard, label: "Overview", key: "overview" },
-  { icon: Zap, label: "Workspace", key: "workspace" },
-  { icon: Map, label: "Jalur Saya", key: "path" },
-  { icon: CalendarCheck, label: "Weekly Plan", key: "weekly" },
+  { icon: Map, label: "Roadmap", key: "roadmap" },
+  { icon: Zap, label: "Generator", key: "generator" },
+  { icon: CalendarCheck, label: "Kalender", key: "calendar" },
   { icon: MessageSquare, label: "Checkpoint", key: "checkpoint" },
-  { icon: Settings, label: "Settings", key: "settings" },
 ];
+
+// ============================================================================
+// COMPONENT
+// ============================================================================
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -64,7 +112,12 @@ const Dashboard = () => {
   const [pathData, setPathData] = useState<PathTemplate | null>(null);
   const [tasks, setTasks] = useState<TaskProgress[]>([]);
 
-  // Checkpoint state
+  // Roadmap
+  const [expandedWeeks, setExpandedWeeks] = useState<Set<number>>(new Set([1]));
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set());
+  const [togglingTask, setTogglingTask] = useState<string | null>(null);
+
+  // Checkpoint
   const [checkpointStatus, setCheckpointStatus] = useState<"on_track" | "stuck" | "ahead">("on_track");
   const [stuckArea, setStuckArea] = useState("");
   const [marketResponse, setMarketResponse] = useState<boolean | null>(null);
@@ -76,18 +129,33 @@ const Dashboard = () => {
   const [riskSignals, setRiskSignals] = useState<RiskSignals | null>(null);
   const [day25Dismissed, setDay25Dismissed] = useState(false);
   const [marketFocus, setMarketFocus] = useState<PathMarketFocus | null>(null);
+  const [marketSignals, setMarketSignals] = useState<MarketSignal[]>([]);
   const [fetchingTrends, setFetchingTrends] = useState(false);
   const pipelineTriggered = useRef(false);
+
+  // Generator
+  const [activeGenerator, setActiveGenerator] = useState<GeneratorType | null>(null);
+  const [generatorInput, setGeneratorInput] = useState("");
+  const [generatedContent, setGeneratedContent] = useState<Record<string, string>>({});
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [trendBrief, setTrendBrief] = useState("");
 
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
+  // Profile context
+  const answerTags = (savedProfile as any)?.answer_tags as Record<string, string> || {};
+  const niche = answerTags.niche || answerTags.interest_market || "general";
+  const subSector = answerTags.sub_sector || "general";
+  const platform = answerTags.platform || answerTags.preferred_platform || "instagram";
+  const economicModel = answerTags.economic_model || "skill_service";
+  const availableGenerators = getAvailableGenerators(economicModel);
+
+  // ── Load all data ──
   useEffect(() => {
     const loadData = async () => {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+      if (!user) { setLoading(false); return; }
 
       const profileData = await loadActiveProfile(user.id);
       if (profileData) {
@@ -98,124 +166,152 @@ const Dashboard = () => {
         const taskData = await loadTaskProgress(profileData.id);
         setTasks(taskData);
 
-        // Load checkpoint history
+        if (profileData.current_week) {
+          setExpandedWeeks(new Set([profileData.current_week]));
+        }
+
         const history = await loadPreviousCheckpoints(profileData.id);
         setCheckpointHistory(history);
-
-        // Compute risk signals
         const signals = computeRiskSignals(profileData, taskData, history);
         setRiskSignals(signals);
 
-        // Load market focus for this path
         const focus = await getPathMarketFocus(profileData.primary_path);
         setMarketFocus(focus);
+        const pathSignals = await loadPathSignals(profileData.primary_path);
+        setMarketSignals(pathSignals);
 
-        // AUTO-TRIGGER: If no market data exists AND APIs are configured,
-        // fetch real trend data in the background (first visit after onboarding)
         if (!focus && hasAnyDataSource() && !pipelineTriggered.current) {
           pipelineTriggered.current = true;
           setFetchingTrends(true);
-          // Run in background — don't block dashboard load
           runFullPipeline(profileData.primary_path).then(async () => {
-            // Re-load market focus after pipeline finishes
             const newFocus = await getPathMarketFocus(profileData.primary_path);
             setMarketFocus(newFocus);
+            const ns = await loadPathSignals(profileData.primary_path);
+            setMarketSignals(ns);
             setFetchingTrends(false);
-          }).catch(() => {
-            setFetchingTrends(false);
-          });
+          }).catch(() => setFetchingTrends(false));
         }
 
-        // If there's a recent checkpoint with feedback, show it
-        const currentCheckpoint = history.find(cp => cp.week_number === profileData.current_week);
-        if (currentCheckpoint?.ai_feedback) {
-          setCheckpointFeedback(currentCheckpoint.ai_feedback);
-          if (currentCheckpoint.system_adjustment) {
+        const currentCp = history.find(cp => cp.week_number === profileData.current_week);
+        if (currentCp?.ai_feedback) {
+          setCheckpointFeedback(currentCp.ai_feedback);
+          if (currentCp.system_adjustment) {
             setAdaptationResult({
-              adjustment: currentCheckpoint.system_adjustment as AdaptationResult["adjustment"],
-              reason: "",
-              suggestion: "",
+              adjustment: currentCp.system_adjustment as AdaptationResult["adjustment"],
+              reason: "", suggestion: "",
             });
           }
         }
       }
-
       setLoading(false);
     };
-
     loadData();
   }, [user]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
+  // ── Actions ──
+  const handleSignOut = async () => { await signOut(); navigate("/"); };
 
   const handleResetProfile = async () => {
     if (!user) return;
     const userPlan = (profile?.plan || "free") as PlanType;
     const gate = await canReprofile(user.id, userPlan);
-    if (!gate.allowed) {
-      setUpgradeFeature(gate.upgradeFeature || "unlimited_reprofiling");
-      return;
-    }
+    if (!gate.allowed) { setUpgradeFeature(gate.upgradeFeature || "unlimited_reprofiling"); return; }
     await resetProfile(user.id);
-    setSavedProfile(null);
-    setPathData(null);
-    setTasks([]);
+    setSavedProfile(null); setPathData(null); setTasks([]);
     navigate("/onboarding");
   };
 
+  const handleToggleTask = useCallback(async (weekNumber: number, taskIndex: number, currentlyCompleted: boolean) => {
+    if (!savedProfile) return;
+    const taskKey = `${weekNumber}-${taskIndex}`;
+    setTogglingTask(taskKey);
+    setTasks((prev) => prev.map((t) =>
+      t.week_number === weekNumber && t.task_index === taskIndex ? { ...t, is_completed: !currentlyCompleted } : t
+    ));
+    const { advanced, newWeek } = await toggleTaskCompletion(savedProfile.id, weekNumber, taskIndex, !currentlyCompleted);
+    setTogglingTask(null);
+    if (advanced && newWeek) {
+      setSavedProfile((prev) => prev ? { ...prev, current_week: newWeek } : prev);
+      toast.success(`Minggu ${weekNumber} selesai — lanjut ke Minggu ${newWeek}`);
+      setExpandedWeeks((prev) => { const next = new Set(prev); next.add(newWeek); return next; });
+    }
+  }, [savedProfile]);
+
   const handleSubmitCheckpoint = useCallback(async () => {
     if (!user || !savedProfile) return;
-
-    // CHECK: Can user use AI weekly feedback?
     const userPlan = (profile?.plan || "free") as PlanType;
     const gate = canUseAIWeeklyFeedback(userPlan);
-    if (!gate.allowed) {
-      setUpgradeFeature(gate.upgradeFeature || "ai_weekly_feedback");
-      return;
-    }
-
+    if (!gate.allowed) { setUpgradeFeature(gate.upgradeFeature || "ai_weekly_feedback"); return; }
     setSubmittingCheckpoint(true);
-
-    const completionRate = tasks.length > 0
-      ? tasks.filter((t) => t.is_completed).length / tasks.length
-      : 0;
-
+    const completionRate = tasks.length > 0 ? tasks.filter((t) => t.is_completed).length / tasks.length : 0;
     const { feedback, adaptation } = await saveWeeklyCheckpoint(
-      user.id,
-      savedProfile.id,
-      savedProfile.current_week,
-      completionRate,
-      checkpointStatus,
-      stuckArea || undefined,
-      marketResponse ?? undefined
+      user.id, savedProfile.id, savedProfile.current_week, completionRate,
+      checkpointStatus, stuckArea || undefined, marketResponse ?? undefined
     );
-
     setCheckpointFeedback(feedback);
     setAdaptationResult(adaptation);
     setSubmittingCheckpoint(false);
   }, [user, savedProfile, profile, tasks, checkpointStatus, stuckArea, marketResponse]);
 
+  const handleGenerate = useCallback(async (type: GeneratorType) => {
+    setIsGenerating(true);
+    try {
+      const input: GeneratorInput = { type, niche, subSector, platform, economicModel, topic: generatorInput || undefined };
+      const output = await generateContent(input);
+      setGeneratedContent((prev) => ({ ...prev, [type]: output.content }));
+    } catch (err) { console.error("Generation failed:", err); }
+    setIsGenerating(false);
+  }, [niche, subSector, platform, economicModel, generatorInput]);
+
+  const copyToClipboard = useCallback(async (text: string, key: string) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
+  }, []);
+
+  // ── Derived ──
   const progress = useMemo(() => {
     if (!pathData || tasks.length === 0) return { total: 0, done: 0, percent: 0, currentWeek: savedProfile?.current_week || 1 };
-
     const total = tasks.length;
     const done = tasks.filter((t) => t.is_completed).length;
-    const percent = total > 0 ? Math.round((done / total) * 100) : 0;
-    return { total, done, percent, currentWeek: savedProfile?.current_week || 1 };
+    return { total, done, percent: total > 0 ? Math.round((done / total) * 100) : 0, currentWeek: savedProfile?.current_week || 1 };
   }, [pathData, tasks, savedProfile]);
 
-  // Get tasks for current week
-  const currentWeekTasks = useMemo(() => {
-    return tasks.filter((t) => t.week_number === progress.currentWeek);
-  }, [tasks, progress.currentWeek]);
+  const weeklyTasks: Record<number, Array<{ text: string; completed: boolean; index: number }>> = {};
+  if (tasks.length > 0) {
+    tasks.forEach((t) => {
+      if (!weeklyTasks[t.week_number]) weeklyTasks[t.week_number] = [];
+      weeklyTasks[t.week_number].push({ text: t.task_text, completed: t.is_completed, index: t.task_index });
+    });
+  } else if (pathData) {
+    pathData.weeklyPlan.forEach((week) => {
+      weeklyTasks[week.week] = week.tasks.map((task, i) => ({ text: task.text, completed: false, index: i }));
+    });
+  }
+
+  const currentWeekTasks = useMemo(() => tasks.filter((t) => t.week_number === progress.currentWeek), [tasks, progress.currentWeek]);
+
+  const signalsPerWeek = (week: number): MarketSignal[] => {
+    if (marketSignals.length === 0) return [];
+    const perWeek = Math.ceil(marketSignals.length / 4);
+    return marketSignals.slice((week - 1) * perWeek, (week - 1) * perWeek + perWeek);
+  };
+
+  const getTemplateTaskDetail = (weekNumber: number, taskIndex: number): TaskDetail | null => {
+    if (!pathData) return null;
+    const week = pathData.weeklyPlan.find((w) => w.week === weekNumber);
+    if (!week || taskIndex >= week.tasks.length) return null;
+    return week.tasks[taskIndex];
+  };
+
+  // ============================================================================
+  // RENDER
+  // ============================================================================
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -229,19 +325,13 @@ const Dashboard = () => {
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 pt-24 pb-16">
             <div className="ml-[10%] md:ml-[15%] pl-8 md:pl-12 border-l border-border/30">
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-8">
-                  Belum terkalibrasi
-                </p>
-                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">
-                  Sistem butuh data Anda.
-                </h1>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-8">Belum terkalibrasi</p>
+                <h1 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground">Sistem butuh data Anda.</h1>
                 <p className="text-sm text-muted-foreground mb-8 max-w-md leading-relaxed">
-                  Tanpa profiling, tidak ada arah yang bisa diberikan.
-                  Jawab beberapa pertanyaan untuk memulai kalibrasi.
+                  Tanpa profiling, tidak ada arah yang bisa diberikan. Jawab beberapa pertanyaan untuk memulai kalibrasi.
                 </p>
                 <Link to="/onboarding" className="cmd-primary group">
-                  Mulai Kalibrasi
-                  <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                  Mulai Kalibrasi <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </motion.div>
             </div>
@@ -251,410 +341,532 @@ const Dashboard = () => {
     );
   }
 
+  // ═══════════════════════════════════════════════════════════════
+  // MAIN WORKSPACE
+  // ═══════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="pt-16 relative">
-        {/* Structural axis */}
         <div className="absolute left-[10%] md:left-[8%] top-0 bottom-0 w-px bg-border/20" />
 
-        {/* Context switch strip — state-based nav, not a sidebar */}
+        {/* ── Tab strip ── */}
         <div className="sticky top-12 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-          <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+          <div className="max-w-[1100px] mx-auto px-6 md:px-10">
             <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide">
-              {menuItems.map((item) => (
+              {tabs.map((item) => (
                 <button
                   key={item.key}
-                  onClick={() => {
-                    if (item.key === "workspace") {
-                      navigate("/workspace");
-                    } else {
-                      setActiveTab(item.key);
-                    }
-                  }}
+                  onClick={() => setActiveTab(item.key)}
                   className={`flex items-center gap-2 px-4 py-3 text-xs uppercase tracking-wider whitespace-nowrap border-b-2 transition-all duration-150 ${
-                    activeTab === item.key
-                      ? "border-foreground text-foreground"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
+                    activeTab === item.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <item.icon className="w-3.5 h-3.5" />
                   {item.label}
                 </button>
               ))}
+              <div className="ml-auto flex items-center gap-2">
+                <button onClick={handleResetProfile} className="cmd-ghost text-[10px]"><RotateCcw className="w-3 h-3" /> Ubah Jalur</button>
+                <button onClick={handleSignOut} className="cmd-ghost text-[10px] text-muted-foreground/40"><LogOut className="w-3 h-3" /></button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Main content — no sidebar, axis-aligned */}
-        <main className="max-w-[1400px] mx-auto px-6 md:px-10 py-8 md:py-12">
+        {/* ── Content ── */}
+        <main className="max-w-[1100px] mx-auto px-6 md:px-10 py-8 md:py-12">
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-            {/* Status header — not greeting, system state */}
-            <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">
-                  Jalur aktif
-                </p>
-                <h1 className="text-xl md:text-2xl font-semibold text-foreground">
-                  {pathData.title}
-                </h1>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Minggu {progress.currentWeek} dari 4 — {progress.percent}% selesai
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <button onClick={handleResetProfile} className="cmd-ghost text-xs">
-                  <RotateCcw className="w-3 h-3" /> Ubah Jalur
-                </button>
-                <button onClick={handleSignOut} className="cmd-ghost text-xs text-muted-foreground/50">
-                  <LogOut className="w-3 h-3" /> Logout
-                </button>
-              </div>
+
+            {/* HEADER */}
+            <div className="mb-8">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Jalur aktif</p>
+              <h1 className="text-xl md:text-2xl font-semibold text-foreground mb-1">{pathData.title}</h1>
+              <p className="text-xs text-muted-foreground/60 max-w-lg leading-relaxed">{pathData.description}</p>
             </div>
 
-            {/* Progress bar — structural, thin */}
-            <div className="mb-10">
+            {/* Progress */}
+            <div className="mb-6">
               <div className="w-full h-px bg-border relative">
-                <div
-                  className="absolute top-0 left-0 h-px bg-foreground/50 transition-all duration-500"
-                  style={{ width: `${progress.percent}%` }}
-                />
-                <div
-                  className="absolute -top-1 w-2 h-2 bg-foreground border border-background transition-all duration-500"
-                  style={{ left: `${progress.percent}%`, transform: "translateX(-50%)" }}
-                />
+                <div className="absolute top-0 left-0 h-px bg-foreground/50 transition-all duration-500" style={{ width: `${progress.percent}%` }} />
+                <div className="absolute -top-1 w-2 h-2 bg-foreground border border-background transition-all duration-500" style={{ left: `${progress.percent}%`, transform: "translateX(-50%)" }} />
               </div>
               <div className="flex justify-between mt-2">
-                <span className="text-[10px] text-muted-foreground/40">Mulai</span>
-                <span className="text-[10px] text-muted-foreground/40">{progress.done}/{progress.total} tasks</span>
-                <span className="text-[10px] text-muted-foreground/40">Selesai</span>
+                <span className="text-[10px] text-muted-foreground/40">Minggu {progress.currentWeek} dari 4</span>
+                <span className="text-[10px] text-muted-foreground/40">{progress.done}/{progress.total} tasks — {progress.percent}%</span>
               </div>
             </div>
 
-            {/* Workspace link — subtle, not a banner */}
-            <div className="mb-8">
-              <button
-                onClick={() => navigate("/workspace")}
-                className="w-full flex items-center justify-between py-4 px-5 border border-border hover:border-foreground/20 transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <Zap className="w-4 h-4 text-muted-foreground" />
-                  <div className="text-left">
-                    <p className="text-xs font-medium text-foreground">Execution Workspace</p>
-                    <p className="text-[10px] text-muted-foreground/60">Generate konten, eksekusi blueprint</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground transition-all" />
-              </button>
+            {/* Key metrics */}
+            <div className="grid grid-cols-3 gap-px bg-border mb-8">
+              <div className="bg-background py-3 px-4">
+                <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Sumber income</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.incomeSource || "Bayaran per project/task dari client langsung"}</p>
+              </div>
+              <div className="bg-background py-3 px-4">
+                <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Waktu test</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.testTimeframe || "7–14 hari untuk income pertama"}</p>
+              </div>
+              <div className="bg-background py-3 px-4">
+                <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Risiko</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.riskLevel || "Rendah — waktu terbuang tapi tidak ada kerugian finansial"}</p>
+              </div>
             </div>
 
-              {/* AI Insight — structural panel, not card */}
-              {savedProfile.ai_why_text && (
-                <div className="mb-8 py-5 px-5 border border-border">
-                  <div className="flex items-start gap-3">
-                    <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Analisis sistem</p>
-                      <p className="text-sm text-foreground/80 leading-relaxed">{savedProfile.ai_why_text}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
 
-              {/* Market Focus — Real trending data for this path */}
-              {fetchingTrends && !marketFocus && (
-                <div className="mb-8 py-4 px-5 border border-border flex items-center gap-3">
-                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Mengambil data market</p>
-                    <p className="text-xs text-muted-foreground/70">Fetching Google Trends, YouTube, SerpAPI...</p>
-                  </div>
-                </div>
-              )}
-              {marketFocus && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.39 }} className="mb-8">
-                  <MarketFocusCard focus={marketFocus} pathTitle={pathData.title} />
-                </motion.div>
-              )}
-
-              {/* Risk Control Banners */}
-              {riskSignals && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }} className="space-y-4 mb-8">
-                  {/* Day 25 Warning */}
-                  {riskSignals.isDay25Warning && !day25Dismissed && (
-                    <Day25Warning
-                      daysSinceStart={riskSignals.daysSinceStart}
-                      onDismiss={() => setDay25Dismissed(true)}
-                    />
-                  )}
-
-                  {/* Pivot Suggestion */}
-                  {riskSignals.shouldSuggestPivot && (
-                    <PivotSuggestion
-                      noMarketWeeks={riskSignals.noMarketWeeks}
-                      alternatePath={savedProfile?.alternate_path}
-                      onSwitchPath={handleResetProfile}
-                    />
-                  )}
-
-                  {/* Reality Check — week 3-4 */}
-                  {riskSignals.isRealityCheckWeek && (
-                    <RealityCheck
-                      currentWeek={riskSignals.currentWeek}
-                      completionRate={riskSignals.completionRate}
-                      hasAnyMarketResponse={riskSignals.hasAnyMarketResponse}
-                      daysSinceStart={riskSignals.daysSinceStart}
-                    />
-                  )}
-
-                  {/* Anti-Sunk Cost — show from week 2+ */}
-                  {riskSignals.currentWeek >= 2 && (
-                    <AntiSunkCostCard weekNumber={riskSignals.currentWeek} />
-                  )}
-                </motion.div>
-              )}
-
-              {/* Niche Recommendation — subtle panel */}
-              {savedProfile.ai_niche_suggestion && (
-                <div className="mb-8 py-5 px-5 border border-border">
-                  <div className="flex items-start gap-3">
-                    <Sparkles className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Rekomendasi niche</p>
-                      <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{savedProfile.ai_niche_suggestion}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Current Week Tasks — structured list, not cards */}
-              <div className="mb-8">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">
-                    Minggu {progress.currentWeek} — Tasks
-                  </p>
-                  <Link to={`/path/${pathData.id}`} className="text-[10px] uppercase tracking-wider text-muted-foreground/40 hover:text-foreground transition-colors">
-                    Lihat semua →
-                  </Link>
-                </div>
-                <div className="space-y-0 border-t border-border">
-                  {currentWeekTasks.length > 0
-                    ? currentWeekTasks.map((task, ti) => (
-                        <div key={ti} className={`flex items-start gap-3 py-3 border-b border-border/50 ${task.is_completed ? "opacity-40" : ""}`}>
-                          {task.is_completed ? (
-                            <CheckCircle2 className="w-4 h-4 text-foreground/40 mt-0.5 flex-shrink-0" />
-                          ) : (
-                            <Circle className="w-4 h-4 text-muted-foreground/40 mt-0.5 flex-shrink-0" />
-                          )}
-                          <span className={`text-sm ${task.is_completed ? "line-through text-muted-foreground" : "text-foreground/80"}`}>
-                            {task.task_text}
-                          </span>
-                        </div>
-                      ))
-                    : pathData.weeklyPlan[progress.currentWeek - 1]?.tasks.map((task, ti) => (
-                        <div key={ti} className="flex items-start gap-3 py-3 border-b border-border/50">
-                          <Circle className="w-4 h-4 text-muted-foreground/40 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-foreground/80">{task.text}</span>
-                        </div>
-                      ))
-                  }
-                </div>
-              </div>
-
-              {/* Weekly Checkpoint */}
-              {/* Weekly Checkpoint — structural panel */}
-              <div className="mb-8 border border-border">
-                <div className="py-4 px-5 border-b border-border flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">
-                      Checkpoint — Minggu {progress.currentWeek}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="py-5 px-5">
-                  {checkpointFeedback ? (
-                    <div className="space-y-5">
-                      {/* Adaptation Signal */}
-                      {adaptationResult && adaptationResult.adjustment !== "continue" && (
-                        <div className="py-4 px-4 border-l-2 border-foreground/30">
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1">
-                            {adaptationResult.adjustment === "pivot_path" ? "Sinyal: Pivot jalur" :
-                             adaptationResult.adjustment === "simplify" ? "Sinyal: Simplifikasi" :
-                             adaptationResult.adjustment === "accelerate" ? "Sinyal: Akselerasi" : "Sinyal: Adjust niche"}
-                          </p>
-                          <p className="text-sm text-foreground/70 leading-relaxed">{adaptationResult.suggestion}</p>
-                          {adaptationResult.adjustment === "pivot_path" && (
-                            <button
-                              onClick={handleResetProfile}
-                              className="mt-3 cmd-ghost text-xs"
-                            >
-                              <RotateCcw className="w-3 h-3" />
-                              Re-profiling
-                            </button>
-                          )}
-                        </div>
-                      )}
-
-                      {/* AI Feedback */}
-                      <div className="flex items-start gap-3">
-                        <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
-                        <div>
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Feedback sistem</p>
-                          <p className="text-sm text-foreground/80 leading-relaxed">{checkpointFeedback}</p>
-                        </div>
+            {/* ═══════════════════════════════
+                TAB: OVERVIEW
+            ═══════════════════════════════ */}
+            {activeTab === "overview" && (
+              <div className="space-y-6">
+                {/* AI Insight */}
+                {savedProfile.ai_why_text && (
+                  <div className="py-5 px-5 border border-border">
+                    <div className="flex items-start gap-3">
+                      <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Analisis sistem</p>
+                        <p className="text-sm text-foreground/80 leading-relaxed">{savedProfile.ai_why_text}</p>
                       </div>
+                    </div>
+                  </div>
+                )}
 
-                      {/* Checkpoint History */}
-                      {checkpointHistory.length > 1 && (
-                        <div className="pt-4 border-t border-border/50">
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-3">
-                            Histori
-                          </p>
-                          <div className="flex gap-3">
-                            {checkpointHistory.map((cp) => (
-                              <div key={cp.week_number} className="text-center">
-                                <div className="text-[10px] text-muted-foreground/40 mb-1">W{cp.week_number}</div>
-                                <div className={`text-xs font-medium ${
-                                  cp.completion_rate >= 0.9 ? "text-foreground" :
-                                  cp.completion_rate >= 0.5 ? "text-muted-foreground" :
-                                  "text-muted-foreground/40"
-                                }`}>
-                                  {Math.round(cp.completion_rate * 100)}%
-                                </div>
-                              </div>
-                            ))}
+                {/* Market data loading */}
+                {fetchingTrends && !marketFocus && (
+                  <div className="py-4 px-5 border border-border flex items-center gap-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Mengambil data market</p>
+                      <p className="text-xs text-muted-foreground/70">Fetching Google Trends, YouTube, SerpAPI...</p>
+                    </div>
+                  </div>
+                )}
+                {marketFocus && <MarketFocusCard focus={marketFocus} pathTitle={pathData.title} />}
+
+                {/* Market signals grid */}
+                {marketSignals.length > 0 && (
+                  <div className="border border-border">
+                    <div className="py-3 px-5 border-b border-border">
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">{marketSignals.length} sinyal terpantau</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border">
+                      {marketSignals.slice(0, 9).map((signal, i) => (
+                        <div key={i} className="bg-background py-3 px-4 flex items-center gap-3">
+                          <TrendIcon direction={signal.direction || "stable"} />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs text-foreground/80 truncate">{signal.keyword}</p>
+                            <p className="text-[10px] text-muted-foreground/40">{signal.interest_score || 0}%</p>
                           </div>
+                          {signal.is_hot && <span className="text-[9px] font-bold px-1.5 py-0.5 bg-foreground/10 text-foreground/60">HOT</span>}
                         </div>
-                      )}
+                      ))}
                     </div>
-                  ) : (
-                    <div className="space-y-5">
-                      {/* Status selection */}
+                  </div>
+                )}
+
+                {/* Niche recommendation */}
+                {savedProfile.ai_niche_suggestion && (
+                  <div className="py-5 px-5 border border-border">
+                    <div className="flex items-start gap-3">
+                      <Sparkles className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                       <div>
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
-                          Status progress
-                        </p>
-                        <div className="flex gap-2">
-                          {(["on_track", "stuck", "ahead"] as const).map((status) => (
-                            <button
-                              key={status}
-                              onClick={() => setCheckpointStatus(status)}
-                              className={`px-4 py-2 text-xs transition-all border ${
-                                checkpointStatus === status
-                                  ? "border-foreground text-foreground"
-                                  : "border-border text-muted-foreground hover:border-foreground/30"
-                              }`}
-                            >
-                              {status === "on_track" ? "On Track" : status === "stuck" ? "Stuck" : "Ahead"}
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Rekomendasi niche</p>
+                        <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{savedProfile.ai_niche_suggestion}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Risk banners */}
+                {riskSignals && (
+                  <div className="space-y-4">
+                    {riskSignals.isDay25Warning && !day25Dismissed && (
+                      <Day25Warning daysSinceStart={riskSignals.daysSinceStart} onDismiss={() => setDay25Dismissed(true)} />
+                    )}
+                    {riskSignals.shouldSuggestPivot && (
+                      <PivotSuggestion noMarketWeeks={riskSignals.noMarketWeeks} alternatePath={savedProfile?.alternate_path} onSwitchPath={handleResetProfile} />
+                    )}
+                    {riskSignals.isRealityCheckWeek && (
+                      <RealityCheck currentWeek={riskSignals.currentWeek} completionRate={riskSignals.completionRate} hasAnyMarketResponse={riskSignals.hasAnyMarketResponse} daysSinceStart={riskSignals.daysSinceStart} />
+                    )}
+                  </div>
+                )}
+
+                {/* Current week tasks */}
+                <div className="border border-border">
+                  <div className="py-3 px-5 border-b border-border flex items-center justify-between">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Minggu {progress.currentWeek} — Tasks</p>
+                    <button onClick={() => setActiveTab("roadmap")} className="text-[10px] uppercase tracking-wider text-muted-foreground/40 hover:text-foreground transition-colors">
+                      Lihat semua →
+                    </button>
+                  </div>
+                  <div>
+                    {currentWeekTasks.length > 0
+                      ? currentWeekTasks.map((task, ti) => (
+                          <div key={ti} className={`flex items-start gap-3 py-3 px-5 border-b border-border/30 ${task.is_completed ? "opacity-40" : ""}`}>
+                            <button onClick={() => handleToggleTask(task.week_number, task.task_index, task.is_completed)} className="mt-0.5 shrink-0" disabled={togglingTask === `${task.week_number}-${task.task_index}`}>
+                              {task.is_completed ? <CheckCircle2 className="w-4 h-4 text-foreground/40" /> : <Circle className="w-4 h-4 text-muted-foreground/40 hover:text-foreground transition-colors" />}
                             </button>
-                          ))}
-                        </div>
-                      </div>
+                            <span className={`text-sm ${task.is_completed ? "line-through text-muted-foreground" : "text-foreground/80"}`}>{task.task_text}</span>
+                          </div>
+                        ))
+                      : pathData.weeklyPlan[progress.currentWeek - 1]?.tasks.map((task, ti) => (
+                          <div key={ti} className="flex items-start gap-3 py-3 px-5 border-b border-border/30">
+                            <Circle className="w-4 h-4 text-muted-foreground/40 mt-0.5 shrink-0" />
+                            <span className="text-sm text-foreground/80">{task.text}</span>
+                          </div>
+                        ))
+                    }
+                  </div>
+                </div>
 
-                      {/* Stuck detail */}
-                      {checkpointStatus === "stuck" && (
-                        <div>
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">
-                            Area yang stuck
-                          </p>
-                          <input
-                            type="text"
-                            value={stuckArea}
-                            onChange={(e) => setStuckArea(e.target.value)}
-                            placeholder="e.g. Cari niche, belum ada client..."
-                            className="w-full px-4 py-2.5 bg-transparent border border-border text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-foreground/30"
-                          />
-                        </div>
-                      )}
-
-                      {/* Market response */}
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">
-                          Respon market
-                        </p>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => setMarketResponse(true)}
-                            className={`px-4 py-2 text-xs transition-all border ${
-                              marketResponse === true ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"
-                            }`}
-                          >
-                            Sudah ada
-                          </button>
-                          <button
-                            onClick={() => setMarketResponse(false)}
-                            className={`px-4 py-2 text-xs transition-all border ${
-                              marketResponse === false ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"
-                            }`}
-                          >
-                            Belum
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Submit */}
-                      <button
-                        onClick={handleSubmitCheckpoint}
-                        disabled={submittingCheckpoint}
-                        className="cmd-primary text-xs disabled:opacity-40"
-                      >
-                        {submittingCheckpoint ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            Menganalisis...
-                          </>
-                        ) : (
-                          <>
-                            <Brain className="w-3.5 h-3.5" />
-                            Submit Checkpoint
-                          </>
-                        )}
-                      </button>
-
-                      {/* Upgrade Prompt */}
-                      {upgradeFeature && (
-                        <div className="mt-3">
-                          <UpgradePrompt
-                            feature={upgradeFeature}
-                            compact
-                            onDismiss={() => setUpgradeFeature(null)}
-                          />
-                        </div>
-                      )}
+                {/* Generator CTA */}
+                <button onClick={() => setActiveTab("generator")} className="w-full flex items-center justify-between py-4 px-5 border border-border hover:border-foreground/20 transition-all group">
+                  <div className="flex items-center gap-3">
+                    <Zap className="w-4 h-4 text-muted-foreground" />
+                    <div className="text-left">
+                      <p className="text-xs font-medium text-foreground">Content Generator</p>
+                      <p className="text-[10px] text-muted-foreground/60">Generate caption, hook, script, bio — sesuai profil kamu</p>
                     </div>
-                  )}
-                </div>
-              </div>
+                  </div>
+                  <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground transition-all" />
+                </button>
 
-              {/* Quick Actions — commands, not marketing buttons */}
-              <div className="mt-8 pt-6 border-t border-border">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-4">
-                  Aksi
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Link to={`/path/${pathData.id}`} className="cmd-primary text-xs">
-                    <Map className="w-3.5 h-3.5" /> Lihat Blueprint 30 Hari
-                  </Link>
-                  <button onClick={handleResetProfile} className="cmd-ghost text-xs">
-                    <RotateCcw className="w-3.5 h-3.5" /> Ubah Jalur
-                  </button>
-                </div>
+                {riskSignals && riskSignals.currentWeek >= 2 && <AntiSunkCostCard weekNumber={riskSignals.currentWeek} />}
 
-                {savedProfile && savedProfile.current_week >= 2 && (
-                  <div className="mt-4">
-                    <SwitchPathButton
-                      onSwitch={handleResetProfile}
-                      alternatePath={savedProfile.alternate_path}
-                    />
+                {pathData.ignoreList && pathData.ignoreList.length > 0 && (
+                  <div className="py-5 px-5 border border-border/50">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-3">Yang harus diabaikan</p>
+                    <div className="space-y-2">
+                      {pathData.ignoreList.map((item, i) => (
+                        <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground/60">
+                          <span className="text-muted-foreground/30">✕</span> {item}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {pathData.examples && pathData.examples.length > 0 && (
+                  <div className="py-5 px-5 border border-border/50">
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-3">Contoh yang bisa dimulai</p>
+                    <div className="flex flex-wrap gap-2">
+                      {pathData.examples.map((ex, i) => (
+                        <span key={i} className="text-xs px-3 py-1.5 border border-border text-foreground/60">{ex}</span>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
-            </motion.div>
-          </main>
-        </div>
+            )}
+
+            {/* ═══════════════════════════════
+                TAB: ROADMAP
+            ═══════════════════════════════ */}
+            {activeTab === "roadmap" && (
+              <div className="space-y-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-6">
+                  Roadmap 30 hari — AI-personalized berdasarkan profil
+                </p>
+
+                {pathData.weeklyPlan.map((week) => {
+                  const isExpanded = expandedWeeks.has(week.week);
+                  const wTasks = weeklyTasks[week.week] || [];
+                  const wCompleted = wTasks.filter((t) => t.completed).length;
+                  const isCurrentWeek = week.week === progress.currentWeek;
+                  const weekSignals = signalsPerWeek(week.week);
+
+                  return (
+                    <div key={week.week} className={`border-t border-border ${isCurrentWeek ? "border-l-2 border-l-foreground/30" : ""}`}>
+                      <button
+                        onClick={() => { setExpandedWeeks((prev) => { const next = new Set(prev); if (next.has(week.week)) next.delete(week.week); else next.add(week.week); return next; }); }}
+                        className="w-full flex items-center gap-4 py-4 px-5 hover:bg-muted/5 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[10px] font-bold text-muted-foreground/40 bg-muted/10 px-2 py-1 w-8 text-center">W{week.week}</span>
+                          {isCurrentWeek && <span className="text-[9px] font-bold px-1.5 py-0.5 bg-foreground/10 text-foreground/60">AKTIF</span>}
+                        </div>
+                        <div className="flex-1 text-left">
+                          <p className="text-sm font-medium text-foreground/80">{week.title}</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {weekSignals.length > 0 && <span className="text-[10px] text-muted-foreground/40">{weekSignals.length} trend</span>}
+                          <span className="text-[10px] text-muted-foreground/40">{wCompleted}/{wTasks.length}</span>
+                          {isExpanded ? <ChevronDown className="w-3.5 h-3.5 text-muted-foreground/30" /> : <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30" />}
+                        </div>
+                      </button>
+
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
+                            {weekSignals.length > 0 && (
+                              <div className="mx-5 mb-4 py-3 px-4 border border-border/50 bg-muted/5">
+                                <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">Konteks market minggu ini — data real</p>
+                                <div className="flex flex-wrap gap-3">
+                                  {weekSignals.map((signal, si) => (
+                                    <div key={si} className="flex items-center gap-1.5">
+                                      <TrendIcon direction={signal.direction || "stable"} />
+                                      <span className="text-xs text-foreground/70">{signal.keyword}</span>
+                                      <span className="text-[10px] text-muted-foreground/40">{signal.interest_score || 0}%</span>
+                                    </div>
+                                  ))}
+                                </div>
+                                {weekSignals[0]?.ai_insight && (
+                                  <p className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">📊 {weekSignals[0].ai_insight}</p>
+                                )}
+                              </div>
+                            )}
+
+                            <div className="border-t border-border/30">
+                              {wTasks.map((task, ti) => {
+                                const taskKey = `${week.week}-${task.index}`;
+                                const isTaskExpanded = expandedTasks.has(taskKey);
+                                const detail = getTemplateTaskDetail(week.week, task.index);
+
+                                return (
+                                  <div key={ti} className={`border-b border-border/20 ${task.completed ? "opacity-40" : ""}`}>
+                                    <div className="flex items-start gap-3 py-3 px-5">
+                                      <button onClick={() => handleToggleTask(week.week, task.index, task.completed)} className="mt-0.5 shrink-0" disabled={togglingTask === taskKey}>
+                                        {task.completed ? <CheckCircle2 className="w-4 h-4 text-foreground/40" /> : <Circle className="w-4 h-4 text-muted-foreground/40 hover:text-foreground transition-colors" />}
+                                      </button>
+                                      <div className="flex-1 min-w-0">
+                                        <button onClick={() => { setExpandedTasks((prev) => { const next = new Set(prev); if (next.has(taskKey)) next.delete(taskKey); else next.add(taskKey); return next; }); }} className="text-left w-full group">
+                                          <p className={`text-sm ${task.completed ? "line-through text-muted-foreground" : "text-foreground/80"}`}>{task.text}</p>
+                                          {detail && (
+                                            <div className="flex items-center gap-3 mt-1">
+                                              {detail.duration && <span className="text-[10px] text-muted-foreground/40">{detail.duration}</span>}
+                                              {detail.difficulty && <span className="text-[10px] text-muted-foreground/40">{detail.difficulty}</span>}
+                                              <span className="text-[10px] text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors">{isTaskExpanded ? "tutup" : "detail →"}</span>
+                                            </div>
+                                          )}
+                                        </button>
+
+                                        <AnimatePresence>
+                                          {isTaskExpanded && detail && (
+                                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                                              <div className="mt-3 space-y-3">
+                                                {detail.actionSteps && detail.actionSteps.length > 0 && (
+                                                  <div>
+                                                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">Langkah aksi</p>
+                                                    <ol className="space-y-1.5">
+                                                      {detail.actionSteps.map((step, si) => (
+                                                        <li key={si} className="text-xs text-muted-foreground/60 leading-relaxed pl-4">{si + 1}. {step}</li>
+                                                      ))}
+                                                    </ol>
+                                                  </div>
+                                                )}
+                                                {detail.deliverable && (
+                                                  <div>
+                                                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Deliverable</p>
+                                                    <p className="text-xs text-foreground/60">{detail.deliverable}</p>
+                                                  </div>
+                                                )}
+                                                {detail.resources && detail.resources.length > 0 && (
+                                                  <div>
+                                                    <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">Resources</p>
+                                                    <div className="flex flex-wrap gap-2">
+                                                      {detail.resources.map((r, ri) => (
+                                                        <a key={ri} href={r.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors px-2 py-1 border border-border/30">
+                                                          {resourceIcon(r.type)} {r.label}
+                                                        </a>
+                                                      ))}
+                                                    </div>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </motion.div>
+                                          )}
+                                        </AnimatePresence>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* ═══════════════════════════════
+                TAB: GENERATOR
+            ═══════════════════════════════ */}
+            {activeTab === "generator" && (
+              <div className="space-y-6">
+                <div className="py-3 px-5 border border-border flex items-center gap-3 flex-wrap">
+                  <span className="text-[9px] font-bold text-muted-foreground/40 uppercase">Profil:</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{economicModel}</span>
+                  <span className="text-muted-foreground/20">→</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{subSector}</span>
+                  <span className="text-muted-foreground/20">→</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{niche}</span>
+                  <span className="text-muted-foreground/20">→</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{platform}</span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-border">
+                  {availableGenerators.filter(g => g !== "content_calendar").map((genType) => {
+                    const label = GENERATOR_LABELS[genType];
+                    const isActive = activeGenerator === genType;
+                    const hasContent = !!generatedContent[genType];
+                    return (
+                      <button key={genType} onClick={() => setActiveGenerator(isActive ? null : genType)} className={`bg-background py-4 px-4 text-left transition-all ${isActive ? "bg-muted/10 border-l-2 border-l-foreground/30" : "hover:bg-muted/5"}`}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className="text-lg">{label.emoji}</span>
+                          {hasContent && <Check className="w-3.5 h-3.5 text-foreground/40" />}
+                        </div>
+                        <p className="text-xs font-medium text-foreground/80">{label.label}</p>
+                        <p className="text-[10px] text-muted-foreground/40 mt-0.5">{label.description}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {activeGenerator && (
+                    <motion.div key={activeGenerator} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
+                      <div className="border border-border">
+                        <div className="py-3 px-5 border-b border-border flex items-center gap-2">
+                          <span className="text-lg">{GENERATOR_LABELS[activeGenerator].emoji}</span>
+                          <p className="text-sm font-medium text-foreground">{GENERATOR_LABELS[activeGenerator].label}</p>
+                        </div>
+                        <div className="py-5 px-5 space-y-4">
+                          <div>
+                            <label className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1.5 block">Topik / Konteks (opsional)</label>
+                            <input type="text" value={generatorInput} onChange={(e) => setGeneratorInput(e.target.value)} placeholder="e.g. tips produktivitas WFH, review AI tool..."
+                              className="w-full px-4 py-2.5 bg-transparent border border-border text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-foreground/30" />
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <button onClick={() => handleGenerate(activeGenerator)} disabled={isGenerating} className="cmd-primary text-xs disabled:opacity-40">
+                              {isGenerating ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating...</> : <><Sparkles className="w-3.5 h-3.5" /> Generate</>}
+                            </button>
+                            {generatedContent[activeGenerator] && (
+                              <button onClick={() => handleGenerate(activeGenerator)} disabled={isGenerating} className="cmd-ghost text-xs disabled:opacity-40">
+                                <RefreshCw className="w-3 h-3" /> Re-generate
+                              </button>
+                            )}
+                          </div>
+                          {generatedContent[activeGenerator] && (
+                            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Result</p>
+                                <button onClick={() => copyToClipboard(generatedContent[activeGenerator], activeGenerator)} className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/50 hover:text-foreground transition-colors">
+                                  {copiedKey === activeGenerator ? <><Check className="w-3 h-3" /> Copied</> : <><Copy className="w-3 h-3" /> Copy</>}
+                                </button>
+                              </div>
+                              <div className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed py-4 px-5 border border-border/50 bg-muted/5 max-h-80 overflow-y-auto">
+                                {generatedContent[activeGenerator]}
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* ═══════════════════════════════
+                TAB: CALENDAR
+            ═══════════════════════════════ */}
+            {activeTab === "calendar" && (
+              <div className="space-y-6">
+                <TrendIntelligenceDashboard pathId={economicModel} interestMarket={niche} subSector={subSector} onTrendBriefReady={setTrendBrief} />
+                <ContentCalendarView economicModel={economicModel} subSector={subSector} niche={niche} platform={platform} trendBrief={trendBrief} />
+              </div>
+            )}
+
+            {/* ═══════════════════════════════
+                TAB: CHECKPOINT
+            ═══════════════════════════════ */}
+            {activeTab === "checkpoint" && (
+              <div className="space-y-6">
+                <div className="border border-border">
+                  <div className="py-4 px-5 border-b border-border flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Checkpoint — Minggu {progress.currentWeek}</p>
+                  </div>
+                  <div className="py-5 px-5">
+                    {checkpointFeedback ? (
+                      <div className="space-y-5">
+                        {adaptationResult && adaptationResult.adjustment !== "continue" && (
+                          <div className="py-4 px-4 border-l-2 border-foreground/30">
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1">
+                              {adaptationResult.adjustment === "pivot_path" ? "Sinyal: Pivot jalur" : adaptationResult.adjustment === "simplify" ? "Sinyal: Simplifikasi" : adaptationResult.adjustment === "accelerate" ? "Sinyal: Akselerasi" : "Sinyal: Adjust niche"}
+                            </p>
+                            <p className="text-sm text-foreground/70 leading-relaxed">{adaptationResult.suggestion}</p>
+                            {adaptationResult.adjustment === "pivot_path" && <button onClick={handleResetProfile} className="mt-3 cmd-ghost text-xs"><RotateCcw className="w-3 h-3" /> Re-profiling</button>}
+                          </div>
+                        )}
+                        <div className="flex items-start gap-3">
+                          <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Feedback sistem</p>
+                            <p className="text-sm text-foreground/80 leading-relaxed">{checkpointFeedback}</p>
+                          </div>
+                        </div>
+                        {checkpointHistory.length > 1 && (
+                          <div className="pt-4 border-t border-border/50">
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-3">Histori</p>
+                            <div className="flex gap-3">
+                              {checkpointHistory.map((cp) => (
+                                <div key={cp.week_number} className="text-center">
+                                  <div className="text-[10px] text-muted-foreground/40 mb-1">W{cp.week_number}</div>
+                                  <div className={`text-xs font-medium ${cp.completion_rate >= 0.9 ? "text-foreground" : cp.completion_rate >= 0.5 ? "text-muted-foreground" : "text-muted-foreground/40"}`}>{Math.round(cp.completion_rate * 100)}%</div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-5">
+                        <div>
+                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">Status progress</p>
+                          <div className="flex gap-2">
+                            {(["on_track", "stuck", "ahead"] as const).map((status) => (
+                              <button key={status} onClick={() => setCheckpointStatus(status)} className={`px-4 py-2 text-xs transition-all border ${checkpointStatus === status ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"}`}>
+                                {status === "on_track" ? "On Track" : status === "stuck" ? "Stuck" : "Ahead"}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        {checkpointStatus === "stuck" && (
+                          <div>
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Area yang stuck</p>
+                            <input type="text" value={stuckArea} onChange={(e) => setStuckArea(e.target.value)} placeholder="e.g. Cari niche, belum ada client..."
+                              className="w-full px-4 py-2.5 bg-transparent border border-border text-sm text-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:border-foreground/30" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-3">Respon market</p>
+                          <div className="flex gap-2">
+                            <button onClick={() => setMarketResponse(true)} className={`px-4 py-2 text-xs transition-all border ${marketResponse === true ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"}`}>Sudah ada</button>
+                            <button onClick={() => setMarketResponse(false)} className={`px-4 py-2 text-xs transition-all border ${marketResponse === false ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"}`}>Belum</button>
+                          </div>
+                        </div>
+                        <button onClick={handleSubmitCheckpoint} disabled={submittingCheckpoint} className="cmd-primary text-xs disabled:opacity-40">
+                          {submittingCheckpoint ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Menganalisis...</> : <><Brain className="w-3.5 h-3.5" /> Submit Checkpoint</>}
+                        </button>
+                        {upgradeFeature && <UpgradePrompt feature={upgradeFeature} compact onDismiss={() => setUpgradeFeature(null)} />}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {savedProfile && savedProfile.current_week >= 2 && <SwitchPathButton onSwitch={handleResetProfile} alternatePath={savedProfile.alternate_path} />}
+              </div>
+            )}
+
+          </motion.div>
+        </main>
       </div>
+    </div>
   );
 };
 
