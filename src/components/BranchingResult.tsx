@@ -69,7 +69,7 @@ const BranchingResult = ({
           JALUR KAMU SUDAH DITENTUKAN
         </div>
         <h1 className="text-3xl md:text-4xl font-black mb-2">
-          Workflow Operator Path
+          {subSpec?.title || pathTemplate?.title || modelInfo?.label || "Your Path"}
         </h1>
         <p className="text-sm text-muted-foreground/70">
           Berdasarkan profil branching kamu, ini adalah jalur paling realistis

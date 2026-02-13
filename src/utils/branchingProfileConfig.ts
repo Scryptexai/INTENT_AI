@@ -694,7 +694,7 @@ export function getTotalSteps(modelId?: EconomicModelId): number {
 // BACKWARD COMPAT — Map new model to old PathId for DB compatibility
 // ============================================================================
 
-import type { PathId, ProfileScores } from "./profilingConfig";
+import type { PathId, ProfileScores, SegmentTag } from "./profilingConfig";
 
 /** Map EconomicModelId + SubSector to old PathId for DB compatibility */
 export function mapToLegacyPathId(model: EconomicModelId, subSector: string): PathId {
@@ -709,13 +709,104 @@ export function mapToLegacyPathId(model: EconomicModelId, subSector: string): Pa
   return mapping[model] || "micro_service";
 }
 
+/** Map branching niche ID to legacy interest_market value */
+function mapNicheToMarket(niche: string, subSector: string): { value: string; score: number } {
+  // Direct niche → market mapping
+  const nicheMarketMap: Record<string, { value: string; score: number }> = {
+    // Content creator niches
+    "education": { value: "education", score: 3 },
+    "gaming_content": { value: "gaming", score: 6 },
+    "finance_content": { value: "finance", score: 4 },
+    "health_content": { value: "health", score: 1 },
+    "tech_content": { value: "tech", score: 10 },
+    "lifestyle": { value: "creative", score: 9 },
+    "selfimprovement": { value: "education", score: 3 },
+    // Affiliate niches
+    "software_affiliate": { value: "tech", score: 10 },
+    "education_affiliate": { value: "education", score: 3 },
+    "health_affiliate": { value: "health", score: 1 },
+    "finance_affiliate": { value: "finance", score: 4 },
+    "gadget_affiliate": { value: "tech", score: 10 },
+    // E-commerce niches
+    "fashion_dropship": { value: "ecommerce", score: 7 },
+    "gadget_dropship": { value: "tech", score: 10 },
+    "home_dropship": { value: "ecommerce", score: 7 },
+    "beauty_tiktok": { value: "health", score: 1 },
+    "fashion_tiktok": { value: "ecommerce", score: 7 },
+    "food_tiktok": { value: "health", score: 1 },
+    // Data/Research niches
+    "tech_trends": { value: "tech", score: 10 },
+    "market_trends": { value: "business", score: 2 },
+    "social_trends": { value: "creative", score: 9 },
+    "defi_analysis": { value: "finance", score: 4 },
+    "trading_signals": { value: "finance", score: 4 },
+    // Digital product niches
+    "business_prompts": { value: "business", score: 2 },
+    "creative_prompts": { value: "creative", score: 9 },
+    "dev_prompts": { value: "tech", score: 10 },
+    "skill_course": { value: "education", score: 3 },
+    "tool_course": { value: "tech", score: 10 },
+    "career_course": { value: "business", score: 2 },
+    // Writing sub-sector
+    "copywriting": { value: "business", score: 2 },
+    "seo_content": { value: "business", score: 2 },
+    "script_writing": { value: "creative", score: 9 },
+    "technical_writing": { value: "tech", score: 10 },
+    "ghostwriting": { value: "business", score: 2 },
+    // Design sub-sector
+    "ui_ux": { value: "tech", score: 10 },
+    "branding": { value: "business", score: 2 },
+    "social_media_design": { value: "creative", score: 9 },
+    "thumbnail_design": { value: "creative", score: 9 },
+    // General sub-sector fallbacks
+    "niche_micro": { value: "business", score: 2 },
+    "local_influencer": { value: "business", score: 2 },
+    "b2b_influencer": { value: "business", score: 2 },
+  };
+
+  // Sub-sector → default market mapping
+  const subSectorMarketMap: Record<string, { value: string; score: number }> = {
+    "writing": { value: "business", score: 2 },
+    "design": { value: "creative", score: 9 },
+    "video": { value: "creative", score: 9 },
+    "development": { value: "tech", score: 10 },
+    "marketing": { value: "business", score: 2 },
+    "ai_operator": { value: "tech", score: 10 },
+    "content_creator": { value: "business", score: 2 },
+    "micro_influencer": { value: "business", score: 2 },
+    "niche_page": { value: "creative", score: 9 },
+    "community_builder": { value: "education", score: 3 },
+    "ebook": { value: "education", score: 3 },
+    "template": { value: "business", score: 2 },
+    "prompt_pack": { value: "tech", score: 10 },
+    "course_mini": { value: "education", score: 3 },
+    "dropship": { value: "ecommerce", score: 7 },
+    "affiliate": { value: "business", score: 2 },
+    "amazon_kdp": { value: "education", score: 3 },
+    "tiktok_shop": { value: "ecommerce", score: 7 },
+    "trend_researcher": { value: "business", score: 2 },
+    "market_analyst": { value: "business", score: 2 },
+    "crypto_analyst": { value: "finance", score: 4 },
+    "newsletter_writer": { value: "business", score: 2 },
+    "ai_curator": { value: "tech", score: 10 },
+    "nocode_builder": { value: "tech", score: 10 },
+    "zapier_automation": { value: "business", score: 2 },
+    "crm_setup": { value: "business", score: 2 },
+    "ai_workflow": { value: "tech", score: 10 },
+    "funnel_builder": { value: "business", score: 2 },
+  };
+
+  return nicheMarketMap[niche] || subSectorMarketMap[subSector] || { value: "business", score: 2 };
+}
+
 /** Map context scores to legacy ProfileScores for DB compatibility */
 export function mapToLegacyScores(
   ctx: ContextScores,
   sectorAnswers: Record<string, string>,
   model: EconomicModelId,
   subSector: string,
-  platform: string
+  platform: string,
+  niche?: string
 ): ProfileScores {
   // Map context scores to the old 11-dimension score system
   const timeMap: Record<string, number> = { "lt1h": 1, "1-2h": 2, "3-4h": 3, "gt4h": 4 };
@@ -724,31 +815,56 @@ export function mapToLegacyScores(
   const skillMap: Record<string, number> = { "beginner": 0, "basic": 1, "intermediate": 2, "advanced": 3, "expert": 4 };
   const audienceMap: Record<string, number> = { "zero": 0, "micro": 1, "small": 2, "medium": 3, "large": 4 };
 
-  // Map work style based on model + sub-sector
+  // Map work style based on model + sub-sector + camera comfort
   const workStyleMap: Record<string, number> = {
     "writing": 3, "design": 2, "video": 2, "development": 7, "marketing": 5,
     "ai_operator": 7, "content_creator": 1, "micro_influencer": 4,
     "niche_page": 7, "community_builder": 6,
   };
 
-  // Map platform to score
+  // Refine content_creator work_style based on camera_comfort sector answer
+  let workStyle = workStyleMap[subSector] || 7;
+  if (subSector === "content_creator" || subSector === "micro_influencer") {
+    const cameraComfort = sectorAnswers.camera_comfort;
+    if (cameraComfort === "no_face") workStyle = 7;        // silent_build
+    else if (cameraComfort === "prefer_no") workStyle = 4;  // short content
+    else if (cameraComfort === "okay") workStyle = 4;       // short content
+    else if (cameraComfort === "love_it") workStyle = 1;    // video_face
+  }
+
+  // Map platform to score — include ALL branching platform IDs
   const platformMap: Record<string, number> = {
-    "tiktok": 1, "youtube": 2, "twitter_x": 3, "linkedin": 4,
-    "fiverr": 5, "upwork": 5, "own_website": 6, "gumroad": 6,
-    "shopee": 5, "substack": 6, "substack_dr": 6,
+    "tiktok": 1, "instagram": 1, "youtube": 2, "twitter_x": 3, "linkedin": 4,
+    "fiverr": 5, "upwork": 5, "upwork_auto": 5, "own_website": 6, "gumroad": 6,
+    "lemon_squeezy": 6, "shopee": 5, "tokopedia": 5, "substack": 6, "substack_dr": 6,
+    "direct_client": 5, "direct_auto": 5, "linkedin_auto": 4, "linkedin_dr": 4,
+    "tokopedia_jasa": 5, "notion_market": 6, "udemy": 6, "etsy_digital": 6,
+    "amazon": 5, "own_store": 6, "tiktok_shop_plat": 1, "own_blog": 6,
+    "medium": 6, "make_marketplace": 5, "productized": 6, "podcast": 2,
+  };
+
+  // Map niche/sub-sector to proper interest_market
+  const market = mapNicheToMarket(niche || subSector, subSector);
+
+  // Map daily_routine based on time availability
+  const dailyRoutineFromTime: Record<number, number> = {
+    1: 4,  // < 1h → malam
+    2: 4,  // 1-2h → malam (after work)
+    3: 5,  // 3-4h → flexible
+    4: 5,  // > 4h → flexible
   };
 
   return {
     time: ctx.time,
     capital: ctx.capital,
-    target_speed: 2, // default moderate
-    work_style: workStyleMap[subSector] || 7,
+    target_speed: ctx.skillLevel >= 3 ? 2 : 3, // skilled → faster, beginner → moderate
+    work_style: workStyle,
     risk: ctx.risk,
     skill_primary: ctx.skillLevel,
-    skill_secondary: 0,
-    interest_market: 1,
+    skill_secondary: ctx.skillLevel >= 2 ? 4 : 0, // if intermediate+, assume social_savvy
+    interest_market: market.score,
     audience_access: ctx.audience,
-    daily_routine: 1,
+    daily_routine: dailyRoutineFromTime[ctx.time] || 4,
     preferred_platform: platformMap[platform] || 1,
   };
 }
@@ -768,4 +884,15 @@ export interface BranchingProfileResult {
   legacyScores: ProfileScores;
   legacySegment: string;
   answerTags: Record<string, string>;
+}
+
+/** Map branching profile to a meaningful legacy segment tag */
+export function mapToLegacySegment(model: EconomicModelId, ctx: ContextScores): SegmentTag {
+  if (ctx.capital === 0) return "zero_capital_builder";
+  if (ctx.skillLevel >= 3) return "skill_leverager";
+  if (model === "audience_based") return "audience_builder";
+  if (model === "skill_service") return "service_executor";
+  if (ctx.risk >= 3) return "risk_taker";
+  if (ctx.capital >= 2) return "low_capital_experimenter";
+  return "long_term_builder";
 }

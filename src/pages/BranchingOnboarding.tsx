@@ -32,6 +32,7 @@ import {
   generateWorkflowId,
   mapToLegacyPathId,
   mapToLegacyScores,
+  mapToLegacySegment,
   type EconomicModelId,
   type BranchOption,
   type BranchQuestion,
@@ -293,7 +294,7 @@ const BranchingOnboarding = () => {
 
     // Map to legacy system for DB compat
     const legacyPathId = mapToLegacyPathId(selectedModel, selectedSubSector);
-    const legacyScores = mapToLegacyScores(contextScores, sectorAnswers, selectedModel, selectedSubSector, platformValue);
+    const legacyScores = mapToLegacyScores(contextScores, sectorAnswers, selectedModel, selectedSubSector, platformValue, nicheValue);
 
     // Build answer tags for AI context
     const answerTags: Record<string, string> = {
@@ -306,19 +307,74 @@ const BranchingOnboarding = () => {
       ...sectorAnswers,
     };
 
-    // Build legacy answers for DB
+    // Build legacy answers for DB — map from branching selections
+    // Map niche to legacy interest_market value
+    const nicheToMarketValue: Record<string, string> = {
+      "health_content": "health", "education": "education", "gaming_content": "gaming",
+      "finance_content": "finance", "tech_content": "tech", "lifestyle": "creative",
+      "selfimprovement": "education", "health_affiliate": "health", "finance_affiliate": "finance",
+      "software_affiliate": "tech", "education_affiliate": "education", "gadget_affiliate": "tech",
+      "copywriting": "business", "seo_content": "business", "script_writing": "creative",
+      "technical_writing": "tech", "ui_ux": "tech", "branding": "business",
+      "social_media_design": "creative", "thumbnail_design": "creative",
+    };
+    const subSectorToMarketValue: Record<string, string> = {
+      "writing": "business", "design": "creative", "video": "creative",
+      "development": "tech", "marketing": "business", "ai_operator": "tech",
+      "content_creator": "business", "micro_influencer": "business",
+      "niche_page": "creative", "community_builder": "education",
+      "ebook": "education", "template": "business", "prompt_pack": "tech",
+      "course_mini": "education", "dropship": "ecommerce", "affiliate": "business",
+      "trend_researcher": "business", "newsletter_writer": "business",
+      "ai_curator": "tech", "nocode_builder": "tech", "ai_workflow": "tech",
+    };
+    const marketValue = nicheToMarketValue[nicheValue] || subSectorToMarketValue[selectedSubSector] || "business";
+
+    // Map sub-sector to work_style value with camera_comfort override
+    let workStyleValue = "silent_build";
+    const workStyleFromSubSector: Record<string, string> = {
+      "writing": "longform_write", "design": "video_edit", "video": "video_edit",
+      "development": "silent_build", "marketing": "research",
+      "ai_operator": "silent_build", "content_creator": "video_face",
+      "micro_influencer": "shortform", "niche_page": "silent_build",
+      "community_builder": "people",
+    };
+    workStyleValue = workStyleFromSubSector[selectedSubSector] || "silent_build";
+    // Override based on camera comfort
+    if (sectorAnswers.camera_comfort) {
+      if (sectorAnswers.camera_comfort === "no_face") workStyleValue = "silent_build";
+      else if (sectorAnswers.camera_comfort === "prefer_no") workStyleValue = "shortform";
+    }
+
+    // Map platform to legacy value
+    const platformToLegacy: Record<string, string> = {
+      "tiktok": "tiktok_reels", "instagram": "tiktok_reels", "youtube": "youtube",
+      "twitter_x": "twitter", "linkedin": "linkedin", "substack": "own_website",
+      "fiverr": "marketplace", "upwork": "marketplace", "gumroad": "own_website",
+      "direct_client": "marketplace", "shopee": "marketplace", "own_website": "own_website",
+      "substack_dr": "own_website", "linkedin_dr": "linkedin", "linkedin_auto": "linkedin",
+      "podcast": "youtube", "own_blog": "own_website",
+    };
+    const legacyPlatform = platformToLegacy[platformValue] || "marketplace";
+
+    // Map skill answer to legacy value
+    const skillToLegacy: Record<string, string> = {
+      "beginner": "none", "basic": "writing", "intermediate": "writing",
+      "advanced": "marketing", "expert": "marketing",
+    };
+
     const legacyAnswers: Record<string, string> = {
       time: contextAnswers.time || "1-2h",
       capital: contextAnswers.capital || "zero",
-      target_speed: "2w",
-      work_style: "silent_build",
+      target_speed: contextScores.skillLevel >= 3 ? "2w" : "1mo",
+      work_style: workStyleValue,
       risk: contextAnswers.risk || "low",
-      skill_primary: contextAnswers.skill_level || "basic",
-      skill_secondary: "none",
-      interest_market: "business",
+      skill_primary: skillToLegacy[contextAnswers.skill_level] || "none",
+      skill_secondary: contextScores.skillLevel >= 2 ? "social_media" : "none",
+      interest_market: marketValue,
       audience_access: contextAnswers.audience || "zero",
-      daily_routine: "evening",
-      preferred_platform: platformValue,
+      daily_routine: contextScores.time <= 2 ? "evening" : "flexible",
+      preferred_platform: legacyPlatform,
     };
 
     const result: BranchingProfileResult = {
@@ -331,7 +387,7 @@ const BranchingOnboarding = () => {
       sectorAnswers,
       legacyPathId,
       legacyScores,
-      legacySegment: "skill_leverager",
+      legacySegment: mapToLegacySegment(selectedModel, contextScores),
       answerTags,
     };
 
@@ -347,7 +403,7 @@ const BranchingOnboarding = () => {
       user.id,
       legacyAnswers as any,
       legacyScores,
-      "skill_leverager",
+      mapToLegacySegment(selectedModel, contextScores),
       legacyPathId,
       null,
       [],
