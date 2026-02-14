@@ -25,6 +25,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import {
   ECONOMIC_MODELS,
   CONTEXT_QUESTIONS,
+  DEEP_PROFILE_QUESTIONS,
   getSubSectors,
   getNiches,
   getPlatforms,
@@ -38,6 +39,7 @@ import {
   type BranchQuestion,
   type BranchingProfileResult,
   type ContextScores,
+  type DeepProfileScores,
 } from "@/utils/branchingProfileConfig";
 import type { PathId } from "@/utils/profilingConfig";
 import { getPathTemplate } from "@/utils/pathTemplates";
@@ -49,6 +51,7 @@ import {
 } from "@/services/profileService";
 import { canReprofile, canUseAIPersonalization, type PlanType } from "@/services/planGating";
 import { generateSubSpecialization, type SubSpecialization } from "@/utils/pathSpecialization";
+import { generateJobResearch, type JobResearchResult } from "@/services/jobResearchEngine";
 import { runFullPipeline } from "@/services/trendPipelineScheduler";
 import { hasAnyDataSource } from "@/services/trendDataFetcher";
 import UpgradePrompt from "@/components/UpgradePrompt";
@@ -65,6 +68,7 @@ type StepType =
   | "platform"
   | "context"
   | "sector_specific"
+  | "deep_profile"
   | "processing"
   | "result";
 
@@ -91,6 +95,7 @@ const BranchingOnboarding = () => {
   const [selectedPlatform, setSelectedPlatform] = useState<string | null>(null);
   const [contextAnswers, setContextAnswers] = useState<Record<string, string>>({});
   const [sectorAnswers, setSectorAnswers] = useState<Record<string, string>>({});
+  const [deepProfileAnswers, setDeepProfileAnswers] = useState<Record<string, string>>({});
 
   // ── NAVIGATION ──
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
@@ -178,6 +183,20 @@ const BranchingOnboarding = () => {
       });
     }
 
+    // Step N+: Deep profile questions (Layer 1 — profil bio mendalam)
+    const sectorQCount = selectedModel ? getSectorQuestions(selectedModel, selectedSubSector || undefined).length : 0;
+    if (selectedModel && Object.keys(sectorAnswers).length >= sectorQCount && Object.keys(contextAnswers).length >= CONTEXT_QUESTIONS.length) {
+      DEEP_PROFILE_QUESTIONS.forEach((q) => {
+        allSteps.push({
+          type: "deep_profile",
+          title: q.title,
+          subtitle: q.subtitle,
+          options: q.options,
+          questionId: q.id,
+        });
+      });
+    }
+
     return allSteps;
   }, [selectedModel, selectedSubSector, selectedNiche, selectedPlatform, contextAnswers]);
 
@@ -195,9 +214,10 @@ const BranchingOnboarding = () => {
       case "platform": return selectedPlatform || undefined;
       case "context": return currentStep.questionId ? contextAnswers[currentStep.questionId] : undefined;
       case "sector_specific": return currentStep.questionId ? sectorAnswers[currentStep.questionId] : undefined;
+      case "deep_profile": return currentStep.questionId ? deepProfileAnswers[currentStep.questionId] : undefined;
       default: return undefined;
     }
-  }, [currentStep, selectedModel, selectedSubSector, selectedNiche, selectedPlatform, contextAnswers, sectorAnswers]);
+  }, [currentStep, selectedModel, selectedSubSector, selectedNiche, selectedPlatform, contextAnswers, sectorAnswers, deepProfileAnswers]);
 
   // ── HANDLE SELECT ──
   const handleSelect = useCallback(
@@ -234,6 +254,11 @@ const BranchingOnboarding = () => {
         case "sector_specific":
           if (currentStep.questionId) {
             setSectorAnswers((prev) => ({ ...prev, [currentStep.questionId!]: value }));
+          }
+          break;
+        case "deep_profile":
+          if (currentStep.questionId) {
+            setDeepProfileAnswers((prev) => ({ ...prev, [currentStep.questionId!]: value }));
           }
           break;
       }
@@ -305,6 +330,7 @@ const BranchingOnboarding = () => {
       workflow_id: workflowId,
       ...contextAnswers,
       ...sectorAnswers,
+      ...deepProfileAnswers,
     };
 
     // Build legacy answers for DB — map from branching selections
@@ -377,6 +403,27 @@ const BranchingOnboarding = () => {
       preferred_platform: legacyPlatform,
     };
 
+    // Build deep profile scores
+    const deepExpMap: Record<string, number> = { never: 0, tried_failed: 1, side_project: 2, working_digital: 3, experienced: 4 };
+    const deepStageMap: Record<string, number> = { student: 0, employee: 1, freelancer: 2, unemployed: 1, entrepreneur: 3, stay_home: 1 };
+    const deepLangMap: Record<string, number> = { none: 0, passive: 1, moderate: 2, fluent: 3 };
+    const deepToolsMap: Record<string, number> = { none: 0, basic: 1, intermediate: 2, advanced: 3 };
+    const deepCommitMap: Record<string, number> = { "1_week": 1, "2_weeks": 2, "1_month": 3, "3_months": 4 };
+    const deepIncomeMap: Record<string, number> = { lt500k: 1, "500k-2m": 2, "2m-5m": 3, "5m-15m": 4, gt15m: 5 };
+    const deepLearnMap: Record<string, number> = { video: 1, reading: 2, practice: 3 };
+    const deepChallengeMap: Record<string, number> = { no_direction: 1, no_skill: 2, no_time: 3, no_confidence: 4, tried_failed: 5 };
+
+    const deepProfileScores: DeepProfileScores = {
+      digitalExperience: deepExpMap[deepProfileAnswers.digital_experience] || 0,
+      currentStage: deepStageMap[deepProfileAnswers.current_stage] || 0,
+      languageSkill: deepLangMap[deepProfileAnswers.language_skill] || 0,
+      toolsFamiliarity: deepToolsMap[deepProfileAnswers.tools_familiarity] || 0,
+      weeklyCommitment: deepCommitMap[deepProfileAnswers.weekly_commitment] || 1,
+      incomeTarget: deepIncomeMap[deepProfileAnswers.income_target] || 1,
+      learningStyle: deepLearnMap[deepProfileAnswers.learning_style] || 1,
+      biggestChallenge: deepChallengeMap[deepProfileAnswers.biggest_challenge] || 1,
+    };
+
     const result: BranchingProfileResult = {
       economicModel: selectedModel,
       subSector: selectedSubSector,
@@ -385,6 +432,8 @@ const BranchingOnboarding = () => {
       workflowId,
       contextScores,
       sectorAnswers,
+      deepProfile: deepProfileAnswers,
+      deepProfileScores,
       legacyPathId,
       legacyScores,
       legacySegment: mapToLegacySegment(selectedModel, contextScores),
@@ -440,9 +489,27 @@ const BranchingOnboarding = () => {
     // AI Personalization
     setProcessingStep("AI sedang menganalisis profil kamu...");
 
+    // Run AI personalization + job research in parallel
+    setProcessingStep("AI sedang riset job & opportunity yang tepat...");
+
     await Promise.all([
       generateAIWhyText(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
       generateAINicheSuggestion(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
+      // Layer 2: Job Research — fire-and-forget, save to localStorage for Dashboard
+      generateJobResearch(
+        selectedModel,
+        selectedSubSector,
+        nicheValue,
+        platformValue,
+        contextScores,
+        deepProfileAnswers,
+        sectorAnswers
+      ).then((jobResult) => {
+        if (jobResult) {
+          // Store job research result for Dashboard to consume
+          localStorage.setItem("intent_job_research", JSON.stringify(jobResult));
+        }
+      }).catch((err) => console.warn("[BranchingOnboarding] Job research failed:", err)),
     ]);
 
     // Fire-and-forget: start fetching market data in background
@@ -487,6 +554,7 @@ const BranchingOnboarding = () => {
     setSelectedPlatform(null);
     setContextAnswers({});
     setSectorAnswers({});
+    setDeepProfileAnswers({});
     setProfileResult(null);
     setAiWhyText("");
     setAiNiche("");
@@ -504,6 +572,7 @@ const BranchingOnboarding = () => {
       case "platform": return "Platform";
       case "context": return "Profil";
       case "sector_specific": return "Detail";
+      case "deep_profile": return "Bio Profil";
       default: return "";
     }
   };
@@ -741,8 +810,10 @@ const BranchingOnboarding = () => {
             <div className="mt-8 max-w-xs mx-auto space-y-2">
               {[
                 "Mapping model ekonomi → sub-sektor → niche",
-                "Mencocokkan platform & workflow",
+                "Menganalisis profil mendalam (bio user)",
+                "Riset job & opportunity yang tepat",
                 "AI personalisasi rekomendasi",
+                "Menyusun workspace eksekusi",
               ].map((step, i) => (
                 <motion.div
                   key={i}

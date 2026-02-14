@@ -16,7 +16,7 @@ import {
   CheckCircle2, Circle, ChevronRight, ChevronDown,
   Brain, Sparkles, MessageSquare, Zap, Copy, Check, RefreshCw,
   ExternalLink, BookOpen, Wrench, Layout, Compass, Star,
-  ArrowUpRight, ArrowDownRight, Minus, CalendarCheck,
+  ArrowUpRight, ArrowDownRight, Minus, CalendarCheck, Search,
 } from "lucide-react";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -62,6 +62,7 @@ import {
   type GeneratorType,
   type GeneratorInput,
 } from "@/services/workspaceGenerator";
+import { type JobResearchResult } from "@/services/jobResearchEngine";
 import ContentCalendarView from "@/components/ContentCalendar";
 import TrendIntelligenceDashboard from "@/components/TrendIntelligenceDashboard";
 import { toast } from "sonner";
@@ -95,6 +96,7 @@ function resourceIcon(type: TaskResource["type"]) {
 
 const tabs = [
   { icon: LayoutDashboard, label: "Overview", key: "overview" },
+  { icon: Search, label: "Job Match", key: "job_research" },
   { icon: Map, label: "Roadmap", key: "roadmap" },
   { icon: Zap, label: "Generator", key: "generator" },
   { icon: CalendarCheck, label: "Kalender", key: "calendar" },
@@ -140,6 +142,9 @@ const Dashboard = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const [trendBrief, setTrendBrief] = useState("");
+
+  // Job Research (Layer 2)
+  const [jobResearch, setJobResearch] = useState<JobResearchResult | null>(null);
 
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -203,6 +208,13 @@ const Dashboard = () => {
           }
         }
       }
+      // Load job research from localStorage (saved by BranchingOnboarding)
+      try {
+        const jobResearchStr = localStorage.getItem("intent_job_research");
+        if (jobResearchStr) {
+          setJobResearch(JSON.parse(jobResearchStr));
+        }
+      } catch { /* ignore parse errors */ }
       setLoading(false);
     };
     loadData();
@@ -432,6 +444,79 @@ const Dashboard = () => {
                   </div>
                 )}
 
+                {/* Deep Profile Summary — Layer 1 bio */}
+                {(answerTags.digital_experience || answerTags.current_stage || answerTags.income_target) && (
+                  <div className="border border-border">
+                    <div className="py-3 px-5 border-b border-border">
+                      <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Profil lengkap anda</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border">
+                      {answerTags.current_stage && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Status</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.current_stage.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.digital_experience && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Exp. Digital</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.digital_experience.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.language_skill && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Bahasa</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.language_skill.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.income_target && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Target income</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.income_target.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.tools_familiarity && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Tools</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.tools_familiarity.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.biggest_challenge && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Hambatan</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.biggest_challenge.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.weekly_commitment && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Komitmen</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.weekly_commitment.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                      {answerTags.learning_style && (
+                        <div className="bg-background py-3 px-4">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Belajar</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.learning_style.replace(/_/g, " ")}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Job Match CTA */}
+                {jobResearch && (
+                  <button onClick={() => setActiveTab("job_research")} className="w-full flex items-center justify-between py-4 px-5 border border-foreground/20 hover:border-foreground/30 transition-all group">
+                    <div className="flex items-center gap-3">
+                      <Search className="w-4 h-4 text-muted-foreground" />
+                      <div className="text-left">
+                        <p className="text-xs font-medium text-foreground">{jobResearch.primaryJob?.title || "Job Research Ready"}</p>
+                        <p className="text-[10px] text-muted-foreground/60">Data-driven job match berdasarkan profil lengkap kamu</p>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground transition-all" />
+                  </button>
+                )}
+
                 {/* Market data loading */}
                 {fetchingTrends && !marketFocus && (
                   <div className="py-4 px-5 border border-border flex items-center gap-3">
@@ -557,6 +642,168 @@ const Dashboard = () => {
                       ))}
                     </div>
                   </div>
+                )}
+              </div>
+            )}
+
+            {/* ═══════════════════════════════
+                TAB: JOB RESEARCH (Layer 2)
+            ═══════════════════════════════ */}
+            {activeTab === "job_research" && (
+              <div className="space-y-6">
+                <div className="mb-6">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Layer 2 — Job Research</p>
+                  <h2 className="text-lg font-semibold text-foreground mb-1">Rekomendasi Job & Opportunity</h2>
+                  <p className="text-xs text-muted-foreground/60 max-w-lg leading-relaxed">
+                    Berdasarkan riset dari profil lengkap kamu — bukan saran generik tapi cocok dengan kondisi, skill, dan market kamu.
+                  </p>
+                </div>
+
+                {!jobResearch ? (
+                  <div className="py-12 text-center border border-border">
+                    <Search className="w-8 h-8 text-muted-foreground/30 mx-auto mb-4" />
+                    <p className="text-sm text-muted-foreground/60 mb-2">Belum ada data job research</p>
+                    <p className="text-xs text-muted-foreground/40">Re-profiling untuk generate job research dengan profil mendalam.</p>
+                    <button onClick={handleResetProfile} className="cmd-primary text-xs mt-4">
+                      <RotateCcw className="w-3 h-3" /> Re-profiling
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {/* Profile Analysis */}
+                    {jobResearch.profileAnalysis && (
+                      <div className="py-5 px-5 border border-border">
+                        <div className="flex items-start gap-3">
+                          <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+                          <div>
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-2">Analisis profil → job match</p>
+                            <p className="text-sm text-foreground/80 leading-relaxed">{jobResearch.profileAnalysis}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Market Context */}
+                    {jobResearch.marketContext && (
+                      <div className="py-4 px-5 border border-border/50">
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">Konteks market saat ini</p>
+                        <p className="text-xs text-foreground/60 leading-relaxed">{jobResearch.marketContext}</p>
+                      </div>
+                    )}
+
+                    {/* Trend Keywords */}
+                    {jobResearch.trendKeywords && jobResearch.trendKeywords.length > 0 && (
+                      <div className="flex flex-wrap gap-2 py-3">
+                        {jobResearch.trendKeywords.map((kw, i) => (
+                          <span key={i} className="text-[10px] px-2 py-1 border border-border text-muted-foreground/60">{kw}</span>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Job Cards */}
+                    {[
+                      { job: jobResearch.primaryJob, label: "Rekomendasi utama", tier: "primary" },
+                      { job: jobResearch.secondaryJob, label: "Alternatif", tier: "secondary" },
+                      { job: jobResearch.exploratoryJob, label: "Eksploratif", tier: "exploratory" },
+                    ].map(({ job, label, tier }) => job && (
+                      <div key={tier} className={`border ${tier === "primary" ? "border-foreground/30" : "border-border"}`}>
+                        <div className={`py-3 px-5 border-b ${tier === "primary" ? "border-foreground/20 bg-foreground/5" : "border-border"}`}>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">{label}</p>
+                            {job.demandLevel && (
+                              <span className={`text-[9px] px-2 py-0.5 ${
+                                job.demandLevel === "tinggi" ? "bg-foreground/10 text-foreground/70" :
+                                job.demandLevel === "sedang" ? "bg-muted/20 text-muted-foreground/60" :
+                                "bg-muted/10 text-muted-foreground/40"
+                              }`}>
+                                Demand: {job.demandLevel}
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="text-sm font-semibold text-foreground mt-1">{job.title}</h3>
+                        </div>
+                        <div className="py-4 px-5 space-y-4">
+                          {/* Why this job */}
+                          <div>
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Kenapa cocok untuk kamu</p>
+                            <p className="text-xs text-foreground/70 leading-relaxed">{job.whyThisJob}</p>
+                          </div>
+
+                          {/* Evidence */}
+                          {job.evidence && (
+                            <div>
+                              <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Data & evidence</p>
+                              <p className="text-xs text-foreground/60 leading-relaxed">{job.evidence}</p>
+                            </div>
+                          )}
+
+                          {/* Key metrics */}
+                          <div className="grid grid-cols-2 gap-px bg-border">
+                            <div className="bg-background py-2.5 px-3">
+                              <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Income range</p>
+                              <p className="text-xs text-foreground/70 mt-0.5">{job.incomeRange}</p>
+                            </div>
+                            <div className="bg-background py-2.5 px-3">
+                              <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Waktu ke income pertama</p>
+                              <p className="text-xs text-foreground/70 mt-0.5">{job.timeToFirstIncome}</p>
+                            </div>
+                          </div>
+
+                          {/* Competitive advantage */}
+                          {job.competitiveAdvantage && (
+                            <div>
+                              <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Keunggulan kamu</p>
+                              <p className="text-xs text-foreground/60 leading-relaxed">{job.competitiveAdvantage}</p>
+                            </div>
+                          )}
+
+                          {/* First step */}
+                          <div className="py-3 px-4 border-l-2 border-foreground/20">
+                            <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Langkah pertama — bisa dilakukan HARI INI</p>
+                            <p className="text-xs text-foreground/70 leading-relaxed">{job.firstStep}</p>
+                          </div>
+
+                          {/* Tools & platform */}
+                          <div className="flex flex-wrap gap-2">
+                            {job.requiredTools && job.requiredTools.map((tool, ti) => (
+                              <span key={ti} className="text-[10px] px-2 py-1 border border-border text-muted-foreground/60">
+                                <Wrench className="w-2.5 h-2.5 inline mr-1" />{tool}
+                              </span>
+                            ))}
+                            {job.bestPlatform && (
+                              <span className="text-[10px] px-2 py-1 border border-foreground/20 text-foreground/60">
+                                <Compass className="w-2.5 h-2.5 inline mr-1" />{job.bestPlatform}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Success example */}
+                          {job.successExample && (
+                            <div>
+                              <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Contoh sukses (benchmark)</p>
+                              <p className="text-xs text-muted-foreground/50 leading-relaxed">{job.successExample}</p>
+                            </div>
+                          )}
+
+                          {/* Skill gap & risk */}
+                          <div className="grid grid-cols-2 gap-4">
+                            {job.skillGap && (
+                              <div>
+                                <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Skill gap</p>
+                                <p className="text-[10px] text-muted-foreground/50 leading-relaxed">{job.skillGap}</p>
+                              </div>
+                            )}
+                            {job.riskMitigation && (
+                              <div>
+                                <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Mitigasi risiko</p>
+                                <p className="text-[10px] text-muted-foreground/50 leading-relaxed">{job.riskMitigation}</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
                 )}
               </div>
             )}

@@ -63,6 +63,18 @@ export interface ContextScores {
   audience: number;    // 0-4
 }
 
+/** Deep profile scores — Layer 1 enrichment */
+export interface DeepProfileScores {
+  digitalExperience: number;   // 0-4: pernah kerja digital sebelumnya?
+  currentStage: number;        // 0-3: tahap sekarang (pelajar, karyawan, freelancer, pengusaha)
+  languageSkill: number;       // 0-3: kemampuan bahasa Inggris
+  toolsFamiliarity: number;    // 0-3: kenal tools digital?
+  weeklyCommitment: number;    // 1-4: konsistensi mingguan
+  incomeTarget: number;        // 1-4: target income realistis
+  learningStyle: number;       // 1-3: cara belajar
+  biggestChallenge: number;    // 1-5: hambatan terbesar
+}
+
 // ============================================================================
 // OPTION TYPES
 // ============================================================================
@@ -502,6 +514,114 @@ export const CONTEXT_QUESTIONS: BranchQuestion[] = [
 ];
 
 // ============================================================================
+// DEEP PROFILE QUESTIONS — Layer 1 Enhancement (Profil Bio User yang tajam)
+// Pertanyaan ini menggali lebih dalam tentang KONDISI dan LATAR BELAKANG user
+// ============================================================================
+
+export const DEEP_PROFILE_QUESTIONS: BranchQuestion[] = [
+  {
+    id: "digital_experience",
+    level: 0,
+    title: "Apakah kamu pernah kerja di bidang digital sebelumnya?",
+    subtitle: "Pengalaman kerja digital apapun — freelance, part-time, full-time, project sampingan",
+    options: [
+      { id: "never", emoji: "🆕", label: "Belum pernah sama sekali", subtitle: "Ini pertama kali saya masuk ke dunia digital" },
+      { id: "tried_failed", emoji: "😤", label: "Pernah coba tapi gagal / berhenti", subtitle: "Pernah jualan online, bikin konten, tapi stop" },
+      { id: "side_project", emoji: "🌙", label: "Pernah sebagai sampingan", subtitle: "Pernah freelance / jual produk kecil-kecilan" },
+      { id: "working_digital", emoji: "💼", label: "Sekarang kerja di bidang digital", subtitle: "Saya sudah di industri ini, mau tambah income stream" },
+      { id: "experienced", emoji: "🏆", label: "Sudah berpengalaman & punya portfolio", subtitle: "Pernah dapat bayaran dari kerja digital" },
+    ],
+  },
+  {
+    id: "current_stage",
+    level: 0,
+    title: "Apa status kamu sekarang?",
+    subtitle: "Ini penting untuk menentukan intensitas dan jenis rekomendasi",
+    options: [
+      { id: "student", emoji: "🎓", label: "Pelajar / Mahasiswa", subtitle: "Punya banyak waktu, mau mulai income pertama" },
+      { id: "employee", emoji: "👔", label: "Karyawan / Pekerja kantoran", subtitle: "Mau side income di luar jam kerja" },
+      { id: "freelancer", emoji: "🧑‍💻", label: "Freelancer aktif", subtitle: "Sudah freelance, mau scale / diversifikasi" },
+      { id: "unemployed", emoji: "🔍", label: "Sedang tidak bekerja / cari kerja", subtitle: "Butuh income ASAP" },
+      { id: "entrepreneur", emoji: "🚀", label: "Pengusaha / Punya bisnis sendiri", subtitle: "Mau tambah revenue stream digital" },
+      { id: "stay_home", emoji: "🏠", label: "Ibu rumah tangga / WFH", subtitle: "Cari income dari rumah" },
+    ],
+  },
+  {
+    id: "language_skill",
+    level: 0,
+    title: "Bagaimana kemampuan bahasa Inggris kamu?",
+    subtitle: "Ini membuka atau menutup akses ke market global (Fiverr, Upwork, Medium, dll)",
+    options: [
+      { id: "none", emoji: "🇮🇩", label: "Bahasa Indonesia only", subtitle: "Tidak bisa bahasa Inggris sama sekali" },
+      { id: "passive", emoji: "📖", label: "Pasif — bisa baca & ngerti, tidak bisa nulis", subtitle: "Consume English content tapi tidak produce" },
+      { id: "moderate", emoji: "💬", label: "Cukup — bisa nulis & komunikasi dasar", subtitle: "Bisa kirim email, chat, tapi belum fluent" },
+      { id: "fluent", emoji: "🌍", label: "Lancar — bisa kerja dalam bahasa Inggris", subtitle: "Bisa nulis, presentasi, handle client global" },
+    ],
+  },
+  {
+    id: "tools_familiarity",
+    level: 0,
+    title: "Tools digital apa yang sudah kamu kuasai?",
+    subtitle: "Semakin banyak tools yang dikuasai, semakin cepat bisa mulai",
+    options: [
+      { id: "none", emoji: "🚫", label: "Belum familiar dengan tools apapun", subtitle: "Hanya pakai HP dan socmed biasa" },
+      { id: "basic", emoji: "📱", label: "Dasar — Canva, Google Docs, Notion", subtitle: "Tools gratis untuk pemula" },
+      { id: "intermediate", emoji: "🔧", label: "Menengah — Figma, Premiere, WordPress, Mailchimp", subtitle: "Bisa pakai beberapa tools profesional" },
+      { id: "advanced", emoji: "⚡", label: "Advanced — bisa coding, API, automation", subtitle: "Zapier, Make, Python, Git, dll" },
+    ],
+  },
+  {
+    id: "weekly_commitment",
+    level: 0,
+    title: "Berapa minggu kamu bisa komitmen konsisten?",
+    subtitle: "Jujur saja — konsistensi menentukan segalanya",
+    options: [
+      { id: "1_week", emoji: "⚡", label: "1 minggu — coba dulu", subtitle: "Belum yakin mau lanjut, test air" },
+      { id: "2_weeks", emoji: "📅", label: "2 minggu — serius tapi belum total", subtitle: "Mau lihat hasil awal dulu" },
+      { id: "1_month", emoji: "📆", label: "1 bulan — komitmen penuh", subtitle: "Siap dedikasi 30 hari non-stop" },
+      { id: "3_months", emoji: "🏔️", label: "3 bulan+ — long game", subtitle: "Siap build sesuatu yang sustainable" },
+    ],
+  },
+  {
+    id: "income_target",
+    level: 0,
+    title: "Target income realistis per bulan dari jalur ini?",
+    subtitle: "Jangan terlalu rendah (tidak motivasi) atau terlalu tinggi (tidak realistis)",
+    options: [
+      { id: "lt500k", emoji: "🪙", label: "< Rp 500.000", subtitle: "Uang jajan, tambahan kecil" },
+      { id: "500k-2m", emoji: "💵", label: "Rp 500.000 – 2 juta", subtitle: "Lumayan untuk sampingan" },
+      { id: "2m-5m", emoji: "💰", label: "Rp 2 juta – 5 juta", subtitle: "Setara part-time job" },
+      { id: "5m-15m", emoji: "🏆", label: "Rp 5 juta – 15 juta", subtitle: "Bisa jadi income utama" },
+      { id: "gt15m", emoji: "🚀", label: "> Rp 15 juta", subtitle: "Full-time income digital" },
+    ],
+  },
+  {
+    id: "learning_style",
+    level: 0,
+    title: "Cara belajar yang paling efektif untuk kamu?",
+    subtitle: "Ini menentukan format guide dan resource yang diberikan",
+    options: [
+      { id: "video", emoji: "🎬", label: "Nonton video tutorial", subtitle: "YouTube, course, video explainer" },
+      { id: "reading", emoji: "📖", label: "Baca artikel / dokumentasi", subtitle: "Blog post, guide, ebook" },
+      { id: "practice", emoji: "🛠️", label: "Langsung praktek & belajar dari error", subtitle: "Learning by doing, trial & error" },
+    ],
+  },
+  {
+    id: "biggest_challenge",
+    level: 0,
+    title: "Apa hambatan TERBESAR yang kamu rasakan sekarang?",
+    subtitle: "Jawaban ini menentukan pendekatan coaching yang diberikan",
+    options: [
+      { id: "no_direction", emoji: "🧭", label: "Tidak tahu harus mulai dari mana", subtitle: "Bingung, terlalu banyak opsi" },
+      { id: "no_skill", emoji: "🎯", label: "Merasa belum punya skill yang bisa dijual", subtitle: "Tidak yakin skill saya cukup" },
+      { id: "no_time", emoji: "⏰", label: "Waktu sangat terbatas", subtitle: "Kerja full-time, tanggung jawab keluarga" },
+      { id: "no_confidence", emoji: "😰", label: "Kurang percaya diri / takut gagal", subtitle: "Overthinking, perfeksionis, takut di-judge" },
+      { id: "tried_failed", emoji: "😤", label: "Sudah pernah coba tapi selalu gagal", subtitle: "Butuh pendekatan yang berbeda" },
+    ],
+  },
+];
+
+// ============================================================================
 // SECTOR-SPECIFIC QUESTIONS — Different per Economic Model
 // ============================================================================
 
@@ -879,6 +999,9 @@ export interface BranchingProfileResult {
   workflowId: string;
   contextScores: ContextScores;
   sectorAnswers: Record<string, string>;
+  // Deep profile — Layer 1 enrichment
+  deepProfile: Record<string, string>;
+  deepProfileScores: DeepProfileScores;
   // Legacy compat
   legacyPathId: PathId;
   legacyScores: ProfileScores;

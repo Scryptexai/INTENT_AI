@@ -208,7 +208,7 @@ export async function generateAIWhyText(
   // Generate sub-specialization for richer context
   const subSpec = generateSubSpecialization(path.id as PathId, scores, {} as Record<ProfilingQuestionId, string>);
 
-  const prompt = `Kamu adalah AI Workflow Architect untuk platform IntentAI. User sudah menyelesaikan profiling mendalam (11 pertanyaan) dan sistem rule-based telah memilih jalur "${path.title}" sebagai jalur utama mereka.
+  const prompt = `Kamu adalah AI Workflow Architect untuk platform IntentAI. User sudah menyelesaikan profiling mendalam dan sistem rule-based telah memilih jalur "${path.title}" sebagai jalur utama mereka.
 
 SUB-SPESIALISASI YANG DIHASILKAN:
 - Title: ${subSpec.title}
@@ -233,12 +233,14 @@ MAPPING SKOR:
 - preferred_platform: 1=TikTok/Reels, 2=YouTube, 3=Twitter/X, 4=LinkedIn, 5=Marketplace, 6=Website sendiri
 
 TUGAS:
-Tulis penjelasan 4-5 kalimat tentang KENAPA sub-spesialisasi "${subSpec.title}" paling cocok untuk user ini.
+Tulis penjelasan 5-7 kalimat tentang KENAPA sub-spesialisasi "${subSpec.title}" paling cocok untuk user ini.
 - Harus SPESIFIK merujuk profil mereka — sebutkan gaya kerja, skill, market interest, platform pilihan, dan kondisi mereka
 - Jelaskan koneksi logis antara profil → sub-spesialisasi → potensi income
 - Sebutkan keuntungan kompetitif user berdasarkan kombinasi UNIK skill + market + platform mereka
-- Berikan 1 insight spesifik yang membuat user merasa "ini memang untuk saya"
-- Bahasa Indonesia, nada percaya diri tapi realistis
+- Berikan 1-2 insight spesifik yang membuat user merasa "ini memang untuk saya"
+- Jika user belum punya pengalaman digital, acknowledge itu dan jelaskan kenapa jalur ini tetap bisa dimulai
+- Jika user punya hambatan (waktu terbatas, takut gagal, dll), address itu secara langsung
+- Bahasa Indonesia natural, nada percaya diri tapi realistis
 - JANGAN mulai dengan "Berdasarkan profil kamu" — langsung ke insight tajam
 
 OUTPUT: Hanya teks penjelasan. Tanpa heading, tanpa markdown.`;
@@ -254,7 +256,7 @@ OUTPUT: Hanya teks penjelasan. Tanpa heading, tanpa markdown.`;
       },
       body: JSON.stringify({
         model: "claude-3-sonnet-20240229",
-        max_tokens: 300,
+        max_tokens: 500,
         messages: [{ role: "user", content: prompt }],
       }),
     });
@@ -545,7 +547,7 @@ FORMAT: 4 paragraf pendek. Bahasa Indonesia. Tanpa heading/markdown.`;
       },
       body: JSON.stringify({
         model: "claude-3-sonnet-20240229",
-        max_tokens: 300,
+        max_tokens: 600,
         messages: [{ role: "user", content: prompt }],
       }),
     });
