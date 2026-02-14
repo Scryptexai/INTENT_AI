@@ -568,18 +568,106 @@ const Dashboard = () => {
                   </div>
                 )}
 
-                {/* Job Match CTA — riset pekerjaan dari data internet */}
+                {/* ── JOB MATCH SUMMARY — structured overview ── */}
                 {jobResearch && (
-                  <button onClick={() => setActiveTab("job_research")} className="w-full flex items-center justify-between py-4 px-5 border border-foreground/20 hover:border-foreground/30 transition-all group">
-                    <div className="flex items-center gap-3">
-                      <Search className="w-4 h-4 text-muted-foreground" />
-                      <div className="text-left">
-                        <p className="text-xs font-medium text-foreground">{jobResearch.primaryJob?.title || "Job Research Ready"}</p>
-                        <p className="text-[10px] text-muted-foreground/60">Hasil riset dari Google Trends, YouTube, TikTok & Google Search — disesuaikan profil kamu</p>
+                  <div className="border border-border">
+                    {/* Section header */}
+                    <div className="py-4 px-5 border-b border-border">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Hasil riset pekerjaan & peluang</p>
                       </div>
+                      <p className="text-xs text-muted-foreground/40 leading-relaxed">
+                        Rekomendasi di bawah bukan saran generik. Sistem menganalisis data profil kamu
+                        (status: {decodeLabel("current_stage", answerTags.current_stage || "employee")},
+                        skill: {decodeLabel("tools_familiarity", answerTags.tools_familiarity || "basic")},
+                        hambatan: {decodeLabel("biggest_challenge", answerTags.biggest_challenge || "no_direction")})
+                        dan mencocokkan dengan data real dari Google Trends, YouTube, TikTok, dan Google Search
+                        untuk menemukan peluang yang realistis sesuai kondisi kamu.
+                      </p>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground transition-all" />
-                  </button>
+
+                    {/* 3 Job Cards — inline in overview */}
+                    {[
+                      { job: jobResearch.primaryJob, tier: "primary", tierLabel: "Rekomendasi utama", tierDesc: "Paling cocok dengan kondisi & skill kamu saat ini" },
+                      { job: jobResearch.secondaryJob, tier: "secondary", tierLabel: "Alternatif", tierDesc: "Opsi kedua jika rekomendasi utama belum terasa pas" },
+                      { job: jobResearch.exploratoryJob, tier: "exploratory", tierLabel: "Eksploratif", tierDesc: "Peluang baru yang bisa dieksplorasi sambil jalan" },
+                    ].map(({ job, tier, tierLabel, tierDesc }) => job && (
+                      <div key={tier} className={`py-5 px-5 ${tier !== "exploratory" ? "border-b border-border/50" : ""}`}>
+                        {/* Tier label */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <p className={`text-[9px] uppercase tracking-[0.15em] ${tier === "primary" ? "text-foreground/50" : "text-muted-foreground/40"}`}>
+                              {tierLabel}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground/30">{tierDesc}</p>
+                          </div>
+                          {job.demandLevel && (
+                            <span className={`text-[9px] px-2 py-0.5 shrink-0 ${
+                              job.demandLevel === "tinggi" ? "bg-foreground/10 text-foreground/70" :
+                              job.demandLevel === "sedang" ? "bg-muted/20 text-muted-foreground/60" :
+                              "bg-muted/10 text-muted-foreground/40"
+                            }`}>
+                              Demand: {job.demandLevel}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Job title */}
+                        <h3 className={`text-sm font-semibold mb-2 ${tier === "primary" ? "text-foreground" : "text-foreground/80"}`}>
+                          {job.title}
+                        </h3>
+
+                        {/* WHY — kenapa cocok */}
+                        <div className="mb-3">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Kenapa cocok untuk kamu</p>
+                          <p className="text-xs text-foreground/70 leading-relaxed">{job.whyThisJob}</p>
+                        </div>
+
+                        {/* EVIDENCE — berdasarkan apa */}
+                        {job.evidence && (
+                          <div className="mb-3">
+                            <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Berdasarkan data</p>
+                            <p className="text-xs text-muted-foreground/60 leading-relaxed">{job.evidence}</p>
+                          </div>
+                        )}
+
+                        {/* Key numbers — income + timeline */}
+                        <div className="grid grid-cols-2 gap-px bg-border mb-3">
+                          <div className="bg-background py-2 px-3">
+                            <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Estimasi income</p>
+                            <p className="text-xs text-foreground/70 mt-0.5">{job.incomeRange}</p>
+                          </div>
+                          <div className="bg-background py-2 px-3">
+                            <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Waktu ke income pertama</p>
+                            <p className="text-xs text-foreground/70 mt-0.5">{job.timeToFirstIncome}</p>
+                          </div>
+                        </div>
+
+                        {/* Competitive advantage */}
+                        {job.competitiveAdvantage && (
+                          <div className="mb-3">
+                            <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Keunggulan kamu di bidang ini</p>
+                            <p className="text-xs text-muted-foreground/60 leading-relaxed">{job.competitiveAdvantage}</p>
+                          </div>
+                        )}
+
+                        {/* First step — actionable */}
+                        <div className="py-2.5 px-3 border-l-2 border-foreground/15 bg-muted/5">
+                          <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Langkah pertama yang bisa dilakukan hari ini</p>
+                          <p className="text-xs text-foreground/70 leading-relaxed">{job.firstStep}</p>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* CTA to full detail */}
+                    <button onClick={() => setActiveTab("job_research")} className="w-full flex items-center justify-center gap-2 py-3 border-t border-border hover:bg-muted/5 transition-colors group">
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 group-hover:text-foreground transition-colors">
+                        Lihat detail lengkap (tools, skill gap, contoh sukses, mitigasi risiko)
+                      </p>
+                      <ChevronRight className="w-3 h-3 text-muted-foreground/30 group-hover:text-foreground transition-colors" />
+                    </button>
+                  </div>
                 )}
 
                 {/* Market data loading */}
