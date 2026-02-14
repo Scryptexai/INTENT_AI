@@ -810,10 +810,10 @@ const BranchingOnboarding = () => {
             </div>
 
             <h2 className="text-2xl font-black mb-3">
-              Membangun Workflow Kamu...
+              Membangun Workspace Kamu...
             </h2>
             <p className="text-muted-foreground/70 text-sm mb-6">
-              AI sedang menyusun rekomendasi berdasarkan profil branching kamu
+              AI sedang menganalisis {Object.keys(deepProfileAnswers).length + Object.keys(contextAnswers).length + Object.keys(sectorAnswers).length} data profil kamu + riset data internet untuk menyusun rekomendasi yang 100% personal
             </p>
 
             <div className="flex items-center justify-center gap-2 text-xs text-primary/60">
@@ -823,11 +823,11 @@ const BranchingOnboarding = () => {
 
             <div className="mt-8 max-w-xs mx-auto space-y-2">
               {[
-                "Mapping model ekonomi → sub-sektor → niche",
-                "Menganalisis profil mendalam (bio user)",
-                "Riset job & opportunity yang tepat",
-                "AI personalisasi rekomendasi",
-                "Menyusun workspace eksekusi",
+                "Menyimpan profil (model ekonomi → sub-sektor → niche → platform)",
+                "Menganalisis 8 data bio (skill, kondisi, hambatan, target, dll)",
+                "Riset job & peluang dari Google Trends, YouTube, TikTok, Google Search",
+                "AI menyusun rekomendasi personal berdasarkan data kamu + market",
+                "Menyiapkan workspace (roadmap, generator, kalender, checkpoint)",
               ].map((step, i) => (
                 <motion.div
                   key={i}

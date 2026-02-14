@@ -3,15 +3,22 @@
  * =========================================================
  * BUKAN rekomendasi generik. Ini sistem riset yang:
  * 1. Menganalisis profil user secara mendalam (dari Layer 1)
- * 2. Mencocokan dengan job/opportunity yang TEPAT berdasarkan data
- * 3. Memberikan alasan berbasis evidence: trend, success rate, competitor analysis
- * 4. Setiap rekomendasi UNIK — tidak ada yang sama antar user
+ * 2. FETCH DATA REAL dari internet (Google Trends, YouTube, TikTok, Google Search)
+ * 3. Mencocokan dengan job/opportunity yang TEPAT berdasarkan data REAL
+ * 4. Memberikan alasan berbasis evidence: trend, success rate, competitor analysis
+ * 5. Setiap rekomendasi UNIK — tidak ada yang sama antar user
  *
  * Architecture:
- *   Deep Profile + Context → AI Research Prompt → Structured Job Match
- *   Setiap output harus: presisi, data-backed, actionable
+ *   Deep Profile + Context → REAL API Data → AI Research Prompt → Structured Job Match
+ *   Setiap output harus: presisi, data-backed dari internet, actionable
  *
- * Trust dibangun di layer ini.
+ * APIs Used:
+ *   - SerpAPI → Google Trends (search interest, rising queries)
+ *   - YouTube Data API v3 → Video count, avg views, competition density
+ *   - RapidAPI → TikTok engagement, IG market signal
+ *   - Google Custom Search → Real job listings, salary data, market articles
+ *
+ * Trust dibangun di layer ini — karena data REAL, bukan halusinasi AI.
  */
 
 import type { ContextScores, DeepProfileScores, EconomicModelId } from "@/utils/branchingProfileConfig";
@@ -73,6 +80,46 @@ export interface JobResearchResult {
 
 const AI_API_KEY = import.meta.env.VITE_AI_API_KEY || "";
 const AI_BASE_URL = import.meta.env.VITE_AI_BASE_URL || "https://api.z.ai/api/anthropic/v1";
+const SERPAPI_KEY = import.meta.env.VITE_SERPAPI_KEY || "";
+const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || "";
+const RAPIDAPI_KEY = import.meta.env.VITE_RAPIDAPI_KEY || "";
+const GOOGLE_CSE_KEY = import.meta.env.VITE_GOOGLE_CSE_API_KEY || "";
+const GOOGLE_CSE_CX = import.meta.env.VITE_GOOGLE_CSE_CX || "";
+
+// ============================================================================
+// REAL MARKET DATA TYPES — Data fetched from internet APIs
+// ============================================================================
+
+interface RealMarketIntel {
+  // Google Trends
+  googleTrendsInterest: number; // 0-100
+  googleTrendDirection: "rising" | "stable" | "declining";
+  risingQueries: string[];
+  relatedTopics: string[];
+
+  // YouTube
+  youtubeVideoCount: number;
+  youtubeAvgViews: number;
+  youtubeTopChannels: string[];
+  youtubeCompetitionLevel: string;
+
+  // TikTok
+  tiktokAvgViews: number;
+  tiktokEngagementRate: string;
+  tiktokSignal: string;
+
+  // Instagram
+  instagramSignal: string;
+
+  // Google Search — real articles, job listings
+  googleSearchResults: string[];
+  jobListingSnippets: string[];
+  salaryDataSnippets: string[];
+
+  // Meta
+  fetchedAt: string;
+  dataQuality: "high" | "medium" | "low";
+}
 
 // ============================================================================
 // LABEL DECODERS
@@ -163,7 +210,7 @@ const RISK_LABELS: Record<string, string> = {
 };
 
 // ============================================================================
-// MAIN ENGINE: Generate Job Research
+// MAIN ENGINE: Generate Job Research — NOW WITH REAL DATA
 // ============================================================================
 
 export async function generateJobResearch(
@@ -177,11 +224,24 @@ export async function generateJobResearch(
 ): Promise<JobResearchResult | null> {
   if (!AI_API_KEY) return null;
 
+  // ── STEP 1: Fetch REAL market data from internet APIs ──
+  console.log("[JobResearch] Fetching real market data from APIs...");
+  const marketIntel = await fetchAllMarketIntel(niche, subSector, platform, economicModel);
+  console.log("[JobResearch] Market intel fetched:", {
+    trends: marketIntel.googleTrendsInterest,
+    youtube: marketIntel.youtubeVideoCount,
+    tiktok: marketIntel.tiktokSignal ? "yes" : "no",
+    searchResults: marketIntel.googleSearchResults.length,
+    quality: marketIntel.dataQuality,
+  });
+
+  // ── STEP 2: Build AI prompt WITH real data injected ──
   const prompt = buildJobResearchPrompt(
     economicModel, subSector, niche, platform,
-    contextScores, deepProfile, sectorAnswers
+    contextScores, deepProfile, sectorAnswers, marketIntel
   );
 
+  // ── STEP 3: Call AI with real data context ──
   try {
     const response = await fetch(`${AI_BASE_URL}/messages`, {
       method: "POST",
@@ -203,7 +263,6 @@ export async function generateJobResearch(
     const data = await response.json();
     const rawOutput = data.content?.[0]?.text || "";
 
-    // Parse JSON response
     const jsonStr = rawOutput
       .replace(/```json\n?/g, "")
       .replace(/```\n?/g, "")
@@ -222,20 +281,22 @@ export async function generateJobResearch(
 // SYSTEM PROMPT — The brain of Layer 2
 // ============================================================================
 
-const JOB_RESEARCH_SYSTEM_PROMPT = `Kamu adalah Job Research Analyst untuk platform IntentAI. Tugas kamu BUKAN memberikan saran generik — tapi melakukan RISET MENDALAM dan memberikan rekomendasi job/opportunity yang PRESISI berdasarkan profil user.
+const JOB_RESEARCH_SYSTEM_PROMPT = `Kamu adalah Job Research Analyst untuk platform IntentAI. Tugas kamu BUKAN memberikan saran generik — tapi melakukan RISET MENDALAM dan memberikan rekomendasi job/opportunity yang PRESISI berdasarkan profil user DAN DATA MARKET REAL yang sudah di-fetch dari internet.
 
 ATURAN FUNDAMENTAL:
 1. SETIAP rekomendasi HARUS spesifik dan berbeda — tidak boleh template/generic
-2. Hubungkan SETIAP rekomendasi ke data nyata: platform demand, trend 2024-2025, success rate orang lain
-3. Sebutkan CONTOH NYATA orang/brand yang sukses di job tersebut sebagai benchmark
-4. Income estimate HARUS realistis berdasarkan: skill level, experience, market rate aktual
+2. GUNAKAN DATA REAL yang diberikan (Google Trends, YouTube stats, TikTok engagement, Google Search results) — WAJIB reference data ini dalam evidence
+3. Sebutkan ANGKA NYATA dari data yang diberikan: search interest score, video count, avg views, rising queries
+4. Income estimate HARUS realistis berdasarkan: skill level, experience, market rate dari data real
 5. JANGAN rekomendasikan sesuatu yang tidak cocok dengan KONDISI user (waktu, modal, skill, bahasa)
-6. Setiap output harus UNIK — berdasarkan kombinasi profil user yang berbeda
+6. Setiap output harus UNIK — berdasarkan kombinasi profil user + data market yang berbeda
+7. Jika ada job listing snippets dari Google Search, gunakan untuk income estimate dan demand validation
 
 PRINSIP:
-- Trust dibangun dari PRESISI, bukan dari janji
-- Lebih baik 1 rekomendasi tajam daripada 5 rekomendasi generic
-- Setiap claim harus bisa di-verify user
+- Trust dibangun dari DATA REAL + PRESISI, bukan dari janji
+- Setiap claim HARUS di-back oleh data yang disediakan
+- Jika data menunjukkan trend declining, JUJUR bilang dan sarankan pivot
+- Jika data menunjukkan niche terlalu crowded, bilang jujur dan cari angle
 - Bahasa Indonesia natural, tanpa buzzword kosong
 
 FORMAT OUTPUT: JSON sesuai schema yang diminta. Langsung output JSON, tanpa wrapper markdown.`;
@@ -251,7 +312,8 @@ function buildJobResearchPrompt(
   platform: string,
   ctx: ContextScores,
   deepProfile: Record<string, string>,
-  sectorAnswers: Record<string, string>
+  sectorAnswers: Record<string, string>,
+  market: RealMarketIntel
 ): string {
   const timeLabels = ["", "< 1 jam/hari", "1-2 jam/hari", "3-4 jam/hari", "> 4 jam/hari"];
   const capitalLabels = ["$0 — tanpa modal", "< $50", "$50-200", "$200-500"];
@@ -315,30 +377,97 @@ Hambatan terbesar: ${CHALLENGE_LABELS[deepProfile.biggest_challenge] || 'unknown
     sections.push(`== CONSTRAINTS PENTING ==\n${constraints.join("\n")}`);
   }
 
-  // Section 7: Task
-  sections.push(`== TUGAS ==
-Berdasarkan SEMUA data di atas, lakukan RISET JOB/OPPORTUNITY dan berikan 3 rekomendasi:
+  // Section 7: REAL MARKET DATA dari internet (bukan halusinasi)
+  const marketLines: string[] = [];
+  marketLines.push(`== DATA MARKET REAL (dari internet — bukan perkiraan) ==`);
+  marketLines.push(`Waktu fetch: ${market.fetchedAt}`);
+  marketLines.push(`Kualitas data: ${market.dataQuality}`);
+  marketLines.push(``);
 
-1. PRIMARY JOB — paling cocok dengan kondisi & skill user saat ini
-2. SECONDARY JOB — alternatif yang sedikit berbeda tapi masih feasible
-3. EXPLORATORY JOB — opsi yang lebih experimental, higher upside tapi butuh effort lebih
+  // Google Trends
+  marketLines.push(`--- GOOGLE TRENDS (SerpAPI) ---`);
+  marketLines.push(`Search interest score: ${market.googleTrendsInterest}/100`);
+  marketLines.push(`Trend direction: ${market.googleTrendDirection.toUpperCase()}`);
+  if (market.risingQueries.length > 0) {
+    marketLines.push(`Rising queries: ${market.risingQueries.join(", ")}`);
+  }
+  if (market.relatedTopics.length > 0) {
+    marketLines.push(`Related topics: ${market.relatedTopics.join(", ")}`);
+  }
+
+  // YouTube
+  marketLines.push(``);
+  marketLines.push(`--- YOUTUBE DATA (API v3) ---`);
+  marketLines.push(`Total video count for keyword: ${market.youtubeVideoCount.toLocaleString()}`);
+  marketLines.push(`Average views top 10 video: ${market.youtubeAvgViews.toLocaleString()}`);
+  marketLines.push(`Competition level: ${market.youtubeCompetitionLevel}`);
+  if (market.youtubeTopChannels.length > 0) {
+    marketLines.push(`Top channels: ${market.youtubeTopChannels.join(", ")}`);
+  }
+
+  // TikTok
+  if (market.tiktokSignal) {
+    marketLines.push(``);
+    marketLines.push(`--- TIKTOK (RapidAPI) ---`);
+    marketLines.push(`${market.tiktokSignal}`);
+    if (market.tiktokAvgViews > 0) marketLines.push(`Average views: ${market.tiktokAvgViews.toLocaleString()}`);
+    if (market.tiktokEngagementRate !== "0") marketLines.push(`Engagement rate: ${market.tiktokEngagementRate}%`);
+  }
+
+  // Instagram
+  if (market.instagramSignal) {
+    marketLines.push(``);
+    marketLines.push(`--- INSTAGRAM (RapidAPI) ---`);
+    marketLines.push(`${market.instagramSignal}`);
+  }
+
+  // Google Search — job listings & salary
+  if (market.googleSearchResults.length > 0) {
+    marketLines.push(``);
+    marketLines.push(`--- GOOGLE SEARCH RESULTS (real listings) ---`);
+    market.googleSearchResults.forEach((r, i) => {
+      marketLines.push(`${i + 1}. ${r}`);
+    });
+  }
+  if (market.jobListingSnippets.length > 0) {
+    marketLines.push(``);
+    marketLines.push(`--- JOB LISTINGS FOUND ---`);
+    market.jobListingSnippets.forEach((s) => marketLines.push(`• ${s}`));
+  }
+  if (market.salaryDataSnippets.length > 0) {
+    marketLines.push(``);
+    marketLines.push(`--- SALARY/RATE DATA ---`);
+    market.salaryDataSnippets.forEach((s) => marketLines.push(`• ${s}`));
+  }
+
+  sections.push(marketLines.join("\n"));
+
+  // Section 8: Task
+  sections.push(`== TUGAS ==
+Berdasarkan PROFIL USER + DATA MARKET REAL di atas, berikan 3 rekomendasi job/opportunity:
+
+PENTING: Gunakan DATA REAL yang sudah di-fetch (Google Trends score, YouTube stats, TikTok engagement, job listings) sebagai DASAR rekomendasi. SETIAP evidence HARUS reference data real di atas — BUKAN data yang kamu tahu dari training.
+
+1. PRIMARY JOB — paling cocok dengan kondisi user + data market menunjukkan demand
+2. SECONDARY JOB — alternatif berdasarkan rising queries / related topics dari Google Trends
+3. EXPLORATORY JOB — opsi based on gap di market (low competition tapi ada demand)
 
 Untuk SETIAP job:
 - Title harus SANGAT SPESIFIK (bukan "Freelancer" tapi misalnya "AI-Assisted SEO Content Writer untuk SaaS companies via Upwork")
-- whyThisJob: hubungkan ke profil USER INI secara spesifik — sebutkan kondisi, skill, platform mereka
-- evidence: data real — platform demand, job listing count, market rate, growth trend 2024-2025
-- incomeRange: realistis berdasarkan skill level user — jangan oversell
+- whyThisJob: hubungkan ke profil USER + data market real — sebutkan search interest, trend direction, competition level
+- evidence: WAJIB sebutkan angka dari data real: "Google Trends interest 73/100, rising", "YouTube avg views 45K, competition sedang", "Rising query: X", dll
+- incomeRange: realistis berdasarkan skill level + salary data dari Google Search jika ada
 - requiredTools: tools KONKRET yang perlu dikuasai
-- firstStep: 1 langkah SANGAT spesifik yang bisa dilakukan HARI INI (bukan "buat portfolio" tapi "buat 3 sample X di Y tool dan post di Z")
-- successExample: nama orang/brand/channel yang sukses di job ini — bisa di-research user
-- riskMitigation: apa yang bisa salah dan bagaimana handle-nya
+- firstStep: 1 langkah SANGAT spesifik yang bisa dilakukan HARI INI
+- successExample: nama orang/brand/channel REAL — jika ada dari YouTube top channels, sebutkan
+- riskMitigation: apa yang bisa salah dan bagaimana handle-nya, based on market data
 - skillGap: apa yang perlu dipelajari dan berapa lama
-- competitiveAdvantage: keunggulan user INI dibanding orang lain
+- competitiveAdvantage: keunggulan user INI based on data (low competition = advantage, rising trend = timing advantage, dll)
 
 TAMBAHAN:
-- profileAnalysis: 3-4 kalimat analisis tajam — hubungkan profil → job match
-- trendKeywords: 5-8 kata kunci trend yang relevan untuk riset lanjutan
-- marketContext: 2-3 kalimat tentang kondisi market saat ini yang relevan
+- profileAnalysis: 3-4 kalimat analisis tajam — hubungkan profil → market data → job match
+- trendKeywords: ambil dari rising queries + related topics yang sudah di-fetch
+- marketContext: 2-3 kalimat tentang kondisi market BERDASARKAN data real (Google Trends direction, YouTube competition, TikTok engagement)
 
 FORMAT OUTPUT: JSON sesuai schema JobResearchResult. Langsung output JSON.`);
 
@@ -438,4 +567,359 @@ Bahasa Indonesia natural. Tanpa heading.`;
   } catch {
     return "";
   }
+}
+
+// ============================================================================
+// REAL MARKET DATA FETCHING — Fetch from ALL available APIs
+// ============================================================================
+
+async function fetchAllMarketIntel(
+  niche: string,
+  subSector: string,
+  platform: string,
+  economicModel: string
+): Promise<RealMarketIntel> {
+  const intel: RealMarketIntel = {
+    googleTrendsInterest: 0,
+    googleTrendDirection: "stable",
+    risingQueries: [],
+    relatedTopics: [],
+    youtubeVideoCount: 0,
+    youtubeAvgViews: 0,
+    youtubeTopChannels: [],
+    youtubeCompetitionLevel: "unknown",
+    tiktokAvgViews: 0,
+    tiktokEngagementRate: "0",
+    tiktokSignal: "",
+    instagramSignal: "",
+    googleSearchResults: [],
+    jobListingSnippets: [],
+    salaryDataSnippets: [],
+    fetchedAt: new Date().toISOString(),
+    dataQuality: "low",
+  };
+
+  const keyword = niche.replace(/_/g, " ");
+  const jobKeyword = `${keyword} ${economicModel.replace(/_/g, " ")}`;
+  let sourcesLoaded = 0;
+
+  // Run ALL API calls in parallel
+  const promises: Promise<void>[] = [];
+
+  // 1. Google Trends via SerpAPI
+  if (SERPAPI_KEY) {
+    promises.push(
+      fetchJobGoogleTrends(keyword, intel).then(() => { sourcesLoaded++; }).catch((e) => console.warn("[JobResearch] Google Trends failed:", e))
+    );
+  }
+
+  // 2. YouTube Data API v3
+  if (YOUTUBE_API_KEY) {
+    promises.push(
+      fetchJobYouTubeData(keyword, intel).then(() => { sourcesLoaded++; }).catch((e) => console.warn("[JobResearch] YouTube failed:", e))
+    );
+  }
+
+  // 3. TikTok via RapidAPI
+  if (RAPIDAPI_KEY) {
+    promises.push(
+      fetchJobTikTokData(keyword, intel).then(() => { sourcesLoaded++; }).catch((e) => console.warn("[JobResearch] TikTok failed:", e))
+    );
+    // 4. Instagram via RapidAPI
+    promises.push(
+      fetchJobInstagramData(keyword, intel).then(() => { sourcesLoaded++; }).catch((e) => console.warn("[JobResearch] Instagram failed:", e))
+    );
+  }
+
+  // 5. Google Custom Search — job listings & salary data
+  if (GOOGLE_CSE_KEY && GOOGLE_CSE_CX) {
+    promises.push(
+      fetchJobGoogleSearch(jobKeyword, platform, intel).then(() => { sourcesLoaded++; }).catch((e) => console.warn("[JobResearch] Google Search failed:", e))
+    );
+  }
+
+  await Promise.allSettled(promises);
+
+  // Determine data quality
+  intel.dataQuality = sourcesLoaded >= 3 ? "high" : sourcesLoaded >= 1 ? "medium" : "low";
+
+  return intel;
+}
+
+// ── Google Trends via SerpAPI ──
+async function fetchJobGoogleTrends(keyword: string, intel: RealMarketIntel): Promise<void> {
+  const url = new URL("https://serpapi.com/search.json");
+  url.searchParams.set("engine", "google_trends");
+  url.searchParams.set("q", keyword);
+  url.searchParams.set("geo", "ID");
+  url.searchParams.set("data_type", "TIMESERIES");
+  url.searchParams.set("date", "today 3-m");
+  url.searchParams.set("api_key", SERPAPI_KEY);
+
+  const resp = await fetch(url.toString());
+  if (!resp.ok) return;
+  const data = await resp.json();
+
+  // Interest over time
+  const timeline = data.interest_over_time?.timeline_data;
+  if (timeline && timeline.length > 0) {
+    const values = timeline.map((d: any) => d.values?.[0]?.extracted_value || 0);
+    const recent = values.slice(-4);
+    const older = values.slice(-8, -4);
+    const recentAvg = recent.reduce((a: number, b: number) => a + b, 0) / recent.length;
+    const olderAvg = older.length > 0 ? older.reduce((a: number, b: number) => a + b, 0) / older.length : recentAvg;
+
+    intel.googleTrendsInterest = Math.round(recentAvg);
+    intel.googleTrendDirection = recentAvg > olderAvg * 1.15 ? "rising" : recentAvg < olderAvg * 0.85 ? "declining" : "stable";
+  }
+
+  // Rising queries
+  const rising = data.related_queries?.rising;
+  if (rising) {
+    intel.risingQueries = rising.slice(0, 8).map((q: any) => q.query || "").filter(Boolean);
+  }
+
+  // Related topics
+  const topics = data.related_topics?.rising;
+  if (topics) {
+    intel.relatedTopics = topics.slice(0, 5).map((t: any) => t.topic?.title || "").filter(Boolean);
+  }
+
+  // Also fetch related queries separately for more data
+  try {
+    const rqUrl = new URL("https://serpapi.com/search.json");
+    rqUrl.searchParams.set("engine", "google_trends");
+    rqUrl.searchParams.set("q", keyword);
+    rqUrl.searchParams.set("geo", "ID");
+    rqUrl.searchParams.set("data_type", "RELATED_QUERIES");
+    rqUrl.searchParams.set("api_key", SERPAPI_KEY);
+
+    const rqResp = await fetch(rqUrl.toString());
+    if (rqResp.ok) {
+      const rqData = await rqResp.json();
+      const topQueries = rqData.related_queries?.top;
+      if (topQueries) {
+        const topQ = topQueries.slice(0, 5).map((q: any) => q.query || "").filter(Boolean);
+        intel.risingQueries = [...new Set([...intel.risingQueries, ...topQ])].slice(0, 10);
+      }
+    }
+  } catch { /* non-critical */ }
+}
+
+// ── YouTube Data API v3 ──
+async function fetchJobYouTubeData(keyword: string, intel: RealMarketIntel): Promise<void> {
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+  const searchUrl = new URL("https://www.googleapis.com/youtube/v3/search");
+  searchUrl.searchParams.set("part", "snippet");
+  searchUrl.searchParams.set("q", keyword);
+  searchUrl.searchParams.set("type", "video");
+  searchUrl.searchParams.set("order", "viewCount");
+  searchUrl.searchParams.set("maxResults", "15");
+  searchUrl.searchParams.set("publishedAfter", threeMonthsAgo.toISOString());
+  searchUrl.searchParams.set("relevanceLanguage", "id");
+  searchUrl.searchParams.set("key", YOUTUBE_API_KEY);
+
+  const resp = await fetch(searchUrl.toString());
+  if (!resp.ok) return;
+  const data = await resp.json();
+  const items = data.items || [];
+
+  intel.youtubeVideoCount = data.pageInfo?.totalResults || items.length;
+
+  if (items.length === 0) {
+    intel.youtubeCompetitionLevel = "Sangat rendah — hampir tidak ada video";
+    return;
+  }
+
+  // Get channel names
+  intel.youtubeTopChannels = items
+    .slice(0, 5)
+    .map((item: any) => item.snippet?.channelTitle || "")
+    .filter(Boolean);
+
+  // Get video stats
+  const videoIds = items.map((item: any) => item.id?.videoId).filter(Boolean).join(",");
+  if (!videoIds) return;
+
+  const statsUrl = new URL("https://www.googleapis.com/youtube/v3/videos");
+  statsUrl.searchParams.set("part", "statistics");
+  statsUrl.searchParams.set("id", videoIds);
+  statsUrl.searchParams.set("key", YOUTUBE_API_KEY);
+
+  const statsResp = await fetch(statsUrl.toString());
+  if (!statsResp.ok) return;
+  const statsData = await statsResp.json();
+  const videos = statsData.items || [];
+
+  if (videos.length > 0) {
+    const views = videos.map((v: any) => parseInt(v.statistics?.viewCount || "0"));
+    intel.youtubeAvgViews = Math.round(views.reduce((a: number, b: number) => a + b, 0) / views.length);
+
+    intel.youtubeCompetitionLevel = intel.youtubeVideoCount > 50000
+      ? "Tinggi — banyak creator, butuh diferensiasi kuat"
+      : intel.youtubeVideoCount > 10000
+        ? "Sedang — ada space tapi butuh angle unik"
+        : intel.youtubeVideoCount > 1000
+          ? "Rendah-Sedang — peluang bagus untuk early mover"
+          : "Rendah — niche terbuka, potensi jadi pioneer";
+  }
+}
+
+// ── TikTok via RapidAPI ──
+async function fetchJobTikTokData(keyword: string, intel: RealMarketIntel): Promise<void> {
+  const resp = await fetch(
+    `https://tiktok-scraper7.p.rapidapi.com/feed/search?keywords=${encodeURIComponent(keyword)}&count=15&region=ID`,
+    {
+      headers: {
+        "x-rapidapi-key": RAPIDAPI_KEY,
+        "x-rapidapi-host": "tiktok-scraper7.p.rapidapi.com",
+      },
+    }
+  );
+
+  if (!resp.ok) return;
+  const data = await resp.json();
+  const videos = data.data?.videos || data.data || [];
+
+  if (Array.isArray(videos) && videos.length > 0) {
+    const totalViews = videos.reduce((sum: number, v: any) => sum + (v.play_count || v.stats?.playCount || 0), 0);
+    intel.tiktokAvgViews = Math.round(totalViews / videos.length);
+
+    const totalLikes = videos.reduce((sum: number, v: any) => sum + (v.digg_count || v.stats?.diggCount || 0), 0);
+    intel.tiktokEngagementRate = totalViews > 0 ? ((totalLikes / totalViews) * 100).toFixed(1) : "0";
+
+    if (intel.tiktokAvgViews > 500000) {
+      intel.tiktokSignal = `Viral potential TINGGI — rata-rata ${fmtNum(intel.tiktokAvgViews)} views per video, engagement ${intel.tiktokEngagementRate}%. Market sangat aktif.`;
+    } else if (intel.tiktokAvgViews > 50000) {
+      intel.tiktokSignal = `Demand BAGUS di TikTok — rata-rata ${fmtNum(intel.tiktokAvgViews)} views, engagement ${intel.tiktokEngagementRate}%. Ada audience yang aktif searching.`;
+    } else if (intel.tiktokAvgViews > 5000) {
+      intel.tiktokSignal = `Niche market di TikTok — rata-rata ${fmtNum(intel.tiktokAvgViews)} views. Low competition, cocok untuk positioning.`;
+    } else {
+      intel.tiktokSignal = `Micro niche di TikTok — rata-rata ${fmtNum(intel.tiktokAvgViews)} views. Peluang jadi first mover tapi audience masih kecil.`;
+    }
+  }
+}
+
+// ── Instagram via RapidAPI ──
+async function fetchJobInstagramData(keyword: string, intel: RealMarketIntel): Promise<void> {
+  try {
+    // Use Instagram hashtag search via RapidAPI
+    const resp = await fetch(
+      `https://instagram-scraper-api2.p.rapidapi.com/v1/hashtag?hashtag=${encodeURIComponent(keyword.replace(/\s+/g, ""))}`,
+      {
+        headers: {
+          "x-rapidapi-key": RAPIDAPI_KEY,
+          "x-rapidapi-host": "instagram-scraper-api2.p.rapidapi.com",
+        },
+      }
+    );
+
+    if (!resp.ok) {
+      // Try alternative IG API
+      const altResp = await fetch(
+        `https://instagram-scraper-2022.p.rapidapi.com/ig/hashtag/?hashtag=${encodeURIComponent(keyword.replace(/\s+/g, ""))}`,
+        {
+          headers: {
+            "x-rapidapi-key": RAPIDAPI_KEY,
+            "x-rapidapi-host": "instagram-scraper-2022.p.rapidapi.com",
+          },
+        }
+      );
+      if (!altResp.ok) return;
+
+      const altData = await altResp.json();
+      const postCount = altData.data?.media_count || altData.media_count || 0;
+      if (postCount > 0) {
+        intel.instagramSignal = `Instagram hashtag #${keyword.replace(/\s+/g, "")}: ${fmtNum(postCount)} posts. ${
+          postCount > 1000000 ? "Market BESAR tapi crowded." :
+          postCount > 100000 ? "Market aktif, competition moderate." :
+          postCount > 10000 ? "Niche tapi ada community." :
+          "Micro niche — bisa jadi pioneer."
+        }`;
+      }
+      return;
+    }
+
+    const data = await resp.json();
+    const postCount = data.data?.media_count || data.media_count || 0;
+    if (postCount > 0) {
+      intel.instagramSignal = `Instagram hashtag #${keyword.replace(/\s+/g, "")}: ${fmtNum(postCount)} posts. ${
+        postCount > 1000000 ? "Market BESAR — banyak creator, butuh diferensiasi." :
+        postCount > 100000 ? "Market aktif — competition moderate, ada peluang." :
+        postCount > 10000 ? "Niche community — low competition, bisa build authority." :
+        "Micro niche — potensi first mover advantage."
+      }`;
+    }
+  } catch {
+    // Instagram APIs can be flaky
+  }
+}
+
+// ── Google Custom Search — Job listings & salary data ──
+async function fetchJobGoogleSearch(
+  jobKeyword: string,
+  platform: string,
+  intel: RealMarketIntel
+): Promise<void> {
+  // Search 1: Job listings & opportunities
+  const jobSearchUrl = new URL("https://www.googleapis.com/customsearch/v1");
+  jobSearchUrl.searchParams.set("key", GOOGLE_CSE_KEY);
+  jobSearchUrl.searchParams.set("cx", GOOGLE_CSE_CX);
+  jobSearchUrl.searchParams.set("q", `${jobKeyword} lowongan kerja freelance income 2025`);
+  jobSearchUrl.searchParams.set("num", "5");
+  jobSearchUrl.searchParams.set("gl", "id");
+  jobSearchUrl.searchParams.set("lr", "lang_id");
+
+  try {
+    const resp = await fetch(jobSearchUrl.toString());
+    if (resp.ok) {
+      const data = await resp.json();
+      const items = data.items || [];
+      intel.googleSearchResults = items.map(
+        (item: any) => `${item.title} — ${item.snippet || ""}`
+      ).slice(0, 5);
+
+      // Extract job-related snippets
+      items.forEach((item: any) => {
+        const snippet = (item.snippet || "").toLowerCase();
+        if (snippet.includes("gaji") || snippet.includes("salary") || snippet.includes("income") || snippet.includes("rate") || snippet.includes("harga") || snippet.includes("bayaran")) {
+          intel.salaryDataSnippets.push(`${item.title}: ${item.snippet}`);
+        }
+        if (snippet.includes("lowongan") || snippet.includes("hiring") || snippet.includes("dicari") || snippet.includes("vacancy") || snippet.includes("freelance")) {
+          intel.jobListingSnippets.push(`${item.title}: ${item.snippet}`);
+        }
+      });
+    }
+  } catch { /* non-critical */ }
+
+  // Search 2: Platform-specific rates/income
+  try {
+    const rateUrl = new URL("https://www.googleapis.com/customsearch/v1");
+    rateUrl.searchParams.set("key", GOOGLE_CSE_KEY);
+    rateUrl.searchParams.set("cx", GOOGLE_CSE_CX);
+    rateUrl.searchParams.set("q", `${jobKeyword} ${platform} rate harga tarif per project 2025`);
+    rateUrl.searchParams.set("num", "3");
+    rateUrl.searchParams.set("gl", "id");
+
+    const rateResp = await fetch(rateUrl.toString());
+    if (rateResp.ok) {
+      const rateData = await rateResp.json();
+      (rateData.items || []).forEach((item: any) => {
+        intel.salaryDataSnippets.push(`${item.title}: ${item.snippet}`);
+      });
+    }
+  } catch { /* non-critical */ }
+
+  // Deduplicate
+  intel.salaryDataSnippets = [...new Set(intel.salaryDataSnippets)].slice(0, 5);
+  intel.jobListingSnippets = [...new Set(intel.jobListingSnippets)].slice(0, 5);
+}
+
+// ── Helpers ──
+function fmtNum(n: number): string {
+  if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+  return n.toString();
 }
