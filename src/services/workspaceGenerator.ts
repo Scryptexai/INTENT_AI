@@ -242,12 +242,13 @@ function buildUserPrompt(input: GeneratorInput): string {
   parts.push(`MODEL BISNIS: ${modelNames[input.economicModel] || input.economicModel}`);
   parts.push(`TARGET AUDIENCE: Orang Indonesia yang tertarik dengan ${input.niche}`);
 
+  if (input.language) parts.push(`\nKEMAMPUAN BAHASA USER: ${input.language}`);
   if (input.topic) parts.push(`\nTOPIK SPESIFIK YANG DIMINTA: ${input.topic}`);
   if (input.targetAudience) parts.push(`TARGET AUDIENCE SPESIFIK: ${input.targetAudience}`);
   if (input.tone) parts.push(`TONE: ${input.tone}`);
-  if (input.additionalContext) parts.push(`KONTEKS TAMBAHAN: ${input.additionalContext}`);
+  if (input.additionalContext) parts.push(`\nKONTEKS PERSONAL USER:\n${input.additionalContext}`);
 
-  parts.push(`\nINGAT: Output harus sesuai dengan profil di atas. Jangan generic. Tulis langsung hasilnya tanpa pengantar.`);
+  parts.push(`\nINGAT: Output harus sesuai dengan profil di atas. Jangan generic. Sesuaikan bahasa & kompleksitas dengan kemampuan user. Tulis langsung hasilnya tanpa pengantar.`);
 
   return parts.join("\n");
 }

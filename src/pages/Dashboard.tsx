@@ -63,6 +63,13 @@ import {
   type GeneratorInput,
 } from "@/services/workspaceGenerator";
 import { type JobResearchResult } from "@/services/jobResearchEngine";
+import {
+  buildCompanionContext,
+  companionAICall,
+  decodeLabel,
+  decodeAllLabels,
+  type CompanionContext,
+} from "@/services/aiCompanion";
 import ContentCalendarView from "@/components/ContentCalendar";
 import TrendIntelligenceDashboard from "@/components/TrendIntelligenceDashboard";
 import { toast } from "sonner";
@@ -146,6 +153,9 @@ const Dashboard = () => {
   // Job Research (Layer 2)
   const [jobResearch, setJobResearch] = useState<JobResearchResult | null>(null);
 
+  // AI Companion (personal context for all AI calls)
+  const [companionCtx, setCompanionCtx] = useState<CompanionContext | null>(null);
+
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
 
@@ -208,13 +218,27 @@ const Dashboard = () => {
           }
         }
       }
-      // Load job research from localStorage (saved by BranchingOnboarding)
+
+      // Load companion context (includes job research from Supabase)
       try {
-        const jobResearchStr = localStorage.getItem("intent_job_research");
-        if (jobResearchStr) {
-          setJobResearch(JSON.parse(jobResearchStr));
+        const ctx = await buildCompanionContext(user.id);
+        if (ctx) {
+          setCompanionCtx(ctx);
+          if (ctx.jobResearch) {
+            setJobResearch(ctx.jobResearch);
+          }
         }
-      } catch { /* ignore parse errors */ }
+      } catch (e) {
+        console.warn("Failed to build companion context:", e);
+        // Fallback: load job research from localStorage
+        try {
+          const jobResearchStr = localStorage.getItem("intent_job_research");
+          if (jobResearchStr) {
+            setJobResearch(JSON.parse(jobResearchStr));
+          }
+        } catch { /* ignore parse errors */ }
+      }
+
       setLoading(false);
     };
     loadData();
@@ -268,12 +292,20 @@ const Dashboard = () => {
   const handleGenerate = useCallback(async (type: GeneratorType) => {
     setIsGenerating(true);
     try {
-      const input: GeneratorInput = { type, niche, subSector, platform, economicModel, topic: generatorInput || undefined };
+      const input: GeneratorInput = {
+        type, niche, subSector, platform, economicModel,
+        topic: generatorInput || undefined,
+        // Pass deep profile context to make generators personal
+        language: answerTags.language_skill ? decodeLabel("language_skill", answerTags.language_skill) : undefined,
+        additionalContext: companionCtx
+          ? `User profile: ${companionCtx.strengthSummary}. Tantangan: ${companionCtx.weaknessSummary}. Situasi: ${companionCtx.situationSummary}. Tools: ${decodeLabel("tools_familiarity", answerTags.tools_familiarity || "basic")}. Gaya belajar: ${decodeLabel("learning_style", answerTags.learning_style || "practice")}.`
+          : undefined,
+      };
       const output = await generateContent(input);
       setGeneratedContent((prev) => ({ ...prev, [type]: output.content }));
     } catch (err) { console.error("Generation failed:", err); }
     setIsGenerating(false);
-  }, [niche, subSector, platform, economicModel, generatorInput]);
+  }, [niche, subSector, platform, economicModel, generatorInput, answerTags, companionCtx]);
 
   const copyToClipboard = useCallback(async (text: string, key: string) => {
     await navigator.clipboard.writeText(text);
@@ -454,49 +486,49 @@ const Dashboard = () => {
                       {answerTags.current_stage && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Status</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.current_stage.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("current_stage", answerTags.current_stage)}</p>
                         </div>
                       )}
                       {answerTags.digital_experience && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Exp. Digital</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.digital_experience.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("digital_experience", answerTags.digital_experience)}</p>
                         </div>
                       )}
                       {answerTags.language_skill && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Bahasa</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.language_skill.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("language_skill", answerTags.language_skill)}</p>
                         </div>
                       )}
                       {answerTags.income_target && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Target income</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.income_target.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("income_target", answerTags.income_target)}</p>
                         </div>
                       )}
                       {answerTags.tools_familiarity && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Tools</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.tools_familiarity.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("tools_familiarity", answerTags.tools_familiarity)}</p>
                         </div>
                       )}
                       {answerTags.biggest_challenge && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Hambatan</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.biggest_challenge.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("biggest_challenge", answerTags.biggest_challenge)}</p>
                         </div>
                       )}
                       {answerTags.weekly_commitment && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Komitmen</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.weekly_commitment.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("weekly_commitment", answerTags.weekly_commitment)}</p>
                         </div>
                       )}
                       {answerTags.learning_style && (
                         <div className="bg-background py-3 px-4">
                           <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Belajar</p>
-                          <p className="text-xs text-foreground/70 mt-0.5">{answerTags.learning_style.replace(/_/g, " ")}</p>
+                          <p className="text-xs text-foreground/70 mt-0.5">{decodeLabel("learning_style", answerTags.learning_style)}</p>
                         </div>
                       )}
                     </div>
@@ -947,11 +979,11 @@ const Dashboard = () => {
               <div className="space-y-6">
                 <div className="py-3 px-5 border border-border flex items-center gap-3 flex-wrap">
                   <span className="text-[9px] font-bold text-muted-foreground/40 uppercase">Profil:</span>
-                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{economicModel}</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{economicModel.replace(/_/g, " ")}</span>
                   <span className="text-muted-foreground/20">→</span>
-                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{subSector}</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{subSector.replace(/_/g, " ")}</span>
                   <span className="text-muted-foreground/20">→</span>
-                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{niche}</span>
+                  <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{niche.replace(/_/g, " ")}</span>
                   <span className="text-muted-foreground/20">→</span>
                   <span className="text-[10px] px-2 py-0.5 border border-border text-foreground/60">{platform}</span>
                 </div>

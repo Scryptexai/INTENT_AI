@@ -47,11 +47,14 @@ import {
   saveProfilingResult,
   generateAIWhyText,
   generateAINicheSuggestion,
+  generateAICustomTasks,
   loadActiveProfile,
 } from "@/services/profileService";
 import { canReprofile, canUseAIPersonalization, type PlanType } from "@/services/planGating";
 import { generateSubSpecialization, type SubSpecialization } from "@/utils/pathSpecialization";
 import { generateJobResearch, type JobResearchResult } from "@/services/jobResearchEngine";
+import { saveJobResearchToDB } from "@/services/aiCompanion";
+import { fetchRealMarketContext } from "@/services/realMarketData";
 import { runFullPipeline } from "@/services/trendPipelineScheduler";
 import { hasAnyDataSource } from "@/services/trendDataFetcher";
 import UpgradePrompt from "@/components/UpgradePrompt";
@@ -489,13 +492,22 @@ const BranchingOnboarding = () => {
     // AI Personalization
     setProcessingStep("AI sedang menganalisis profil kamu...");
 
-    // Run AI personalization + job research in parallel
-    setProcessingStep("AI sedang riset job & opportunity yang tepat...");
+    // Pre-fetch real market data in background so AI context is richer
+    const marketDataPromise = fetchRealMarketContext(nicheValue, platformValue).catch(() => null);
+
+    // Run ALL AI personalization in parallel
+    setProcessingStep("AI personal sedang riset profil, job & roadmap kamu...");
+
+    const segment = mapToLegacySegment(selectedModel, contextScores);
 
     await Promise.all([
-      generateAIWhyText(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
-      generateAINicheSuggestion(user.id, profileId, legacyScores, "skill_leverager", primaryPath),
-      // Layer 2: Job Research — fire-and-forget, save to localStorage for Dashboard
+      // 1. AI Why Text — kenapa jalur ini cocok
+      generateAIWhyText(user.id, profileId, legacyScores, segment, primaryPath),
+      // 2. AI Niche Suggestion — niche super spesifik
+      generateAINicheSuggestion(user.id, profileId, legacyScores, segment, primaryPath),
+      // 3. AI Custom Tasks — personalized roadmap (BUKAN template!)
+      generateAICustomTasks(user.id, profileId, legacyScores, segment, primaryPath),
+      // 4. Layer 2: Job Research — data-driven job matching
       generateJobResearch(
         selectedModel,
         selectedSubSector,
@@ -504,12 +516,14 @@ const BranchingOnboarding = () => {
         contextScores,
         deepProfileAnswers,
         sectorAnswers
-      ).then((jobResult) => {
+      ).then(async (jobResult) => {
         if (jobResult) {
-          // Store job research result for Dashboard to consume
-          localStorage.setItem("intent_job_research", JSON.stringify(jobResult));
+          // Save to Supabase (persistent) + localStorage (fallback)
+          await saveJobResearchToDB(profileId, user.id, jobResult);
         }
       }).catch((err) => console.warn("[BranchingOnboarding] Job research failed:", err)),
+      // 5. Pre-fetch market data for Dashboard
+      marketDataPromise,
     ]);
 
     // Fire-and-forget: start fetching market data in background
