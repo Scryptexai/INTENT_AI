@@ -11,6 +11,8 @@ import BranchingOnboarding from "./pages/BranchingOnboarding";
 import PathDetail from "./pages/PathDetail";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 
@@ -59,6 +61,8 @@ const App = () => (
             />
             <Route path="/login" element={<Auth />} />
             <Route path="/signup" element={<Auth />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/oauth/*" element={<AuthCallback />} />
             <Route path="/auth/callback" element={<AuthCallback />} />
             <Route 

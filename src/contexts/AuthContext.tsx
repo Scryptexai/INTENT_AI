@@ -102,9 +102,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithGoogle = async () => {
     try {
-      // Use current origin so redirect matches exactly (www.intent.sbs or localhost)
-      // This prevents hash fragment loss from domain redirects (intent.sbs → www.intent.sbs)
-      const redirectUrl = `${window.location.origin}/dashboard`;
+      // CRITICAL: redirect to /auth/callback (NOT /dashboard)
+      // /dashboard is a ProtectedRoute that would redirect to /login before 
+      // Supabase processes the hash tokens, causing token loss.
+      // /auth/callback is unprotected and handles token extraction properly.
+      const redirectUrl = `${window.location.origin}/auth/callback`;
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
