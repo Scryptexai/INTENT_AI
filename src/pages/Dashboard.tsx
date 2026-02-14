@@ -413,15 +413,15 @@ const Dashboard = () => {
             <div className="grid grid-cols-3 gap-px bg-border mb-8">
               <div className="bg-background py-3 px-4">
                 <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Sumber income</p>
-                <p className="text-xs text-foreground/80 mt-1">{pathData.incomeSource || "Bayaran per project/task dari client langsung"}</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.moneySource || "Bayaran per project/task dari client langsung"}</p>
               </div>
               <div className="bg-background py-3 px-4">
                 <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Waktu test</p>
-                <p className="text-xs text-foreground/80 mt-1">{pathData.testTimeframe || "7–14 hari untuk income pertama"}</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.timeToTest || "7–14 hari untuk income pertama"}</p>
               </div>
               <div className="bg-background py-3 px-4">
                 <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40">Risiko</p>
-                <p className="text-xs text-foreground/80 mt-1">{pathData.riskLevel || "Rendah — waktu terbuang tapi tidak ada kerugian finansial"}</p>
+                <p className="text-xs text-foreground/80 mt-1">{pathData.riskIfFail || "Rendah — waktu terbuang tapi tidak ada kerugian finansial"}</p>
               </div>
             </div>
 
@@ -538,10 +538,10 @@ const Dashboard = () => {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border">
                       {marketSignals.slice(0, 9).map((signal, i) => (
                         <div key={i} className="bg-background py-3 px-4 flex items-center gap-3">
-                          <TrendIcon direction={signal.direction || "stable"} />
+                          <TrendIcon direction={signal.trend_direction || "stable"} />
                           <div className="min-w-0 flex-1">
                             <p className="text-xs text-foreground/80 truncate">{signal.keyword}</p>
-                            <p className="text-[10px] text-muted-foreground/40">{signal.interest_score || 0}%</p>
+                            <p className="text-[10px] text-muted-foreground/40">{signal.trend_score || 0}%</p>
                           </div>
                           {signal.is_hot && <span className="text-[9px] font-bold px-1.5 py-0.5 bg-foreground/10 text-foreground/60">HOT</span>}
                         </div>
@@ -620,11 +620,11 @@ const Dashboard = () => {
 
                 {riskSignals && riskSignals.currentWeek >= 2 && <AntiSunkCostCard weekNumber={riskSignals.currentWeek} />}
 
-                {pathData.ignoreList && pathData.ignoreList.length > 0 && (
+                {pathData.avoid && pathData.avoid.length > 0 && (
                   <div className="py-5 px-5 border border-border/50">
                     <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-3">Yang harus diabaikan</p>
                     <div className="space-y-2">
-                      {pathData.ignoreList.map((item, i) => (
+                      {pathData.avoid.map((item, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground/60">
                           <span className="text-muted-foreground/30">✕</span> {item}
                         </div>
@@ -853,14 +853,14 @@ const Dashboard = () => {
                                 <div className="flex flex-wrap gap-3">
                                   {weekSignals.map((signal, si) => (
                                     <div key={si} className="flex items-center gap-1.5">
-                                      <TrendIcon direction={signal.direction || "stable"} />
+                                      <TrendIcon direction={signal.trend_direction || "stable"} />
                                       <span className="text-xs text-foreground/70">{signal.keyword}</span>
-                                      <span className="text-[10px] text-muted-foreground/40">{signal.interest_score || 0}%</span>
+                                      <span className="text-[10px] text-muted-foreground/40">{signal.trend_score || 0}%</span>
                                     </div>
                                   ))}
                                 </div>
-                                {weekSignals[0]?.ai_insight && (
-                                  <p className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">📊 {weekSignals[0].ai_insight}</p>
+                                {weekSignals[0]?.suggestion && (
+                                  <p className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">📊 {weekSignals[0].suggestion}</p>
                                 )}
                               </div>
                             )}
@@ -882,7 +882,7 @@ const Dashboard = () => {
                                           <p className={`text-sm ${task.completed ? "line-through text-muted-foreground" : "text-foreground/80"}`}>{task.text}</p>
                                           {detail && (
                                             <div className="flex items-center gap-3 mt-1">
-                                              {detail.duration && <span className="text-[10px] text-muted-foreground/40">{detail.duration}</span>}
+                                              {detail.time_estimate && <span className="text-[10px] text-muted-foreground/40">{detail.time_estimate}</span>}
                                               {detail.difficulty && <span className="text-[10px] text-muted-foreground/40">{detail.difficulty}</span>}
                                               <span className="text-[10px] text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors">{isTaskExpanded ? "tutup" : "detail →"}</span>
                                             </div>
@@ -893,12 +893,12 @@ const Dashboard = () => {
                                           {isTaskExpanded && detail && (
                                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
                                               <div className="mt-3 space-y-3">
-                                                {detail.actionSteps && detail.actionSteps.length > 0 && (
+                                                {detail.action_guide && (
                                                   <div>
                                                     <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2">Langkah aksi</p>
                                                     <ol className="space-y-1.5">
-                                                      {detail.actionSteps.map((step, si) => (
-                                                        <li key={si} className="text-xs text-muted-foreground/60 leading-relaxed pl-4">{si + 1}. {step}</li>
+                                                      {detail.action_guide.split('\n').filter(s => s.trim()).map((step, si) => (
+                                                        <li key={si} className="text-xs text-muted-foreground/60 leading-relaxed pl-4">{step}</li>
                                                       ))}
                                                     </ol>
                                                   </div>
