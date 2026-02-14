@@ -73,6 +73,8 @@ import {
 } from "@/services/aiCompanion";
 import ContentCalendarView from "@/components/ContentCalendar";
 import TrendIntelligenceDashboard from "@/components/TrendIntelligenceDashboard";
+import ProfileUpgradePrompt from "@/components/ProfileUpgradePrompt";
+import { shouldShowUpgradePrompt } from "@/utils/quickProfileConfig";
 import { toast } from "sonner";
 
 // ============================================================================
@@ -174,6 +176,9 @@ const Dashboard = () => {
 
   // AI Companion (personal context for all AI calls)
   const [companionCtx, setCompanionCtx] = useState<CompanionContext | null>(null);
+
+  // Profile upgrade prompt (Level 2)
+  const [upgradePromptDismissed, setUpgradePromptDismissed] = useState(false);
 
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -453,7 +458,10 @@ const Dashboard = () => {
               <h1 className="text-xl md:text-2xl font-semibold text-foreground mb-1">{pathData.title}</h1>
               <p className="text-xs text-muted-foreground/60 max-w-lg leading-relaxed">{pathData.description}</p>
               <p className="text-[10px] text-muted-foreground/40 mt-2 max-w-lg leading-relaxed">
-                Workspace ini disusun berdasarkan {Object.keys(answerTags).length} data profil kamu — dari model ekonomi, skill, kondisi, hingga tantangan terbesar. Semua rekomendasi bersifat personal.
+                {answerTags.profile_level === "quick"
+                  ? `Workspace ini disusun dari ${Object.keys(answerTags).length} data profil cepat. Tingkatkan profil setelah beberapa hari untuk rekomendasi lebih presisi.`
+                  : `Workspace ini disusun berdasarkan ${Object.keys(answerTags).length} data profil kamu — dari model ekonomi, skill, kondisi, hingga tantangan terbesar. Semua rekomendasi bersifat personal.`
+                }
               </p>
             </div>
 
@@ -566,6 +574,23 @@ const Dashboard = () => {
                       )}
                     </div>
                   </div>
+                )}
+
+                {/* ── LEVEL 2: Profile Upgrade Prompt ── */}
+                {savedProfile && !upgradePromptDismissed && user &&
+                  answerTags.profile_level !== "upgraded" &&
+                  shouldShowUpgradePrompt(answerTags, savedProfile.created_at || new Date().toISOString()) && (
+                  <ProfileUpgradePrompt
+                    profileId={savedProfile.id}
+                    userId={user.id}
+                    currentAnswerTags={answerTags}
+                    onComplete={(updatedTags) => {
+                      // Refresh profile data with new tags
+                      setSavedProfile(prev => prev ? { ...prev, answer_tags: updatedTags } as any : prev);
+                      toast.success("Profil ditingkatkan! Rekomendasi akan lebih presisi.");
+                    }}
+                    onDismiss={() => setUpgradePromptDismissed(true)}
+                  />
                 )}
 
                 {/* ── JOB MATCH SUMMARY — structured overview ── */}

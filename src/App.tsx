@@ -8,6 +8,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
 import BranchingOnboarding from "./pages/BranchingOnboarding";
+import QuickOnboarding from "./pages/QuickOnboarding";
 import PathDetail from "./pages/PathDetail";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
@@ -29,6 +30,14 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route 
               path="/onboarding" 
+              element={
+                <ProtectedRoute>
+                  <QuickOnboarding />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/onboarding/full" 
               element={
                 <ProtectedRoute>
                   <BranchingOnboarding />
