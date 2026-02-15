@@ -399,7 +399,7 @@ const Dashboard = () => {
                   Tanpa profiling, tidak ada arah yang bisa diberikan. Jawab beberapa pertanyaan untuk memulai kalibrasi.
                 </p>
                 <p className="text-xs text-muted-foreground/40 mb-8 max-w-md leading-relaxed">
-                  Proses profiling akan menanyakan: model ekonomi → bidang → niche → platform, lalu 5 pertanyaan kondisi (waktu, modal, risiko, skill, audience), dan 8 pertanyaan profil mendalam (status, pengalaman, target, hambatan, dll). Setelah selesai, AI akan riset dari Google Trends, YouTube, TikTok, dan Google Search untuk menyusun workspace eksekusi personal.
+                  Proses profiling hanya 7 pertanyaan singkat: bidang skill → sub-spesialisasi → pengalaman → target → waktu → bahasa → status. Setelah selesai, AI akan menyusun workspace eksekusi personal lengkap dengan riset peluang dari internet.
                 </p>
                 <Link to="/onboarding" className="cmd-primary group">
                   Mulai Kalibrasi <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />

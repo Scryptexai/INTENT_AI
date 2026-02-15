@@ -52,17 +52,17 @@ interface ContentCalendarProps {
 // ============================================================================
 
 const PILLAR_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  education:     { bg: "bg-blue-500/10",    text: "text-blue-400",    border: "border-blue-500/30" },
-  educational:   { bg: "bg-blue-500/10",    text: "text-blue-400",    border: "border-blue-500/30" },
-  entertainment: { bg: "bg-pink-500/10",    text: "text-pink-400",    border: "border-pink-500/30" },
-  entertaining:  { bg: "bg-pink-500/10",    text: "text-pink-400",    border: "border-pink-500/30" },
-  inspiration:   { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30" },
-  inspiring:     { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30" },
-  promotion:     { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
-  promotional:   { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
-  engagement:    { bg: "bg-indigo-500/10",  text: "text-indigo-400",  border: "border-indigo-500/30" },
-  personal:      { bg: "bg-slate-500/10",   text: "text-slate-400",   border: "border-slate-500/30" },
-  behind_the_scenes: { bg: "bg-orange-500/10", text: "text-orange-400", border: "border-orange-500/30" },
+  education:     { bg: "bg-foreground/5",    text: "text-foreground/60",    border: "border-foreground/15" },
+  educational:   { bg: "bg-foreground/5",    text: "text-foreground/60",    border: "border-foreground/15" },
+  entertainment: { bg: "bg-foreground/[0.03]", text: "text-foreground/50", border: "border-foreground/10" },
+  entertaining:  { bg: "bg-foreground/[0.03]", text: "text-foreground/50", border: "border-foreground/10" },
+  inspiration:   { bg: "bg-foreground/[0.04]", text: "text-foreground/55", border: "border-foreground/12" },
+  inspiring:     { bg: "bg-foreground/[0.04]", text: "text-foreground/55", border: "border-foreground/12" },
+  promotion:     { bg: "bg-foreground/[0.06]", text: "text-foreground/65", border: "border-foreground/18" },
+  promotional:   { bg: "bg-foreground/[0.06]", text: "text-foreground/65", border: "border-foreground/18" },
+  engagement:    { bg: "bg-foreground/[0.03]", text: "text-foreground/50", border: "border-foreground/10" },
+  personal:      { bg: "bg-muted/10",   text: "text-muted-foreground/60",   border: "border-border/30" },
+  behind_the_scenes: { bg: "bg-muted/10", text: "text-muted-foreground/60", border: "border-border/30" },
 };
 
 function getPillarColor(pillar: string) {
@@ -180,32 +180,30 @@ const ContentCalendarView = ({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border-2 border-dashed border-primary/30 bg-primary/5 p-8"
+        className="border border-border border-dashed py-12 px-8"
       >
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full bg-primary/10 border-2 border-primary/20 flex items-center justify-center mx-auto mb-4">
-            <Calendar className="w-8 h-8 text-primary" />
-          </div>
-          <h3 className="text-xl font-black mb-2">📅 Content Calendar</h3>
-          <p className="text-sm text-muted-foreground/70 mb-2 max-w-md mx-auto">
-            AI akan buatkan kalender konten 7 hari yang <strong>hyper-spesifik</strong> untuk niche <strong>{niche}</strong> di <strong>{platform}</strong>.
+          <Calendar className="w-6 h-6 text-muted-foreground mx-auto mb-4" />
+          <h3 className="text-sm font-semibold text-foreground mb-2">Content Calendar</h3>
+          <p className="text-xs text-muted-foreground/60 mb-2 max-w-md mx-auto leading-relaxed">
+            AI akan buatkan kalender konten 7 hari yang hyper-spesifik untuk niche <strong>{niche}</strong> di <strong>{platform}</strong>.
           </p>
-          <p className="text-xs text-muted-foreground/50 mb-6 max-w-sm mx-auto">
+          <p className="text-[10px] text-muted-foreground/40 mb-6 max-w-sm mx-auto leading-relaxed">
             Termasuk: topik, hook, caption siap copy-paste, hashtags, visual direction, action steps, dan execution template.
           </p>
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:brightness-110 transition-all disabled:opacity-50"
+            className="cmd-primary text-xs disabled:opacity-40"
           >
             {isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 Generating Calendar...
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-3.5 h-3.5" />
                 Generate Minggu {weekNumber}
               </>
             )}
@@ -228,12 +226,12 @@ const ContentCalendarView = ({
       {/* ── Header Bar ── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h3 className="text-lg font-black flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-primary" />
+          <h3 className="text-sm font-semibold flex items-center gap-2 text-foreground">
+            <Calendar className="w-4 h-4 text-muted-foreground" />
             Content Calendar — Minggu {weekNumber}
           </h3>
-          <p className="text-xs text-muted-foreground/60 mt-0.5">
-            🎯 {calendar.weekTheme}
+          <p className="text-[10px] text-muted-foreground/50 mt-0.5">
+            {calendar.weekTheme}
           </p>
         </div>
 
@@ -242,24 +240,24 @@ const ContentCalendarView = ({
           <button
             onClick={() => goToWeek(-1)}
             disabled={weekNumber <= 1}
-            className="p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors disabled:opacity-30"
+            className="p-2 border border-border hover:border-foreground/20 transition-colors disabled:opacity-30"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
-          <span className="text-xs font-bold px-2">W{weekNumber}</span>
+          <span className="text-[10px] font-medium px-2 text-muted-foreground">W{weekNumber}</span>
           <button
             onClick={() => goToWeek(1)}
             disabled={weekNumber >= 4}
-            className="p-2 rounded-lg bg-muted/20 hover:bg-muted/30 transition-colors disabled:opacity-30"
+            className="p-2 border border-border hover:border-foreground/20 transition-colors disabled:opacity-30"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
           {/* Re-generate week */}
           <button
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary/10 text-xs font-bold text-primary hover:bg-primary/20 transition-colors disabled:opacity-50"
+            className="cmd-action text-[10px] disabled:opacity-40"
           >
             {isGenerating ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -272,20 +270,20 @@ const ContentCalendarView = ({
       </div>
 
       {/* ── Progress Bar ── */}
-      <div className="p-3 rounded-xl bg-card/50 border border-border/30">
+      <div className="py-3 px-5 border border-border">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-muted-foreground/60">
+          <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/40">
             Progress Minggu {weekNumber}
           </span>
-          <span className="text-xs font-bold text-primary">
-            {doneCount}/7 ✅ ({completionRate}%)
+          <span className="text-[10px] text-foreground/60">
+            {doneCount}/7 ({completionRate}%)
           </span>
         </div>
-        <div className="h-2 bg-muted/20 rounded-full overflow-hidden">
+        <div className="h-px bg-border relative">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${completionRate}%` }}
-            className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-500"
+            className="absolute top-0 left-0 h-px bg-foreground/50"
           />
         </div>
       </div>
@@ -304,14 +302,14 @@ const ContentCalendarView = ({
             <motion.div
               key={day.day}
               layout
-              className={`rounded-xl border-2 transition-all overflow-hidden ${
+              className={`border transition-all overflow-hidden ${
                 isToday
-                  ? "border-primary/50 bg-primary/5 shadow-md shadow-primary/10"
+                  ? "border-foreground/30"
                   : isDone
-                  ? "border-emerald-500/30 bg-emerald-500/5"
+                  ? "border-border/50 opacity-60"
                   : isSkipped
-                  ? "border-muted/30 bg-muted/5 opacity-60"
-                  : "border-border/30 bg-card/50"
+                  ? "border-border/20 opacity-40"
+                  : "border-border"
               }`}
             >
               {/* ── Day Header (always visible) ── */}
@@ -320,8 +318,8 @@ const ContentCalendarView = ({
                 className="w-full p-4 text-left flex items-center gap-3"
               >
                 {/* Day badge */}
-                <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center flex-shrink-0 ${
-                  isToday ? "bg-primary text-white" : isDone ? "bg-emerald-500/20 text-emerald-400" : "bg-muted/10 text-muted-foreground"
+                <div className={`w-10 h-10 border flex flex-col items-center justify-center flex-shrink-0 ${
+                  isToday ? "border-foreground/30 bg-foreground/5 text-foreground" : isDone ? "border-border bg-muted/5 text-muted-foreground" : "border-border/30 text-muted-foreground"
                 }`}>
                   <span className="text-[10px] font-bold uppercase leading-none">
                     {day.dayName.substring(0, 3)}
@@ -335,7 +333,7 @@ const ContentCalendarView = ({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     {isToday && (
-                      <span className="px-2 py-0.5 rounded-full bg-primary text-white text-[9px] font-black uppercase">
+                      <span className="px-2 py-0.5 border border-foreground/20 text-foreground/60 text-[9px] font-medium uppercase">
                         Hari Ini
                       </span>
                     )}
@@ -354,7 +352,7 @@ const ContentCalendarView = ({
 
                 {/* Status + expand */}
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {isDone && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
+                  {isDone && <CheckCircle2 className="w-4 h-4 text-foreground/40" />}
                   {isSkipped && <XCircle className="w-5 h-5 text-muted-foreground/40" />}
                   {isExpanded ? (
                     <ChevronUp className="w-4 h-4 text-muted-foreground/40" />
@@ -377,31 +375,31 @@ const ContentCalendarView = ({
                     <div className="px-4 pb-4 space-y-4 border-t border-border/20 pt-4">
 
                       {/* Hook preview */}
-                      <div className="p-3 rounded-lg bg-yellow-500/5 border border-yellow-500/20">
-                        <p className="text-xs font-bold text-yellow-500 mb-1">🪝 HOOK</p>
-                        <p className="text-sm font-medium">{day.hook}</p>
+                      <div className="py-3 px-4 border-l-2 border-foreground/15 bg-foreground/[0.02]">
+                        <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-1">Hook</p>
+                        <p className="text-sm text-foreground/80">{day.hook}</p>
                       </div>
 
                       {/* Action Steps */}
                       <div>
-                        <p className="text-xs font-bold text-muted-foreground/60 uppercase mb-2 flex items-center gap-1.5">
-                          <Target className="w-3.5 h-3.5" />
+                        <p className="text-[9px] uppercase tracking-[0.15em] text-muted-foreground/40 mb-2 flex items-center gap-1.5">
+                          <Target className="w-3 h-3" />
                           Action Steps — {formatInfo.label}
                         </p>
                         <div className="space-y-2">
                           {day.actionSteps.map((step) => (
                             <div
                               key={step.step}
-                              className="flex gap-3 p-3 rounded-lg bg-muted/10 border border-border/20"
+                              className="flex gap-3 py-3 px-3 border border-border/30"
                             >
-                              <div className="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-black flex-shrink-0 mt-0.5">
+                              <div className="w-5 h-5 border border-foreground/15 flex items-center justify-center text-[10px] font-medium text-foreground/50 flex-shrink-0 mt-0.5">
                                 {step.step}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium">{step.action}</p>
+                                <p className="text-xs text-foreground/70">{step.action}</p>
                                 <div className="flex items-center gap-3 mt-1 flex-wrap">
                                   {step.tool && (
-                                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 font-bold">
+                                    <span className="text-[10px] px-1.5 py-0.5 border border-border text-foreground/50">
                                       🔧 {step.tool}
                                     </span>
                                   )}
@@ -410,7 +408,7 @@ const ContentCalendarView = ({
                                   </span>
                                 </div>
                                 {step.tip && (
-                                  <p className="text-[11px] text-amber-400/70 mt-1">
+                                  <p className="text-[10px] text-muted-foreground/50 mt-1">
                                     💡 {step.tip}
                                   </p>
                                 )}
@@ -426,17 +424,17 @@ const ContentCalendarView = ({
                           onClick={() => setShowExecutionTemplate(
                             showExecutionTemplate === day.day ? null : day.day
                           )}
-                          className="w-full text-left p-3 rounded-lg bg-primary/5 border border-primary/20 hover:bg-primary/10 transition-colors"
+                          className="w-full text-left py-3 px-4 border border-border hover:border-foreground/20 transition-colors"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-primary flex items-center gap-1.5">
-                              <Eye className="w-3.5 h-3.5" />
-                              📋 Lihat Execution Template (Copy-Paste Ready)
+                            <span className="text-[10px] uppercase tracking-[0.12em] text-foreground/60 flex items-center gap-1.5">
+                              <Eye className="w-3 h-3" />
+                              Execution Template (Copy-Paste Ready)
                             </span>
                             {showExecutionTemplate === day.day ? (
-                              <ChevronUp className="w-4 h-4 text-primary" />
+                              <ChevronUp className="w-3.5 h-3.5 text-muted-foreground/40" />
                             ) : (
-                              <ChevronDown className="w-4 h-4 text-primary" />
+                              <ChevronDown className="w-3.5 h-3.5 text-muted-foreground/40" />
                             )}
                           </div>
                         </button>
@@ -452,7 +450,7 @@ const ContentCalendarView = ({
                               <div className="mt-3 relative">
                                 <button
                                   onClick={() => copyText(day.executionTemplate, `template-${day.day}`)}
-                                  className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-white text-[10px] font-bold shadow-md hover:bg-primary/90 transition-colors"
+                                  className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 px-2.5 py-1.5 border border-foreground/20 bg-background text-foreground/60 text-[10px] font-medium hover:border-foreground/40 transition-colors"
                                 >
                                   {copiedKey === `template-${day.day}` ? (
                                     <><Check className="w-3 h-3" /> Copied!</>
@@ -460,7 +458,7 @@ const ContentCalendarView = ({
                                     <><Copy className="w-3 h-3" /> Copy All</>
                                   )}
                                 </button>
-                                <div className="text-xs text-foreground/80 whitespace-pre-wrap leading-relaxed bg-muted/10 p-4 rounded-lg border border-border/20 max-h-80 overflow-y-auto font-mono">
+                                <div className="text-xs text-foreground/80 whitespace-pre-wrap leading-relaxed bg-muted/5 p-4 border border-border/20 max-h-80 overflow-y-auto font-mono">
                                   {day.executionTemplate}
                                 </div>
                               </div>
@@ -470,36 +468,36 @@ const ContentCalendarView = ({
                                 {day.caption && (
                                   <button
                                     onClick={() => copyText(day.caption, `caption-${day.day}`)}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted/20 text-[10px] font-bold hover:bg-muted/30 transition-colors"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-border text-[10px] font-medium hover:border-foreground/20 transition-colors"
                                   >
-                                    {copiedKey === `caption-${day.day}` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                    {copiedKey === `caption-${day.day}` ? <Check className="w-3 h-3 text-foreground/50" /> : <Copy className="w-3 h-3" />}
                                     Caption
                                   </button>
                                 )}
                                 {day.hashtags && (
                                   <button
                                     onClick={() => copyText(day.hashtags, `hashtags-${day.day}`)}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted/20 text-[10px] font-bold hover:bg-muted/30 transition-colors"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-border text-[10px] font-medium hover:border-foreground/20 transition-colors"
                                   >
-                                    {copiedKey === `hashtags-${day.day}` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                    {copiedKey === `hashtags-${day.day}` ? <Check className="w-3 h-3 text-foreground/50" /> : <Copy className="w-3 h-3" />}
                                     Hashtags
                                   </button>
                                 )}
                                 {day.hook && (
                                   <button
                                     onClick={() => copyText(day.hook, `hook-${day.day}`)}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted/20 text-[10px] font-bold hover:bg-muted/30 transition-colors"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-border text-[10px] font-medium hover:border-foreground/20 transition-colors"
                                   >
-                                    {copiedKey === `hook-${day.day}` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                    {copiedKey === `hook-${day.day}` ? <Check className="w-3 h-3 text-foreground/50" /> : <Copy className="w-3 h-3" />}
                                     Hook
                                   </button>
                                 )}
                                 {day.cta && (
                                   <button
                                     onClick={() => copyText(day.cta, `cta-${day.day}`)}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-muted/20 text-[10px] font-bold hover:bg-muted/30 transition-colors"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1.5 border border-border text-[10px] font-medium hover:border-foreground/20 transition-colors"
                                   >
-                                    {copiedKey === `cta-${day.day}` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                                    {copiedKey === `cta-${day.day}` ? <Check className="w-3 h-3 text-foreground/50" /> : <Copy className="w-3 h-3" />}
                                     CTA
                                   </button>
                                 )}
@@ -514,23 +512,23 @@ const ContentCalendarView = ({
                         {/* Mark done */}
                         <button
                           onClick={() => handleStatusChange(day.day, isDone ? "pending" : "done")}
-                          className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs transition-colors border ${
                             isDone
-                              ? "bg-emerald-500/20 text-emerald-400"
-                              : "bg-muted/20 text-muted-foreground hover:bg-emerald-500/10 hover:text-emerald-400"
+                              ? "border-foreground/20 text-foreground/60"
+                              : "border-border text-muted-foreground hover:border-foreground/20 hover:text-foreground/60"
                           }`}
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          {isDone ? "Done ✅" : "Mark Done"}
+                          {isDone ? "Done ✓" : "Mark Done"}
                         </button>
 
                         {/* Skip */}
                         <button
                           onClick={() => handleStatusChange(day.day, isSkipped ? "pending" : "skipped")}
-                          className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-2 text-xs transition-colors border ${
                             isSkipped
-                              ? "bg-red-500/20 text-red-400"
-                              : "bg-muted/20 text-muted-foreground hover:bg-red-500/10 hover:text-red-400"
+                              ? "border-foreground/15 text-muted-foreground/60"
+                              : "border-border text-muted-foreground hover:border-foreground/15"
                           }`}
                         >
                           <XCircle className="w-3.5 h-3.5" />
@@ -541,7 +539,7 @@ const ContentCalendarView = ({
                         <button
                           onClick={() => handleRegenerateDay(day.day)}
                           disabled={regeneratingDay === day.day}
-                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted/20 text-xs font-bold text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors disabled:opacity-50 ml-auto"
+                          className="cmd-ghost text-[10px] ml-auto disabled:opacity-40"
                         >
                           {regeneratingDay === day.day ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -561,18 +559,18 @@ const ContentCalendarView = ({
       </div>
 
       {/* ── Weekly Summary ── */}
-      <div className="p-4 rounded-xl bg-card/50 border border-border/30">
+      <div className="py-4 px-5 border border-border">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-muted-foreground/60 uppercase">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/40">
               Minggu {weekNumber} Summary
             </p>
-            <p className="text-sm text-muted-foreground/70 mt-1">
+            <p className="text-xs text-muted-foreground/60 mt-1">
               {doneCount === 7
-                ? "🎉 Semua konten minggu ini selesai! Generate minggu berikutnya?"
+                ? "Semua konten minggu ini selesai. Generate minggu berikutnya?"
                 : doneCount > 0
-                ? `👊 ${doneCount}/7 selesai — keep going!`
-                : "🚀 Belum ada yang selesai — mulai dari hari ini!"}
+                ? `${doneCount}/7 selesai — keep going.`
+                : "Belum ada yang selesai — mulai dari hari ini."}
             </p>
           </div>
           {doneCount >= 5 && weekNumber < 4 && (
@@ -581,10 +579,10 @@ const ContentCalendarView = ({
                 setWeekNumber(weekNumber + 1);
                 setExpandedDay(null);
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold shadow-md"
+              className="cmd-primary text-xs"
             >
               Minggu {weekNumber + 1}
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </button>
           )}
         </div>

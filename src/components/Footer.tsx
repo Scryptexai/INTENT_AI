@@ -37,8 +37,8 @@ const Footer = () => (
         <div className="flex items-center gap-6 text-[10px] uppercase tracking-wider text-muted-foreground/30">
           <Link to="/onboarding" className="hover:text-foreground/60 transition-colors">Mulai</Link>
           <Link to="/dashboard" className="hover:text-foreground/60 transition-colors">Dashboard</Link>
-          <a href="#" className="hover:text-foreground/60 transition-colors">Terms</a>
-          <a href="#" className="hover:text-foreground/60 transition-colors">Privacy</a>
+          <Link to="/terms" className="hover:text-foreground/60 transition-colors">Terms</Link>
+          <Link to="/privacy" className="hover:text-foreground/60 transition-colors">Privacy</Link>
         </div>
       </div>
     </div>

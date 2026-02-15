@@ -80,7 +80,7 @@ const GeneratorDemo = () => {
             transition={{ delay: 0.3 }}
           >
             <p className="text-xs text-muted-foreground mb-4">
-              2 menit. 6 pertanyaan. 1 jalur kerja.
+              2 menit. 7 pertanyaan. 1 jalur kerja.
             </p>
             <Link
               to="/onboarding"

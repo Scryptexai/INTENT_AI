@@ -132,19 +132,19 @@ export default function TrendIntelligenceDashboard({
 
   if (loading) {
     return (
-      <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-6 flex items-center justify-center gap-3">
-        <Loader2 className="w-5 h-5 animate-spin text-primary" />
-        <span className="text-gray-400">Loading Trend Intelligence...</span>
+      <div className="border border-border p-6 flex items-center justify-center gap-3">
+        <Loader2 className="w-5 h-5 animate-spin text-foreground/40" />
+        <span className="text-muted-foreground">Loading Trend Intelligence...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-900/20 border border-red-700/50 rounded-xl p-4 flex items-center gap-3">
-        <AlertTriangle className="w-5 h-5 text-red-400" />
-        <span className="text-red-300 text-sm">{error}</span>
-        <button onClick={loadTrends} className="ml-auto text-red-400 hover:text-red-300">
+      <div className="border border-foreground/20 p-4 flex items-center gap-3">
+        <AlertTriangle className="w-5 h-5 text-foreground/50" />
+        <span className="text-foreground/60 text-sm">{error}</span>
+        <button onClick={loadTrends} className="ml-auto text-foreground/40 hover:text-foreground/60">
           <RefreshCw className="w-4 h-4" />
         </button>
       </div>
@@ -154,48 +154,48 @@ export default function TrendIntelligenceDashboard({
   if (!insight || insight.scores.length === 0) {
     const health = checkPipelineHealth();
     return (
-      <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-6">
+      <div className="border border-border p-6">
         <div className="flex items-center gap-3 mb-3">
-          <Database className="w-5 h-5 text-gray-500" />
-          <h3 className="text-gray-400 font-medium">Trend Intelligence</h3>
+          <Database className="w-5 h-5 text-muted-foreground/40" />
+          <h3 className="text-foreground/60 font-medium">Trend Intelligence</h3>
         </div>
-        <p className="text-gray-500 text-sm mb-3">
+        <p className="text-muted-foreground text-sm mb-3">
           Belum ada data trend untuk niche ini. Klik refresh untuk fetch data real dari API.
         </p>
 
         {/* API Status */}
-        <div className="mb-4 p-3 bg-gray-800/50 rounded-lg border border-gray-700/30">
-          <p className="text-xs text-gray-400 mb-2 font-medium">
-            📡 Data Sources ({health.apis_configured}/{health.apis_total} configured)
+        <div className="mb-4 p-3 border border-border">
+          <p className="text-xs text-muted-foreground/60 mb-2 font-medium">
+            Data Sources ({health.apis_configured}/{health.apis_total} configured)
           </p>
           {health.sources.map((src) => (
             <div key={src.name} className="flex items-center gap-2 text-xs py-0.5">
-              <span className={src.available ? "text-emerald-400" : "text-red-400"}>
-                {src.available ? "✅" : "❌"}
+              <span className={src.available ? "text-foreground/60" : "text-foreground/30"}>
+                {src.available ? "●" : "○"}
               </span>
-              <span className={src.available ? "text-gray-300" : "text-gray-500"}>{src.name}</span>
+              <span className={src.available ? "text-foreground/70" : "text-muted-foreground"}>{src.name}</span>
               {!src.available && src.reason && (
-                <span className="text-gray-600 ml-auto">{src.reason}</span>
+                <span className="text-muted-foreground/40 ml-auto">{src.reason}</span>
               )}
             </div>
           ))}
           {!health.has_minimum_setup && (
-            <p className="text-yellow-400 text-xs mt-2">
-              ⚠️ Tambahkan minimal 1 API key ke file .env untuk data real
+            <p className="text-foreground/50 text-xs mt-2">
+              Tambahkan minimal 1 API key ke file .env untuk data real
             </p>
           )}
         </div>
 
         {/* Pipeline Progress */}
         {refreshing && refreshProgress && (
-          <div className="mb-3 p-3 bg-blue-900/20 rounded-lg border border-blue-700/30">
+          <div className="mb-3 p-3 border border-border">
             <div className="flex items-center gap-2 mb-1">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-400" />
-              <span className="text-blue-300 text-xs">{refreshProgress.message}</span>
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-foreground/40" />
+              <span className="text-foreground/60 text-xs">{refreshProgress.message}</span>
             </div>
-            <div className="w-full bg-gray-700/50 rounded-full h-1.5">
+            <div className="w-full bg-border h-px">
               <div
-                className="bg-blue-500 h-1.5 rounded-full transition-all duration-500"
+                className="bg-foreground/40 h-px transition-all duration-500"
                 style={{ width: `${refreshProgress.progress}%` }}
               />
             </div>
@@ -205,7 +205,7 @@ export default function TrendIntelligenceDashboard({
         <button
           onClick={handleRefresh}
           disabled={refreshing || !health.has_minimum_setup}
-          className="px-4 py-2 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm hover:bg-primary/15 flex items-center gap-2 disabled:opacity-50"
+          className="cmd-action text-xs disabled:opacity-50"
         >
           {refreshing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
           {refreshing ? "Fetching Real Data..." : "Fetch Data Trend"}
@@ -221,23 +221,23 @@ export default function TrendIntelligenceDashboard({
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="bg-gray-900/80 border border-gray-700/50 rounded-xl p-5">
+      <div className="border border-border p-5">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <BarChart3 className="w-5 h-5 text-primary" />
+            <div className="w-10 h-10 border border-border flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-foreground/50" />
             </div>
             <div>
-              <h2 className="text-white font-semibold text-lg">Trend Intelligence</h2>
-              <p className="text-gray-400 text-sm">
-                {insight.nicheLabel} • {insight.dataPointsTotal} data points • {insight.scores.length} keywords
+              <h2 className="text-foreground font-semibold text-lg">Trend Intelligence</h2>
+              <p className="text-muted-foreground text-sm">
+                {insight.nicheLabel} · {insight.dataPointsTotal} data points · {insight.scores.length} keywords
               </p>
             </div>
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="px-3 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 text-sm hover:bg-gray-700 flex items-center gap-2"
+            className="cmd-ghost text-xs"
           >
             {refreshing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
             Refresh
@@ -258,13 +258,13 @@ export default function TrendIntelligenceDashboard({
             value={insight.hotKeywords.length}
             suffix={`/${insight.scores.length}`}
             icon={<Flame className="w-4 h-4" />}
-            color="text-orange-400"
+            color="text-foreground/60"
           />
           <StatCard
             label="Breakouts"
             value={insight.breakoutKeywords.length}
             icon={<Zap className="w-4 h-4" />}
-            color="text-yellow-400"
+            color="text-foreground/60"
           />
           <StatCard
             label="Dominant Stage"
@@ -277,7 +277,7 @@ export default function TrendIntelligenceDashboard({
             label="Data Points"
             value={insight.dataPointsTotal}
             icon={<Database className="w-4 h-4" />}
-            color="text-gray-400"
+            color="text-muted-foreground"
           />
         </div>
       </div>
@@ -301,10 +301,10 @@ export default function TrendIntelligenceDashboard({
 
       {/* AI Brief (debug/transparency view) */}
       {aiBrief && (
-        <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4">
+        <div className="border border-border p-4">
           <button
             onClick={() => setShowRawBrief(!showRawBrief)}
-            className="flex items-center gap-2 text-gray-400 hover:text-gray-300 text-sm w-full"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground/70 text-sm w-full"
           >
             {showRawBrief ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             <span>AI Trend Brief (data yang dikirim ke AI)</span>
@@ -316,7 +316,7 @@ export default function TrendIntelligenceDashboard({
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="mt-3 p-3 bg-gray-950 rounded-lg text-xs text-gray-400 font-mono overflow-x-auto whitespace-pre-wrap"
+                className="mt-3 p-3 bg-background border border-border text-xs text-muted-foreground font-mono overflow-x-auto whitespace-pre-wrap"
               >
                 {formatBriefForPrompt(aiBrief)}
               </motion.pre>
@@ -335,26 +335,26 @@ export default function TrendIntelligenceDashboard({
 function CompactView({ insight }: { insight: TrendInsight; onExpand: () => void }) {
   const top = insight.topOpportunity;
   return (
-    <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4">
+    <div className="border border-border p-4">
       <div className="flex items-center gap-3">
-        <BarChart3 className="w-5 h-5 text-primary" />
+        <BarChart3 className="w-5 h-5 text-foreground/50" />
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-white text-sm font-medium">Trend: {insight.nicheLabel}</span>
+            <span className="text-foreground text-sm font-medium">Trend: {insight.nicheLabel}</span>
             <span className={`text-xs ${getOpportunityColor(insight.avgOpportunityScore)}`}>
               {insight.avgOpportunityScore}/100
             </span>
           </div>
           {top && (
-            <p className="text-gray-400 text-xs mt-0.5">
+            <p className="text-muted-foreground text-xs mt-0.5">
               Top: "{top.keyword}" ({top.opportunity_score}/100, {LIFECYCLE_LABELS[top.lifecycle_stage].emoji} {top.lifecycle_stage})
             </p>
           )}
         </div>
         <div className="flex items-center gap-1">
           {insight.hotKeywords.length > 0 && (
-            <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">
-              🔥 {insight.hotKeywords.length} hot
+            <span className="text-xs border border-border text-foreground/50 px-2 py-0.5">
+              {insight.hotKeywords.length} hot
             </span>
           )}
         </div>
@@ -372,13 +372,13 @@ function StatCard({ label, value, suffix, icon, color, isText }: {
   isText?: boolean;
 }) {
   return (
-    <div className="bg-gray-800/50 rounded-lg p-3">
+    <div className="border border-border p-3">
       <div className="flex items-center gap-1.5 mb-1">
         <span className={color}>{icon}</span>
-        <span className="text-gray-500 text-xs">{label}</span>
+        <span className="text-muted-foreground text-xs">{label}</span>
       </div>
       <div className={`${isText ? "text-sm" : "text-xl"} font-bold ${color}`}>
-        {value}{suffix && <span className="text-sm font-normal text-gray-500">{suffix}</span>}
+        {value}{suffix && <span className="text-sm font-normal text-muted-foreground">{suffix}</span>}
       </div>
     </div>
   );
@@ -392,23 +392,23 @@ function TopOpportunityCard({ score }: { score: TrendScore }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-primary/[0.06] border border-primary/15 rounded-xl p-5"
+      className="border border-foreground/15 p-5"
     >
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Target className="w-4 h-4 text-primary" />
-            <span className="text-primary/80 text-xs font-medium uppercase tracking-wider">Top Opportunity</span>
+            <Target className="w-4 h-4 text-foreground/50" />
+            <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/40">Top Opportunity</span>
           </div>
-          <h3 className="text-white text-lg font-bold">"{score.keyword}"</h3>
+          <h3 className="text-foreground text-lg font-bold">"{score.keyword}"</h3>
           <div className="flex items-center gap-3 mt-2 flex-wrap">
-            <span className={`text-sm flex items-center gap-1 ${lifecycle.color}`}>
+            <span className="text-sm flex items-center gap-1 text-foreground/60">
               {lifecycle.emoji} {lifecycle.label}
             </span>
-            <span className={`text-sm flex items-center gap-1 ${risk.color}`}>
+            <span className="text-sm flex items-center gap-1 text-foreground/50">
               {risk.emoji} {risk.label}
             </span>
-            <span className="text-gray-400 text-sm flex items-center gap-1">
+            <span className="text-muted-foreground text-sm flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" />
               ~{score.sustainability_window}d window
             </span>
@@ -418,16 +418,16 @@ function TopOpportunityCard({ score }: { score: TrendScore }) {
           <div className={`text-3xl font-bold ${getOpportunityColor(score.opportunity_score)}`}>
             {score.opportunity_score}
           </div>
-          <div className="text-gray-500 text-xs">/100 score</div>
+          <div className="text-muted-foreground text-xs">/100 score</div>
         </div>
       </div>
 
       {/* Score Breakdown Bar */}
       <div className="mt-4 grid grid-cols-4 gap-2">
-        <ScoreBar label="Momentum" value={score.trend_momentum} color="bg-emerald-500" />
-        <ScoreBar label="Monetisasi" value={score.monetization_score} color="bg-amber-500" />
-        <ScoreBar label="Supply Gap" value={score.supply_gap_score} color="bg-blue-500" />
-        <ScoreBar label="Kompetisi" value={score.competition_score} color="bg-red-500" inverted />
+        <ScoreBar label="Momentum" value={score.trend_momentum} color="bg-foreground/30" />
+        <ScoreBar label="Monetisasi" value={score.monetization_score} color="bg-foreground/25" />
+        <ScoreBar label="Supply Gap" value={score.supply_gap_score} color="bg-foreground/20" />
+        <ScoreBar label="Kompetisi" value={score.competition_score} color="bg-foreground/15" inverted />
       </div>
     </motion.div>
   );
@@ -442,12 +442,12 @@ function ScoreBar({ label, value, color, inverted }: {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-gray-400 text-xs">{label}</span>
-        <span className="text-white text-xs font-medium">{value}</span>
+        <span className="text-muted-foreground text-xs">{label}</span>
+        <span className="text-foreground text-xs font-medium">{value}</span>
       </div>
-      <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
+      <div className="h-px bg-border overflow-hidden">
         <div
-          className={`h-full rounded-full ${inverted ? "bg-red-500/70" : color}`}
+          className={`h-full ${inverted ? "bg-foreground/20" : color}`}
           style={{ width: `${Math.min(100, value)}%` }}
         />
       </div>
@@ -463,9 +463,9 @@ function LifecyclePipeline({ summary, scores }: {
   const total = Object.values(summary).reduce((s, v) => s + v, 0);
 
   return (
-    <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl p-4">
-      <h3 className="text-white text-sm font-medium mb-3 flex items-center gap-2">
-        <Activity className="w-4 h-4 text-primary" />
+    <div className="border border-border p-4">
+      <h3 className="text-foreground text-sm font-medium mb-3 flex items-center gap-2">
+        <Activity className="w-4 h-4 text-foreground/50" />
         Lifecycle Pipeline
       </h3>
       <div className="flex items-center gap-1">
@@ -480,19 +480,19 @@ function LifecyclePipeline({ summary, scores }: {
               className="flex-1 group relative"
               title={`${info.label}: ${count} keywords`}
             >
-              <div className={`h-8 rounded-md flex items-center justify-center ${
-                count > 0 ? getLifecycleBgColor(stage) : "bg-gray-800"
-              } transition-all hover:scale-105`}>
+              <div className={`h-8 flex items-center justify-center border ${
+                count > 0 ? "border-foreground/20 bg-foreground/5" : "border-border bg-background"
+              } transition-all hover:bg-foreground/10`}>
                 {count > 0 && (
-                  <span className="text-xs font-medium text-white">
+                  <span className="text-xs font-medium text-foreground/70">
                     {info.emoji} {count}
                   </span>
                 )}
               </div>
-              <div className={`text-center text-xs mt-1 ${info.color}`}>
+              <div className="text-center text-xs mt-1 text-foreground/50">
                 {info.label}
               </div>
-              <div className="text-center text-xs text-gray-500">
+              <div className="text-center text-xs text-muted-foreground">
                 {pct > 0 ? `${Math.round(pct)}%` : "—"}
               </div>
             </div>
@@ -513,45 +513,45 @@ function KeywordScoresTable({ scores, showAll, expandedKeyword, onToggleExpand, 
   const displayed = showAll ? scores : scores.slice(0, 5);
 
   return (
-    <div className="bg-gray-900/50 border border-gray-700/50 rounded-xl overflow-hidden">
-      <div className="p-4 border-b border-gray-700/50">
-        <h3 className="text-white text-sm font-medium flex items-center gap-2">
-          <Search className="w-4 h-4 text-primary" />
+    <div className="border border-border overflow-hidden">
+      <div className="p-4 border-b border-border">
+        <h3 className="text-foreground text-sm font-medium flex items-center gap-2">
+          <Search className="w-4 h-4 text-foreground/50" />
           Keyword Scores
-          <span className="text-gray-500 text-xs ml-1">({scores.length} keywords)</span>
+          <span className="text-muted-foreground text-xs ml-1">({scores.length} keywords)</span>
         </h3>
       </div>
 
-      <div className="divide-y divide-gray-800/50">
+      <div className="divide-y divide-border">
         {displayed.map((score) => {
           const lifecycle = LIFECYCLE_LABELS[score.lifecycle_stage];
           const risk = RISK_LABELS[score.risk_level];
           const isExpanded = expandedKeyword === score.keyword;
 
           return (
-            <div key={score.keyword} className="hover:bg-gray-800/30 transition-colors">
+            <div key={score.keyword} className="hover:bg-foreground/[0.03] transition-colors">
               <button
                 onClick={() => onToggleExpand(isExpanded ? null : score.keyword)}
                 className="w-full px-4 py-3 flex items-center gap-3 text-left"
               >
                 {/* Opportunity Score */}
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm ${
-                  getOpportunityBg(score.opportunity_score)
-                } ${getOpportunityColor(score.opportunity_score)}`}>
+                <div className={`w-10 h-10 border border-border flex items-center justify-center font-bold text-sm ${
+                  getOpportunityColor(score.opportunity_score)
+                }`}>
                   {score.opportunity_score}
                 </div>
 
                 {/* Keyword */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-white text-sm font-medium truncate">{score.keyword}</span>
-                    {score.is_hot && <Flame className="w-3.5 h-3.5 text-orange-400 flex-shrink-0" />}
-                    {score.is_breakout && <Zap className="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" />}
+                    <span className="text-foreground text-sm font-medium truncate">{score.keyword}</span>
+                    {score.is_hot && <Flame className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0" />}
+                    {score.is_breakout && <Zap className="w-3.5 h-3.5 text-foreground/40 flex-shrink-0" />}
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className={`text-xs ${lifecycle.color}`}>{lifecycle.emoji} {lifecycle.label}</span>
-                    <span className={`text-xs ${risk.color}`}>{risk.emoji}</span>
-                    <span className="text-gray-500 text-xs">~{score.sustainability_window}d</span>
+                    <span className="text-xs text-foreground/50">{lifecycle.emoji} {lifecycle.label}</span>
+                    <span className="text-xs text-foreground/40">{risk.emoji}</span>
+                    <span className="text-muted-foreground text-xs">~{score.sustainability_window}d</span>
                   </div>
                 </div>
 
@@ -564,9 +564,9 @@ function KeywordScoresTable({ scores, showAll, expandedKeyword, onToggleExpand, 
                 </div>
 
                 {isExpanded ? (
-                  <ChevronUp className="w-4 h-4 text-gray-500" />
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
                 ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
                 )}
               </button>
 
@@ -591,7 +591,7 @@ function KeywordScoresTable({ scores, showAll, expandedKeyword, onToggleExpand, 
       {scores.length > 5 && (
         <button
           onClick={onToggleShowAll}
-          className="w-full px-4 py-2 text-sm text-gray-400 hover:text-gray-300 flex items-center justify-center gap-1 border-t border-gray-800/50"
+          className="w-full px-4 py-2 text-sm text-muted-foreground hover:text-foreground/70 flex items-center justify-center gap-1 border-t border-border"
         >
           {showAll ? "Show Less" : `Show All (${scores.length})`}
           {showAll ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -602,13 +602,11 @@ function KeywordScoresTable({ scores, showAll, expandedKeyword, onToggleExpand, 
 }
 
 function MiniScore({ label, value, inverted }: { label: string; value: number; inverted?: boolean }) {
-  const color = inverted
-    ? (value > 60 ? "text-red-400" : value > 30 ? "text-yellow-400" : "text-emerald-400")
-    : (value > 60 ? "text-emerald-400" : value > 30 ? "text-yellow-400" : "text-gray-500");
+  const color = value > 60 ? "text-foreground/70" : value > 30 ? "text-foreground/50" : "text-foreground/30";
 
   return (
     <div className="text-center">
-      <div className="text-gray-600 text-[10px]">{label}</div>
+      <div className="text-muted-foreground/40 text-[10px]">{label}</div>
       <div className={`text-xs font-medium ${color}`}>{value}</div>
     </div>
   );
@@ -620,8 +618,8 @@ function KeywordDetail({ score }: { score: TrendScore }) {
   return (
     <div className="px-4 pb-4 space-y-3">
       {/* Score Breakdown */}
-      <div className="bg-gray-800/50 rounded-lg p-3">
-        <h4 className="text-gray-400 text-xs font-medium mb-2">Score Breakdown</h4>
+      <div className="border border-border p-3">
+        <h4 className="text-muted-foreground text-xs font-medium mb-2">Score Breakdown</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <DetailMetric
             label="Trend Momentum"
@@ -632,7 +630,7 @@ function KeywordDetail({ score }: { score: TrendScore }) {
               `30d growth: ${breakdown.momentum.growth_30d_raw.toFixed(1)}%`,
               `Volume weight: ${(breakdown.momentum.search_volume_weight * 100).toFixed(0)}%`,
             ]}
-            color="text-emerald-400"
+            color="text-foreground/70"
           />
           <DetailMetric
             label="Monetization"
@@ -643,7 +641,7 @@ function KeywordDetail({ score }: { score: TrendScore }) {
               `Affiliate: ${(breakdown.monetization.affiliate_density_raw * 100).toFixed(0)}%`,
               `Ads: ${(breakdown.monetization.ads_density_raw * 100).toFixed(0)}%`,
             ]}
-            color="text-yellow-400"
+            color="text-foreground/60"
           />
           <DetailMetric
             label="Supply Gap"
@@ -654,7 +652,7 @@ function KeywordDetail({ score }: { score: TrendScore }) {
               `Content: ${breakdown.supply_gap.content_density_raw.toLocaleString()}`,
               `Creators: ${breakdown.supply_gap.creator_density_raw.toLocaleString()}`,
             ]}
-            color="text-blue-400"
+            color="text-foreground/50"
           />
           <DetailMetric
             label="Competition"
@@ -664,7 +662,7 @@ function KeywordDetail({ score }: { score: TrendScore }) {
               `Content/creator: ${breakdown.competition.content_per_creator}`,
               `Engagement: ${breakdown.competition.engagement_velocity_raw.toFixed(1)}%`,
             ]}
-            color="text-red-400"
+            color="text-foreground/40"
           />
         </div>
       </div>
@@ -672,9 +670,9 @@ function KeywordDetail({ score }: { score: TrendScore }) {
       {/* Risk Factors */}
       {score.risk_factors.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
-          <AlertTriangle className="w-3.5 h-3.5 text-yellow-500" />
+          <AlertTriangle className="w-3.5 h-3.5 text-foreground/40" />
           {score.risk_factors.map((factor) => (
-            <span key={factor} className="text-xs bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full">
+            <span key={factor} className="text-xs border border-border text-foreground/50 px-2 py-0.5">
               {formatRiskFactor(factor)}
             </span>
           ))}
@@ -682,8 +680,8 @@ function KeywordDetail({ score }: { score: TrendScore }) {
       )}
 
       {/* Formula */}
-      <div className="text-xs text-gray-500 font-mono bg-gray-950/50 rounded p-2">
-        opportunity = ({score.trend_momentum}×0.35) + ({score.monetization_score}×0.30) + ({score.supply_gap_score}×0.25) - ({score.competition_score}×0.10) = <span className="text-white font-bold">{score.opportunity_score}</span>
+      <div className="text-xs text-muted-foreground font-mono bg-background border border-border p-2">
+        opportunity = ({score.trend_momentum}×0.35) + ({score.monetization_score}×0.30) + ({score.supply_gap_score}×0.25) - ({score.competition_score}×0.10) = <span className="text-foreground font-bold">{score.opportunity_score}</span>
       </div>
     </div>
   );
@@ -697,15 +695,15 @@ function DetailMetric({ label, value, weight, details, color }: {
   color: string;
 }) {
   return (
-    <div className="bg-gray-900/50 rounded p-2">
+    <div className="border border-border p-2">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-gray-500 text-xs">{label}</span>
-        <span className="text-gray-600 text-[10px]">{weight}</span>
+        <span className="text-muted-foreground text-xs">{label}</span>
+        <span className="text-muted-foreground/40 text-[10px]">{weight}</span>
       </div>
       <div className={`text-lg font-bold ${color}`}>{value}</div>
       <div className="mt-1 space-y-0.5">
         {details.map((d, i) => (
-          <div key={i} className="text-gray-500 text-[10px]">{d}</div>
+          <div key={i} className="text-muted-foreground text-[10px]">{d}</div>
         ))}
       </div>
     </div>
@@ -717,28 +715,21 @@ function DetailMetric({ label, value, weight, details, color }: {
 // ============================================================================
 
 function getOpportunityColor(score: number): string {
-  if (score >= 60) return "text-emerald-400";
-  if (score >= 40) return "text-yellow-400";
-  if (score >= 20) return "text-orange-400";
-  return "text-red-400";
+  if (score >= 60) return "text-foreground/80";
+  if (score >= 40) return "text-foreground/60";
+  if (score >= 20) return "text-foreground/40";
+  return "text-foreground/25";
 }
 
 function getOpportunityBg(score: number): string {
-  if (score >= 60) return "bg-emerald-500/20";
-  if (score >= 40) return "bg-yellow-500/20";
-  if (score >= 20) return "bg-orange-500/20";
-  return "bg-red-500/20";
+  if (score >= 60) return "bg-foreground/10";
+  if (score >= 40) return "bg-foreground/7";
+  if (score >= 20) return "bg-foreground/5";
+  return "bg-foreground/3";
 }
 
 function getLifecycleBgColor(stage: LifecycleStage): string {
-  const colors: Record<LifecycleStage, string> = {
-    emerging: "bg-blue-600/40",
-    early_growth: "bg-emerald-600/40",
-    peak: "bg-yellow-600/40",
-    saturating: "bg-orange-600/40",
-    declining: "bg-red-600/40",
-  };
-  return colors[stage];
+  return "bg-foreground/5";
 }
 
 function getDominantLifecycleLabel(summary: Record<LifecycleStage, number>): string {
@@ -751,8 +742,8 @@ function getDominantLifecycleLabel(summary: Record<LifecycleStage, number>): str
 function getDominantLifecycleColor(summary: Record<LifecycleStage, number>): string {
   const sorted = Object.entries(summary).sort((a, b) => b[1] - a[1]);
   const top = sorted[0];
-  if (!top || top[1] === 0) return "text-gray-500";
-  return LIFECYCLE_LABELS[top[0] as LifecycleStage].color;
+  if (!top || top[1] === 0) return "text-muted-foreground";
+  return "text-foreground/60";
 }
 
 function formatRiskFactor(factor: string): string {

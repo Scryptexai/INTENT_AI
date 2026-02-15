@@ -7,6 +7,10 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  // DEV MODE: bypass auth for UI testing
+  return <>{children}</>;
+
+  /* PRODUCTION — re-enable this:
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -23,6 +27,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   return <>{children}</>;
+  */
 };
 
 export default ProtectedRoute;

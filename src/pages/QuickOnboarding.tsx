@@ -1,8 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Check, Loader2, Compass } from "lucide-react";
-import Navbar from "@/components/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Q_SKILLS,
@@ -178,6 +177,8 @@ const QuickOnboarding = () => {
           break;
         case "stage":
           setSelectedStage(optionId);
+          // Last question — auto-process after brief animation
+          setTimeout(() => processProfile(), 350);
           break;
       }
     },
@@ -418,7 +419,13 @@ const QuickOnboarding = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Navbar />
+      {/* Minimal header — just a mark, not full navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50 h-12 flex items-center px-6 md:px-10">
+        <Link to="/" className="flex items-center gap-1 text-muted-foreground/40 hover:text-foreground/60 transition-colors">
+          <img src="/logo.jpg" alt="INTENT" className="h-6 w-auto opacity-40" />
+          <span className="text-[10px] uppercase tracking-wider">INTENT</span>
+        </Link>
+      </div>
 
       <main className="pt-20 pb-16 px-4">
         {phase === "questions" && (
@@ -627,21 +634,6 @@ const QuickOnboarding = () => {
                           className="w-full py-3 text-sm font-medium border border-foreground/20 hover:border-foreground/40 text-foreground/70 hover:text-foreground transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                         >
                           Lanjut →
-                        </button>
-                      </motion.div>
-                    )}
-
-                    {stepId === "stage" && selectedStage && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="mt-6"
-                      >
-                        <button
-                          onClick={processProfile}
-                          className="w-full py-3 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-all"
-                        >
-                          Selesai — Lihat Hasil →
                         </button>
                       </motion.div>
                     )}

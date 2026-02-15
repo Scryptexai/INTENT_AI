@@ -69,7 +69,7 @@ const HeroSection = () => {
             transition={{ duration: 0.4, delay: 0.5 }}
             className="mt-16 flex items-center gap-8 text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50"
           >
-            <span>6 pertanyaan</span>
+            <span>7 pertanyaan</span>
             <span className="w-4 h-px bg-border" />
             <span>1 jalur kerja</span>
             <span className="w-4 h-px bg-border" />

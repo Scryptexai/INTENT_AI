@@ -168,7 +168,7 @@ export const Q_LANGUAGE: QuickQuestion = {
     { id: "id_only", emoji: "🇮🇩", label: "Indonesia saja", hint: "Market lokal" },
     { id: "id_en_passive", emoji: "📖", label: "Bisa baca Inggris", hint: "Consume English, produce Indo" },
     { id: "id_en_active", emoji: "💬", label: "Bisa kerja dalam Inggris", hint: "Market lokal + global" },
-    { id: "en_fluent", emoji: "��", label: "Inggris lancar", hint: "Full akses market global" },
+    { id: "en_fluent", emoji: "🌍", label: "Inggris lancar", hint: "Full akses market global" },
   ],
 };
 
