@@ -6,64 +6,64 @@
 
 @layer base {
   :root {
-    /* ─── INTENT Design System: Monochrome Depth ─── */
-    /* Deep charcoal foundation */
-    --background: 222 22% 5%;
-    --foreground: 210 20% 92%;
+    /* ─── INTENT Design System: Digital Deep Teal ─── */
+    /* Deep teal foundation — futuristik & organik */
+    --background: 170 60% 4%;
+    --foreground: 163 20% 90%;
 
-    /* Surface layers (panels, not cards) */
-    --surface-deep: 222 20% 7%;
-    --surface: 222 18% 9%;
-    --surface-light: 220 16% 12%;
-    --surface-raised: 220 14% 15%;
+    /* Surface layers — teal-tinted depth */
+    --surface-deep: 170 45% 5%;
+    --surface: 170 35% 7%;
+    --surface-light: 168 28% 10%;
+    --surface-raised: 166 22% 13%;
 
-    --card: 222 18% 9%;
-    --card-foreground: 210 20% 92%;
+    --card: 170 35% 7%;
+    --card-foreground: 163 20% 90%;
 
-    --popover: 222 18% 9%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 170 35% 7%;
+    --popover-foreground: 163 20% 90%;
 
-    /* Neutral steel — not a "brand color" */
-    --primary: 210 16% 60%;
-    --primary-foreground: 222 22% 5%;
+    /* Smoky Jade — system accent */
+    --primary: 163 45% 60%;
+    --primary-foreground: 170 60% 4%;
 
     /* Signal colors — only for decisions */
     --accent-signal: 38 80% 55%;
-    --accent-confirm: 160 50% 45%;
+    --accent-confirm: 163 55% 50%;
     --accent-alert: 350 70% 55%;
 
-    --secondary: 220 14% 18%;
-    --secondary-foreground: 210 20% 80%;
+    --secondary: 168 20% 14%;
+    --secondary-foreground: 163 25% 78%;
 
-    --muted: 220 14% 14%;
-    --muted-foreground: 220 12% 45%;
+    --muted: 168 18% 11%;
+    --muted-foreground: 168 14% 42%;
 
-    --accent: 220 14% 16%;
-    --accent-foreground: 210 20% 80%;
+    --accent: 168 20% 12%;
+    --accent-foreground: 163 25% 78%;
 
     --destructive: 350 70% 55%;
-    --destructive-foreground: 210 20% 95%;
+    --destructive-foreground: 163 20% 95%;
 
-    /* Structural borders — thin, architectural */
-    --border: 220 14% 13%;
-    --border-subtle: 220 14% 10%;
-    --input: 220 14% 13%;
-    --ring: 210 16% 50%;
+    /* Structural borders — teal-tinted */
+    --border: 168 18% 12%;
+    --border-subtle: 168 18% 9%;
+    --input: 168 18% 12%;
+    --ring: 163 40% 45%;
 
     /* Sharp, architectural — no rounded bubbles */
     --radius: 0.25rem;
 
-    --sidebar-background: 222 22% 4%;
-    --sidebar-foreground: 220 12% 55%;
-    --sidebar-primary: 210 16% 60%;
-    --sidebar-primary-foreground: 222 22% 5%;
-    --sidebar-accent: 220 14% 10%;
-    --sidebar-accent-foreground: 220 12% 70%;
-    --sidebar-border: 220 14% 10%;
-    --sidebar-ring: 210 16% 50%;
+    --sidebar-background: 170 60% 3%;
+    --sidebar-foreground: 168 14% 50%;
+    --sidebar-primary: 163 45% 60%;
+    --sidebar-primary-foreground: 170 60% 4%;
+    --sidebar-accent: 168 20% 9%;
+    --sidebar-accent-foreground: 163 20% 68%;
+    --sidebar-border: 168 18% 9%;
+    --sidebar-ring: 163 40% 45%;
 
     /* Semantic */
-    --success: 160 50% 45%;
+    --success: 163 55% 50%;
     --warning: 38 80% 55%;
   }
 }
@@ -128,7 +128,7 @@
     box-shadow: none;
   }
 
-  /* ─── Command Buttons (flat, sharp, not "buttony") ─── */
+  /* ─── Command Buttons (teal-accented, sharp) ─── */
   .cmd-primary {
     @apply inline-flex items-center gap-2 text-sm font-medium
            bg-transparent text-foreground
@@ -137,7 +137,8 @@
            transition-all duration-150;
   }
   .cmd-primary:hover {
-    @apply border-foreground/50 text-foreground;
+    border-color: hsl(163 45% 60% / 0.6);
+    color: hsl(163 20% 95%);
   }
 
   .cmd-action {
@@ -148,7 +149,8 @@
            transition-all duration-150;
   }
   .cmd-action:hover {
-    @apply bg-foreground/10 border-foreground/20;
+    @apply bg-foreground/10;
+    border-color: hsl(163 45% 60% / 0.3);
   }
 
   .cmd-ghost {
@@ -199,7 +201,7 @@
   }
 }
 
-/* Scrollbar — thin, structural */
+/* Scrollbar — thin, teal-tinted */
 ::-webkit-scrollbar {
   width: 4px;
 }
@@ -207,11 +209,11 @@
   background: hsl(var(--background));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: hsl(168 18% 16%);
   border-radius: 0;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
+  background: hsl(163 30% 30%);
 }
 
 .scrollbar-hide {
