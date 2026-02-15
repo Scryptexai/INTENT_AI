@@ -33,13 +33,37 @@ export const useAuth = () => {
   return context;
 };
 
+// ── DEV MODE: set to true to bypass auth entirely ──
+const DEV_BYPASS_AUTH = true;
+
+const DEV_MOCK_USER = {
+  id: "dev-user-00000000-0000-0000-0000-000000000000",
+  email: "dev@intent.sbs",
+  app_metadata: {},
+  user_metadata: { full_name: "Dev Tester", avatar_url: "" },
+  aud: "authenticated",
+  created_at: new Date().toISOString(),
+} as unknown as User;
+
+const DEV_MOCK_PROFILE: Profile = {
+  id: "dev-profile-00000000",
+  user_id: DEV_MOCK_USER.id,
+  email: "dev@intent.sbs",
+  name: "Dev Tester",
+  avatar_url: null,
+  plan: "pro",
+  credits_remaining: 9999,
+  credits_reset_at: null,
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(DEV_BYPASS_AUTH ? DEV_MOCK_USER : null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile | null>(DEV_BYPASS_AUTH ? DEV_MOCK_PROFILE : null);
+  const [loading, setLoading] = useState(DEV_BYPASS_AUTH ? false : true);
 
   const fetchProfile = async (userId: string) => {
+    if (DEV_BYPASS_AUTH) return DEV_MOCK_PROFILE;
     try {
       const { data, error } = await supabase
         .from("profiles")
@@ -59,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const refreshProfile = async () => {
+    if (DEV_BYPASS_AUTH) return;
     if (user) {
       const profileData = await fetchProfile(user.id);
       setProfile(profileData);
@@ -66,6 +91,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    // DEV MODE: skip all Supabase auth listeners
+    if (DEV_BYPASS_AUTH) return;
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -101,6 +129,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const signInWithGoogle = async () => {
+    if (DEV_BYPASS_AUTH) {
+      console.log("[DEV MODE] signInWithGoogle bypassed");
+      return { error: null };
+    }
     try {
       // CRITICAL: redirect to /auth/callback (NOT /dashboard)
       // /dashboard is a ProtectedRoute that would redirect to /login before 
@@ -126,6 +158,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
+    if (DEV_BYPASS_AUTH) {
+      console.log("[DEV MODE] signOut bypassed");
+      return;
+    }
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);
