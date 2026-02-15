@@ -75,6 +75,17 @@ const HeroSection = () => {
             <span className="w-4 h-px bg-border" />
             <span>30 hari roadmap</span>
           </motion.div>
+
+          {/* Trust signal — subtle, not marketing */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.65 }}
+            className="mt-6 flex items-center gap-2 text-[10px] text-muted-foreground/30"
+          >
+            <div className="w-1 h-1 rounded-full bg-primary/50" />
+            <span>Gratis · Tanpa kartu kredit · Hasil instan</span>
+          </motion.div>
         </div>
       </div>
     </section>

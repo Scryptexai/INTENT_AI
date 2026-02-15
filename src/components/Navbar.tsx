@@ -54,8 +54,8 @@ const Navbar = () => {
           : "bg-transparent"
       }`}
     >
-      {/* Thin status strip */}
-      <div className="h-12 flex items-center justify-between px-6 md:px-10 max-w-[1400px] mx-auto">
+      {/* Status strip */}
+      <div className="h-14 flex items-center justify-between px-6 md:px-10 max-w-[1400px] mx-auto">
         {/* Mark — not a logo, a system identifier */}
         <Link to="/" className="flex items-center gap-1 shrink-0">
           <img src="/logo.jpg" alt="INTENT" className="h-8 w-auto" />
@@ -77,7 +77,7 @@ const Navbar = () => {
                     ? "text-foreground"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
-                style={isActive ? { textDecoration: "underline", textUnderlineOffset: "4px" } : {}}
+                style={isActive ? { textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "hsl(163 45% 60% / 0.6)" } : {}}
               >
                 {item.label}
               </Link>
@@ -105,7 +105,7 @@ const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard" className="cursor-pointer text-xs">
                     <User className="w-3.5 h-3.5 mr-2" />
-                    Dashboard
+                    Workspace
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -124,7 +124,7 @@ const Navbar = () => {
                 Masuk
               </Link>
               <Link
-                to="/signup"
+                to="/onboarding"
                 className="text-xs font-medium text-foreground border border-foreground/20 px-4 py-1.5 hover:border-foreground/50 transition-all"
               >
                 Profiling
@@ -199,7 +199,7 @@ const Navbar = () => {
                     Masuk
                   </Link>
                   <Link
-                    to="/signup"
+                    to="/onboarding"
                     className="text-xs font-medium text-foreground border border-foreground/20 py-2.5 text-center"
                   >
                     Profiling

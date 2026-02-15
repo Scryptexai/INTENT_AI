@@ -439,7 +439,7 @@ const QuickOnboarding = () => {
                 <div className="inline-flex items-center gap-2 mb-4">
                   <Compass className="w-4 h-4 text-foreground/40" />
                   <span className="text-[10px] uppercase tracking-[0.2em] text-foreground/40 font-medium">
-                    Quick Mapping
+                    Kalibrasi Profil
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground/50">
@@ -459,7 +459,7 @@ const QuickOnboarding = () => {
               </div>
               <div className="h-[3px] bg-border/20 overflow-hidden">
                 <motion.div
-                  className="h-full bg-foreground/60"
+                  className="h-full bg-primary/70"
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
@@ -583,8 +583,10 @@ const QuickOnboarding = () => {
                                   : "bg-transparent border-border/30 hover:border-foreground/20"
                               }`}
                             >
-                              <span className="text-lg shrink-0">
-                                {opt.emoji}
+                              <span className={`text-[10px] font-mono shrink-0 w-5 text-center ${
+                                selected ? "text-foreground/60" : "text-muted-foreground/30"
+                              }`}>
+                                {String(idx + 1).padStart(2, '0')}
                               </span>
                               <div className="flex-1 min-w-0">
                                 <p

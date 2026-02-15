@@ -326,14 +326,14 @@ export function getAvailableGenerators(economicModel: string): GeneratorType[] {
 
 /** Labels for generator types */
 export const GENERATOR_LABELS: Record<GeneratorType, { emoji: string; label: string; description: string }> = {
-  caption: { emoji: "✍️", label: "Caption", description: "Caption untuk posting sesuai profil" },
-  hook: { emoji: "🪝", label: "Hook", description: "Kalimat pembuka yang menghentikan scroll" },
-  script: { emoji: "🎬", label: "Script", description: "Script video/podcast terstruktur" },
-  visual_prompt: { emoji: "🎨", label: "Visual Prompt", description: "Prompt untuk AI image generator" },
-  hashtag: { emoji: "#️⃣", label: "Hashtag Set", description: "Hashtag optimal per platform" },
-  cta: { emoji: "📢", label: "CTA", description: "Call to Action yang presisi" },
-  bio: { emoji: "👤", label: "Bio", description: "Bio yang dikalibrasi untuk platform" },
-  content_pillars: { emoji: "🏛️", label: "Content Pillars", description: "Pilar konten strategis" },
-  content_calendar: { emoji: "📅", label: "Jadwal Eksekusi", description: "Jadwal posting 1 minggu" },
-  first_post: { emoji: "🚀", label: "First Post", description: "Material post pertama" },
+  caption: { emoji: "01", label: "Caption", description: "Caption untuk posting sesuai profil" },
+  hook: { emoji: "02", label: "Hook", description: "Kalimat pembuka yang menghentikan scroll" },
+  script: { emoji: "03", label: "Script", description: "Script video/podcast terstruktur" },
+  visual_prompt: { emoji: "04", label: "Visual Prompt", description: "Prompt untuk AI image generator" },
+  hashtag: { emoji: "05", label: "Hashtag Set", description: "Hashtag optimal per platform" },
+  cta: { emoji: "06", label: "CTA", description: "Call to Action yang presisi" },
+  bio: { emoji: "07", label: "Bio", description: "Bio yang dikalibrasi untuk platform" },
+  content_pillars: { emoji: "08", label: "Content Pillars", description: "Pilar konten strategis" },
+  content_calendar: { emoji: "09", label: "Jadwal Eksekusi", description: "Jadwal posting 1 minggu" },
+  first_post: { emoji: "10", label: "First Post", description: "Material post pertama" },
 };

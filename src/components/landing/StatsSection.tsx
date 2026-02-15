@@ -53,10 +53,11 @@ const StatsSection = () => (
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.6 }}
-          className="mt-6 text-sm text-foreground/80 max-w-md"
+          className="mt-6 text-sm font-semibold text-foreground max-w-md"
         >
           Fungsi sistem bukan menambah pilihan.
-          Fungsi sistem adalah menyaring.
+          <br />
+          <span className="text-primary/80">Fungsi sistem adalah menyaring.</span>
         </motion.p>
       </div>
     </div>

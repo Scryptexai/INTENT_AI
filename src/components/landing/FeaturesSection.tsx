@@ -62,7 +62,7 @@ const FeaturesSection = () => (
               className="grid grid-cols-[3rem_1fr] gap-4 md:gap-6 py-6 border-t border-border/40 first:border-t-0"
             >
               {/* Step number */}
-              <span className="text-xs font-mono text-muted-foreground/40 pt-0.5">
+              <span className="text-xs font-mono text-primary/50 pt-0.5">
                 {step.num}
               </span>
 

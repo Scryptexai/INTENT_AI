@@ -422,7 +422,7 @@ const Dashboard = () => {
         <div className="absolute left-[10%] md:left-[8%] top-0 bottom-0 w-px bg-border/20" />
 
         {/* ── Tab strip ── */}
-        <div className="sticky top-12 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="sticky top-14 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
           <div className="max-w-[1100px] mx-auto px-6 md:px-10">
             <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide">
               {tabs.map((item) => (
@@ -431,7 +431,7 @@ const Dashboard = () => {
                   onClick={() => setActiveTab(item.key)}
                   title={item.hint}
                   className={`flex items-center gap-2 px-4 py-3 text-xs uppercase tracking-wider whitespace-nowrap border-b-2 transition-all duration-150 ${
-                    activeTab === item.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                    activeTab === item.key ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                   }`}
                 >
                   <item.icon className="w-3.5 h-3.5" />
@@ -468,12 +468,12 @@ const Dashboard = () => {
             {/* Progress */}
             <div className="mb-6">
               <div className="w-full h-px bg-border relative">
-                <div className="absolute top-0 left-0 h-px bg-foreground/50 transition-all duration-500" style={{ width: `${progress.percent}%` }} />
-                <div className="absolute -top-1 w-2 h-2 bg-foreground border border-background transition-all duration-500" style={{ left: `${progress.percent}%`, transform: "translateX(-50%)" }} />
+                <div className="absolute top-0 left-0 h-px bg-primary/70 transition-all duration-500" style={{ width: `${progress.percent}%` }} />
+                <div className="absolute -top-1 w-2 h-2 bg-primary border border-background transition-all duration-500" style={{ left: `${progress.percent}%`, transform: "translateX(-50%)" }} />
               </div>
               <div className="flex justify-between mt-2">
                 <span className="text-[10px] text-muted-foreground/40">Minggu {progress.currentWeek} dari 4</span>
-                <span className="text-[10px] text-muted-foreground/40">{progress.done}/{progress.total} tasks — {progress.percent}%</span>
+                <span className="text-[10px] text-muted-foreground/40">{progress.done}/{progress.total} tugas — {progress.percent}%</span>
               </div>
             </div>
 
@@ -701,7 +701,7 @@ const Dashboard = () => {
                     <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                     <div>
                       <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Mengambil data market</p>
-                      <p className="text-xs text-muted-foreground/70">Fetching Google Trends, YouTube, SerpAPI...</p>
+                      <p className="text-xs text-muted-foreground/70">Mengambil data dari Google Trends, YouTube, TikTok...</p>
                     </div>
                   </div>
                 )}
@@ -949,7 +949,7 @@ const Dashboard = () => {
                           {/* Key metrics */}
                           <div className="grid grid-cols-2 gap-px bg-border">
                             <div className="bg-background py-2.5 px-3">
-                              <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Income range</p>
+                              <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40">Estimasi income</p>
                               <p className="text-xs text-foreground/70 mt-0.5">{job.incomeRange}</p>
                             </div>
                             <div className="bg-background py-2.5 px-3">
@@ -998,7 +998,7 @@ const Dashboard = () => {
                           <div className="grid grid-cols-2 gap-4">
                             {job.skillGap && (
                               <div>
-                                <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Skill gap</p>
+                                <p className="text-[9px] uppercase tracking-[0.12em] text-muted-foreground/40 mb-1">Skill yang perlu dikembangkan</p>
                                 <p className="text-[10px] text-muted-foreground/50 leading-relaxed">{job.skillGap}</p>
                               </div>
                             )}
@@ -1047,7 +1047,7 @@ const Dashboard = () => {
                         className="w-full flex items-center gap-4 py-4 px-5 hover:bg-muted/5 transition-colors"
                       >
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-[10px] font-bold text-muted-foreground/40 bg-muted/10 px-2 py-1 w-8 text-center">W{week.week}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground/40 bg-muted/10 px-2 py-1 w-8 text-center">M{week.week}</span>
                           {isCurrentWeek && <span className="text-[9px] font-bold px-1.5 py-0.5 bg-foreground/10 text-foreground/60">AKTIF</span>}
                         </div>
                         <div className="flex-1 text-left">
@@ -1196,7 +1196,7 @@ const Dashboard = () => {
                     return (
                       <button key={genType} onClick={() => setActiveGenerator(isActive ? null : genType)} className={`bg-background py-4 px-4 text-left transition-all ${isActive ? "bg-muted/10 border-l-2 border-l-foreground/30" : "hover:bg-muted/5"}`}>
                         <div className="flex items-center justify-between mb-1.5">
-                          <span className="text-lg">{label.emoji}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground/40">{label.emoji}</span>
                           {hasContent && <Check className="w-3.5 h-3.5 text-foreground/40" />}
                         </div>
                         <p className="text-xs font-medium text-foreground/80">{label.label}</p>
@@ -1211,7 +1211,7 @@ const Dashboard = () => {
                     <motion.div key={activeGenerator} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
                       <div className="border border-border">
                         <div className="py-3 px-5 border-b border-border flex items-center gap-2">
-                          <span className="text-lg">{GENERATOR_LABELS[activeGenerator].emoji}</span>
+                          <span className="text-[10px] font-mono text-muted-foreground/50">{GENERATOR_LABELS[activeGenerator].emoji}</span>
                           <p className="text-sm font-medium text-foreground">{GENERATOR_LABELS[activeGenerator].label}</p>
                         </div>
                         <div className="py-5 px-5 space-y-4">
@@ -1320,7 +1320,7 @@ const Dashboard = () => {
                             <div className="flex gap-3">
                               {checkpointHistory.map((cp) => (
                                 <div key={cp.week_number} className="text-center">
-                                  <div className="text-[10px] text-muted-foreground/40 mb-1">W{cp.week_number}</div>
+                                  <div className="text-[10px] text-muted-foreground/40 mb-1">M{cp.week_number}</div>
                                   <div className={`text-xs font-medium ${cp.completion_rate >= 0.9 ? "text-foreground" : cp.completion_rate >= 0.5 ? "text-muted-foreground" : "text-muted-foreground/40"}`}>{Math.round(cp.completion_rate * 100)}%</div>
                                 </div>
                               ))}
@@ -1336,7 +1336,7 @@ const Dashboard = () => {
                           <div className="flex gap-2">
                             {(["on_track", "stuck", "ahead"] as const).map((status) => (
                               <button key={status} onClick={() => setCheckpointStatus(status)} className={`px-4 py-2 text-xs transition-all border ${checkpointStatus === status ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"}`}>
-                                {status === "on_track" ? "On Track" : status === "stuck" ? "Stuck" : "Ahead"}
+                                {status === "on_track" ? "Sesuai Rencana" : status === "stuck" ? "Terhambat" : "Lebih Cepat"}
                               </button>
                             ))}
                           </div>

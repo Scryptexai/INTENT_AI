@@ -86,7 +86,7 @@ const GeneratorDemo = () => {
               to="/onboarding"
               className="cmd-primary group"
             >
-              Mulai Sekarang
+              Mulai Kalibrasi
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </motion.div>

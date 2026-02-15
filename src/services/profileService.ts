@@ -582,7 +582,53 @@ FORMAT: 4 paragraf pendek. Bahasa Indonesia. Tanpa heading/markdown.`;
 // 6. LOAD ACTIVE PROFILE FROM SUPABASE
 // ============================================================================
 
+// ── DEV MODE: must match AuthContext DEV_BYPASS_AUTH ──
+const DEV_BYPASS_AUTH = true;
+
+const DEV_MOCK_SAVED_PROFILE: SavedProfile = {
+  id: "dev-profile-00000000",
+  user_id: "dev-user-00000000-0000-0000-0000-000000000000",
+  primary_path: "freelance_upgrade",
+  alternate_path: "micro_service",
+  segment_tag: "skill_leverage",
+  eliminated_paths: ["high_risk_speculative"],
+  scores: {
+    time: 3, capital: 2, target_speed: 3, work_style: 4,
+    risk: 2, skill_primary: 4, skill_secondary: 3,
+    interest_market: 3, audience_access: 1,
+    daily_routine: 2, preferred_platform: 3,
+  },
+  ai_why_text: "Berdasarkan profil kamu — skill design yang sudah ada di level intermediate, pengalaman 2+ tahun freelance, dan target income Rp 5-15 juta/bulan — jalur AI Freelance Upgrade adalah pilihan paling realistis. Kamu tidak perlu belajar skill baru. Yang perlu dilakukan adalah memperkuat workflow yang sudah ada dengan AI tools sehingga bisa menaikkan harga 2-3x sambil memangkas waktu delivery. Dengan waktu 1-2 jam per hari, kamu bisa mulai uji coba di minggu pertama tanpa mengganggu project yang sedang berjalan.",
+  ai_custom_tasks: null,
+  ai_niche_suggestion: "Fokus di sub-niche 'AI-Enhanced Brand Identity Design' — demand tinggi, kompetisi masih rendah di Indonesia. Target client: startup & UMKM yang butuh branding profesional tapi budget terbatas. Kamu bisa tawarkan package brand identity (logo + guidelines + social media templates) dengan harga Rp 3-5 juta per package, delivery 3-5 hari dengan bantuan AI.",
+  current_week: 1,
+  is_active: true,
+  created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+};
+
+// Attach answer_tags as extra property (Dashboard reads it via `as any`)
+(DEV_MOCK_SAVED_PROFILE as any).answer_tags = {
+  profile_level: "quick",
+  economic_model: "skill_service",
+  niche: "design",
+  sub_sector: "brand_identity",
+  platform: "instagram",
+  current_stage: "freelancer",
+  digital_experience: "intermediate",
+  language_skill: "bilingual",
+  income_target: "5_15jt",
+  tools_familiarity: "intermediate",
+  biggest_challenge: "no_direction",
+  weekly_commitment: "1_2_hours",
+  learning_style: "practice",
+};
+
 export async function loadActiveProfile(userId: string): Promise<SavedProfile | null> {
+  // DEV MODE: return mock profile so dashboard renders fully
+  if (DEV_BYPASS_AUTH) {
+    return DEV_MOCK_SAVED_PROFILE;
+  }
+
   const { data, error } = await supabase
     .from("user_profiles_intent")
     .select("*")
@@ -628,6 +674,22 @@ export async function loadActiveProfile(userId: string): Promise<SavedProfile | 
 export async function loadTaskProgress(
   profileId: string
 ): Promise<TaskProgress[]> {
+  // DEV MODE: generate tasks from the path template
+  if (DEV_BYPASS_AUTH) {
+    const pathTemplate = getPathTemplate(DEV_MOCK_SAVED_PROFILE.primary_path as any);
+    if (!pathTemplate) return [];
+    return pathTemplate.weeklyPlan.flatMap((week) =>
+      week.tasks.map((task, idx) => ({
+        path_id: pathTemplate.id,
+        week_number: week.week,
+        task_index: idx,
+        task_text: task.text,
+        is_completed: false,
+        completed_at: null,
+      }))
+    );
+  }
+
   const { data, error } = await supabase
     .from("user_path_progress")
     .select("path_id, week_number, task_index, task_text, is_completed, completed_at")
@@ -649,6 +711,11 @@ export async function toggleTaskCompletion(
   taskIndex: number,
   isCompleted: boolean
 ): Promise<{ advanced: boolean; newWeek: number | null }> {
+  // DEV MODE: just return success without DB write
+  if (DEV_BYPASS_AUTH) {
+    return { advanced: false, newWeek: null };
+  }
+
   const { error } = await supabase
     .from("user_path_progress")
     .update({
@@ -817,6 +884,9 @@ export function getAntiSunkCostMessage(weekNumber: number): typeof ANTI_SUNK_COS
 export async function loadPreviousCheckpoints(
   profileId: string
 ): Promise<CheckpointHistory[]> {
+  // DEV MODE: return empty — no checkpoint history yet
+  if (DEV_BYPASS_AUTH) return [];
+
   const { data, error } = await supabase
     .from("weekly_checkpoints")
     .select("week_number, completion_rate, self_report_status, stuck_area, market_response, system_adjustment, ai_feedback, created_at")
@@ -922,6 +992,9 @@ export function computeSystemAdjustment(
 // ============================================================================
 
 export async function resetProfile(userId: string): Promise<void> {
+  // DEV MODE: no-op
+  if (DEV_BYPASS_AUTH) return;
+
   const { error } = await supabase
     .from("user_profiles_intent")
     .update({ is_active: false, updated_at: new Date().toISOString() })
@@ -946,6 +1019,15 @@ export async function saveWeeklyCheckpoint(
   stuckArea?: string,
   marketResponse?: boolean
 ): Promise<{ feedback: string; adaptation: AdaptationResult }> {
+  // DEV MODE: return mock feedback without DB write
+  if (DEV_BYPASS_AUTH) {
+    const adaptation: AdaptationResult = { adjustment: "continue", reason: "Dev mode", suggestion: "Lanjutkan eksekusi sesuai rencana." };
+    return {
+      feedback: "DEV MODE — Checkpoint diterima. Progress kamu di jalur yang benar. Lanjutkan eksekusi minggu ini, fokus pada task yang belum selesai. Pastikan setiap deliverable ter-dokumentasi.",
+      adaptation,
+    };
+  }
+
   // Load previous checkpoints for context
   const previousCheckpoints = await loadPreviousCheckpoints(profileId);
 

@@ -31,7 +31,7 @@ const TestimonialsSection = () => (
           viewport={{ once: true }}
           className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-4"
         >
-          Kasus penggunaan
+          Contoh kalibrasi
         </motion.p>
 
         <motion.h2
