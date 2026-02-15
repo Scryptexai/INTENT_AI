@@ -123,12 +123,12 @@ function resourceIcon(type: TaskResource["type"]) {
 // ============================================================================
 
 const tabs = [
-  { icon: LayoutDashboard, label: "Overview", key: "overview", hint: "Ringkasan profil & progress kamu" },
-  { icon: Search, label: "Job Match", key: "job_research", hint: "Riset pekerjaan cocok dari data internet" },
+  { icon: LayoutDashboard, label: "Overview", key: "overview", hint: "Ringkasan profil & arah yang ditetapkan sistem" },
+  { icon: Search, label: "Job Match", key: "job_research", hint: "Peluang kerja yang difilter berdasarkan profil kamu" },
   { icon: Map, label: "Roadmap", key: "roadmap", hint: "Rencana aksi 30 hari, minggu per minggu" },
-  { icon: Zap, label: "Generator", key: "generator", hint: "Buat konten personal sesuai profil" },
-  { icon: CalendarCheck, label: "Kalender", key: "calendar", hint: "Jadwal konten & trend intelligence" },
-  { icon: MessageSquare, label: "Checkpoint", key: "checkpoint", hint: "Evaluasi mingguan & feedback AI" },
+  { icon: Zap, label: "Generator", key: "generator", hint: "Buat material eksekusi sesuai blueprint kamu" },
+  { icon: CalendarCheck, label: "Kalender", key: "calendar", hint: "Jadwal eksekusi & trend intelligence" },
+  { icon: MessageSquare, label: "Checkpoint", key: "checkpoint", hint: "Evaluasi mingguan & kalibrasi ulang" },
 ];
 
 // ============================================================================
@@ -459,8 +459,8 @@ const Dashboard = () => {
               <p className="text-xs text-muted-foreground/60 max-w-lg leading-relaxed">{pathData.description}</p>
               <p className="text-[10px] text-muted-foreground/40 mt-2 max-w-lg leading-relaxed">
                 {answerTags.profile_level === "quick"
-                  ? `Workspace ini disusun dari ${Object.keys(answerTags).length} data profil cepat. Tingkatkan profil setelah beberapa hari untuk rekomendasi lebih presisi.`
-                  : `Workspace ini disusun berdasarkan ${Object.keys(answerTags).length} data profil kamu — dari model ekonomi, skill, kondisi, hingga tantangan terbesar. Semua rekomendasi bersifat personal.`
+                  ? `Workspace ini disusun dari ${Object.keys(answerTags).length} data profil cepat. Tingkatkan profil untuk kalibrasi lebih presisi.`
+                  : `Workspace ini dikalibrasi dari 7 data profil kamu — model ekonomi, skill, kondisi, hingga tantangan. Semua rekomendasi bersifat personal.`
                 }
               </p>
             </div>
@@ -509,7 +509,7 @@ const Dashboard = () => {
                       <Brain className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                       <div>
                         <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1">Analisis AI — kenapa jalur ini cocok untuk kamu</p>
-                        <p className="text-[10px] text-muted-foreground/30 mb-2">Digenerate berdasarkan 8 data profil mendalam (skill, kondisi, hambatan, target income, dll)</p>
+                        <p className="text-[10px] text-muted-foreground/30 mb-2">Digenerate berdasarkan 7 data profil mendalam (skill, kondisi, hambatan, target income, dll)</p>
                         <p className="text-sm text-foreground/80 leading-relaxed">{savedProfile.ai_why_text}</p>
                       </div>
                     </div>
@@ -789,13 +789,13 @@ const Dashboard = () => {
                   </div>
                 </div>
 
-                {/* Generator CTA — buat konten personal */}
+                {/* Generator CTA — material eksekusi */}
                 <button onClick={() => setActiveTab("generator")} className="w-full flex items-center justify-between py-4 px-5 border border-border hover:border-foreground/20 transition-all group">
                   <div className="flex items-center gap-3">
                     <Zap className="w-4 h-4 text-muted-foreground" />
                     <div className="text-left">
-                      <p className="text-xs font-medium text-foreground">Content Generator</p>
-                      <p className="text-[10px] text-muted-foreground/60">Generate caption, hook, script, bio — hasil sudah disesuaikan niche & profil kamu</p>
+                      <p className="text-xs font-medium text-foreground">Execution Generator</p>
+                      <p className="text-[10px] text-muted-foreground/60">Generate material eksekusi — caption, hook, script, bio — disesuaikan jalur & profil kamu</p>
                     </div>
                   </div>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-foreground transition-all" />
@@ -851,11 +851,11 @@ const Dashboard = () => {
                     <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50">Sumber data riset</p>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">📊 Google Trends</span>
-                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">🎬 YouTube Data</span>
-                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">🎵 TikTok Trends</span>
-                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">🔍 Google Search</span>
-                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">🤖 AI Analysis</span>
+                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">Google Trends</span>
+                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">YouTube Data</span>
+                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">TikTok Trends</span>
+                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">Google Search</span>
+                    <span className="text-[10px] px-2 py-0.5 border border-border text-muted-foreground/50">AI Analysis</span>
                   </div>
                   <p className="text-[10px] text-muted-foreground/30 mt-2">Data di-fetch saat profiling. AI menganalisis data ini + profil kamu untuk memberikan rekomendasi yang akurat.</p>
                 </div>
@@ -1077,7 +1077,7 @@ const Dashboard = () => {
                                   ))}
                                 </div>
                                 {weekSignals[0]?.suggestion && (
-                                  <p className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">📊 {weekSignals[0].suggestion}</p>
+                                  <p className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">{weekSignals[0].suggestion}</p>
                                 )}
                               </div>
                             )}
@@ -1164,10 +1164,10 @@ const Dashboard = () => {
               <div className="space-y-6">
                 {/* Intro context */}
                 <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Content generator personal</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Execution generator</p>
                   <p className="text-[10px] text-muted-foreground/30 max-w-lg leading-relaxed">
-                    Semua konten yang di-generate sudah disesuaikan dengan niche, platform, dan gaya komunikasi kamu.
-                    Pilih jenis konten, masukkan topik (opsional), lalu klik Generate.
+                    Material eksekusi yang di-generate sudah dikalibrasi dengan niche, platform, dan konteks profil kamu.
+                    Pilih jenis material, masukkan topik (opsional), lalu klik Generate.
                   </p>
                 </div>
 
@@ -1258,10 +1258,10 @@ const Dashboard = () => {
               <div className="space-y-6">
                 {/* Intro context */}
                 <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Trend intelligence & kalender konten</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Trend intelligence & jadwal eksekusi</p>
                   <p className="text-[10px] text-muted-foreground/30 max-w-lg leading-relaxed">
-                    Dashboard ini menampilkan trend terbaru di niche kamu dari berbagai sumber (Google Trends, YouTube, dll).
-                    Kalender konten dibawahnya otomatis disusun berdasarkan trend + profil kamu — tinggal eksekusi.
+                    Dashboard ini menampilkan trend terbaru di niche kamu dari berbagai sumber data.
+                    Kalender eksekusi di bawahnya disusun berdasarkan trend + profil kamu — tinggal jalankan.
                   </p>
                 </div>
                 <TrendIntelligenceDashboard pathId={economicModel} interestMarket={niche} subSector={subSector} onTrendBriefReady={setTrendBrief} />
@@ -1276,10 +1276,10 @@ const Dashboard = () => {
               <div className="space-y-6">
                 {/* Intro context */}
                 <div className="mb-2">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Evaluasi & feedback mingguan</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-2">Evaluasi & kalibrasi ulang</p>
                   <p className="text-[10px] text-muted-foreground/30 max-w-lg leading-relaxed">
-                    Submit checkpoint di akhir setiap minggu untuk mendapatkan feedback dari AI.
-                    Sistem akan menganalisis progress kamu dan memberikan saran adaptasi — apakah perlu lanjut, simplifikasi, atau pivot.
+                    Submit checkpoint di akhir setiap minggu. Sistem menganalisis progress kamu
+                    dan memberikan keputusan — lanjut, simplifikasi, atau pivot.
                   </p>
                 </div>
 
@@ -1299,7 +1299,7 @@ const Dashboard = () => {
                         {adaptationResult && adaptationResult.adjustment !== "continue" && (
                           <div className="py-4 px-4 border-l-2 border-foreground/30">
                             <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/50 mb-1">
-                              {adaptationResult.adjustment === "pivot_path" ? "⚠️ Sinyal: Pivot jalur — data menunjukkan perlu ganti arah" : adaptationResult.adjustment === "simplify" ? "📉 Sinyal: Simplifikasi — kurangi scope agar lebih fokus" : adaptationResult.adjustment === "accelerate" ? "🚀 Sinyal: Akselerasi — kamu ahead, bisa percepat!" : "🔄 Sinyal: Adjust niche — perlu re-focus di niche lebih spesifik"}
+                              {adaptationResult.adjustment === "pivot_path" ? "Sinyal: Pivot jalur — data menunjukkan perlu ganti arah" : adaptationResult.adjustment === "simplify" ? "Sinyal: Simplifikasi — kurangi scope agar lebih fokus" : adaptationResult.adjustment === "accelerate" ? "Sinyal: Akselerasi — kamu ahead, bisa percepat" : "Sinyal: Adjust niche — perlu re-focus di niche lebih spesifik"}
                             </p>
                             <p className="text-sm text-foreground/70 leading-relaxed">{adaptationResult.suggestion}</p>
                             {adaptationResult.adjustment === "pivot_path" && <button onClick={handleResetProfile} className="mt-3 cmd-ghost text-xs"><RotateCcw className="w-3 h-3" /> Re-profiling</button>}
@@ -1336,7 +1336,7 @@ const Dashboard = () => {
                           <div className="flex gap-2">
                             {(["on_track", "stuck", "ahead"] as const).map((status) => (
                               <button key={status} onClick={() => setCheckpointStatus(status)} className={`px-4 py-2 text-xs transition-all border ${checkpointStatus === status ? "border-foreground text-foreground" : "border-border text-muted-foreground hover:border-foreground/30"}`}>
-                                {status === "on_track" ? "🟢 On Track" : status === "stuck" ? "🔴 Stuck" : "🔵 Ahead"}
+                                {status === "on_track" ? "On Track" : status === "stuck" ? "Stuck" : "Ahead"}
                               </button>
                             ))}
                           </div>

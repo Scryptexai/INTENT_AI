@@ -1,20 +1,20 @@
 import { motion } from "framer-motion";
 
-const signals = [
+const useCases = [
   {
-    initials: "AP",
-    context: "Freelancer → Micro AI Service",
-    quote: "Sebelumnya saya coba 4 hal berbeda. Tidak ada yang jalan. Sistem ini langsung arahkan ke satu jalur yang sesuai kondisi saya.",
+    tag: "Kasus 1",
+    context: "Freelancer, skill menulis, tanpa arah",
+    scenario: "Punya kemampuan menulis tapi coba 4 hal berbeda — tidak ada yang jalan. Sistem membaca profil: skill writing + zero audience + waktu terbatas → arah langsung ke micro AI copywriting service. Bukan 10 opsi. Satu jalur.",
   },
   {
-    initials: "RS",
-    context: "Mahasiswa, modal nol",
-    quote: "Yang saya butuhkan bukan motivasi. Saya butuh tahu langkah pertama. INTENT kasih itu.",
+    tag: "Kasus 2",
+    context: "Mahasiswa, modal nol, butuh langkah pertama",
+    scenario: "Tidak butuh motivasi. Butuh tahu langkah pertama yang realistis. Sistem memetakan: zero capital + waktu malam + skill dasar → jalur content freelancer dengan blueprint harian yang bisa dikerjakan setelah kuliah.",
   },
   {
-    initials: "BS",
-    context: "Karyawan → side income",
-    quote: "Weekly plan-nya realistis. Bukan 'mulai bisnis', tapi langkah kecil yang bisa dikerjakan setelah pulang kantor.",
+    tag: "Kasus 3",
+    context: "Karyawan, ingin side income tanpa tampil",
+    scenario: "Waktu terbatas, tidak mau tampil di kamera. Sistem filter: gaya kerja diam-diam + skill analisis + 1-2 jam/hari → jalur AI data curation service. Weekly plan realistis, bisa dikerjakan setelah pulang kantor.",
   },
 ];
 
@@ -29,16 +29,27 @@ const TestimonialsSection = () => (
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-12"
+          className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50 mb-4"
         >
-          Signal
+          Kasus penggunaan
         </motion.p>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-xl md:text-2xl font-semibold text-foreground mb-12 max-w-md"
+        >
+          Kondisi berbeda.
+          <br />
+          <span className="text-muted-foreground">Sistem menyesuaikan.</span>
+        </motion.h2>
 
         {/* No cards. Structured text blocks with thin dividers */}
         <div className="space-y-0 max-w-xl">
-          {signals.map((s, i) => (
+          {useCases.map((s, i) => (
             <motion.div
-              key={s.initials}
+              key={s.tag}
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -46,12 +57,13 @@ const TestimonialsSection = () => (
               className="py-6 border-t border-border/40 first:border-t-0"
             >
               <p className="text-sm text-foreground/70 leading-relaxed mb-4">
-                "{s.quote}"
+                {s.scenario}
               </p>
               <div className="flex items-center gap-3">
-                <div className="w-6 h-6 border border-foreground/15 flex items-center justify-center text-[9px] font-semibold text-muted-foreground">
-                  {s.initials}
-                </div>
+                <span className="text-[9px] font-mono text-muted-foreground/40">
+                  {s.tag}
+                </span>
+                <span className="w-3 h-px bg-border" />
                 <span className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">
                   {s.context}
                 </span>

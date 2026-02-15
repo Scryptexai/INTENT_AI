@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { label: "Mulai", path: "/onboarding" },
-  { label: "Dashboard", path: "/dashboard" },
+  { label: "Profiling", path: "/onboarding" },
+  { label: "Workspace", path: "/dashboard" },
 ];
 
 const Navbar = () => {
@@ -111,7 +111,7 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-xs text-destructive">
                   <LogOut className="w-3.5 h-3.5 mr-2" />
-                  Sign out
+                  Keluar
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -121,13 +121,13 @@ const Navbar = () => {
                 to="/login"
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors"
               >
-                Login
+                Masuk
               </Link>
               <Link
                 to="/signup"
                 className="text-xs font-medium text-foreground border border-foreground/20 px-4 py-1.5 hover:border-foreground/50 transition-all"
               >
-                Mulai
+                Profiling
               </Link>
             </div>
           )}
@@ -187,7 +187,7 @@ const Navbar = () => {
                     className="flex items-center gap-2 text-xs text-muted-foreground py-3 text-left"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    Sign out
+                    Keluar
                   </button>
                 </>
               ) : (
@@ -196,13 +196,13 @@ const Navbar = () => {
                     to="/login"
                     className="text-xs text-muted-foreground py-3 text-center"
                   >
-                    Login
+                    Masuk
                   </Link>
                   <Link
                     to="/signup"
                     className="text-xs font-medium text-foreground border border-foreground/20 py-2.5 text-center"
                   >
-                    Mulai
+                    Profiling
                   </Link>
                 </div>
               )}

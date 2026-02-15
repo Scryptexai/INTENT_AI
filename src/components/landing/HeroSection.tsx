@@ -19,7 +19,7 @@ const HeroSection = () => {
           >
             <div className="w-1.5 h-1.5 bg-foreground/40" />
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Adaptive Direction System
+              Skill Direction System
             </span>
           </motion.div>
 

@@ -1,0 +1,404 @@
+
+📘 PROJECT DOCUMENT
+
+INTENT — Adaptive Skill Direction System
+
+
+1️⃣ PROJECT ABOUT (Apa Itu INTENT)
+
+INTENT adalah sistem analisis dan pengarah berbasis skill.
+
+Fungsi utamanya:
+
+Menggali skill dan kapasitas user
+
+Menganalisis kecocokan dengan peluang nyata
+
+Menyaring noise peluang digital
+
+Memberikan jalur eksekusi terstruktur
+
+
+INTENT bukan:
+
+AI chat umum
+
+Marketplace lowongan
+
+Kursus online
+
+Platform motivasi
+
+
+INTENT adalah:
+
+> Direction & Optimization Engine berbasis profiling dan filtering.
+
+
+
+
+---
+
+2️⃣ CORE PROBLEM YANG DISASAR
+
+Masalah utama pasar:
+
+1. Terlalu banyak peluang → Overchoice.
+
+
+2. Skill ada → Monetisasi tidak jelas.
+
+
+3. Sudah punya channel/asset → Stagnan.
+
+
+4. Trial & error buang waktu.
+
+
+
+Akar masalah: Mismatch antara skill dan strategi.
+
+INTENT memposisikan diri sebagai sistem eliminasi dan penyaring arah.
+
+
+---
+
+3️⃣ CORE VALUE PROPOSITION
+
+INTENT membantu user:
+
+1. Memetakan skill secara terstruktur.
+
+
+2. Mengurangi pilihan tidak relevan.
+
+
+3. Mendapat 1 jalur fokus utama.
+
+
+4. Mengoptimalkan kapasitas yang sudah ada.
+
+
+
+Nilai utamanya bukan pada “AI”. Nilai utamanya pada: Struktur filtering dan presisi arah.
+
+
+---
+
+4️⃣ TARGET MARKET (Satu Target Inti)
+
+Target tunggal:
+
+> Individu yang memiliki kapasitas (skill/asset), tetapi belum optimal secara arah atau monetisasi.
+
+
+
+Turunannya:
+
+Pemula dengan skill belum terstruktur.
+
+Punya skill tapi belum menghasilkan.
+
+Content creator stagnan.
+
+Usaha offline ingin scale.
+
+Freelancer tidak stabil.
+
+
+Semua masuk satu kategori: Skill–Strategy Gap.
+
+
+---
+
+5️⃣ POSITIONING
+
+INTENT diposisikan sebagai:
+
+Personal Skill Optimization System.
+
+Bukan career portal. Bukan AI generalist.
+
+Brand personality:
+
+Rasional
+
+Analitis
+
+Anti-noise
+
+Tidak motivasional
+
+
+Tone:
+
+Ringkas
+
+Tegas
+
+Sistematis
+
+
+
+---
+
+6️⃣ MVP STRATEGY
+
+Tujuan MVP:
+
+Validasi minat pasar.
+
+Kumpulkan data perilaku.
+
+Uji relevansi blueprint.
+
+Minimalkan friksi onboarding.
+
+
+
+---
+
+MVP Profiling Structure
+
+Level 1 (Quick Mapping – 2–4 menit)
+
+Checklist skill granular.
+
+Turunan skill.
+
+Confidence level.
+
+Tujuan (income / scale / pivot).
+
+Waktu tersedia.
+
+
+Output: 1 Jalur utama + langkah awal.
+
+Tanpa validasi berat. Tanpa tes mendalam.
+
+
+---
+
+Level 2 (Upgrade Profil – Opsional)
+
+Micro scenario test.
+
+Penyempurnaan skill.
+
+Validasi kedalaman.
+
+Strategy correction.
+
+
+Level ini bukan wajib di awal.
+
+
+---
+
+7️⃣ SYSTEM ARCHITECTURE (High Level)
+
+1. Profile Layer
+
+
+2. Behavior Tracking Layer
+
+
+3. Opportunity Structuring Engine
+
+
+4. Matching & Scoring Engine
+
+
+5. Blueprint Generator
+
+
+6. Feedback Loop
+
+
+
+Data bisa berasal dari: Google API, SerpAPI, RapidAPI.
+
+Tapi semua data harus melalui: Noise Filtering & Structuring sebelum tampil ke user.
+
+
+---
+
+8️⃣ MONETIZATION STRATEGY
+
+Fase MVP: Free 100%.
+
+Tujuan:
+
+Meningkatkan completion profiling.
+
+Meningkatkan retention.
+
+Mengumpulkan feedback.
+
+
+Fase berikutnya: Freemium Model.
+
+Free:
+
+Profiling dasar
+
+1 blueprint utama
+
+
+Premium:
+
+Deep analysis
+
+Strategy correction
+
+Ongoing adaptive update
+
+
+Tidak disarankan:
+
+Credit task follow medsos
+
+Growth hack murahan
+
+
+
+---
+
+9️⃣ MARKETING STRATEGY (Fase Awal)
+
+Budget: 500k – 1 juta
+
+Fokus: Meta Ads → Landing → Profiling → Blueprint.
+
+Sosial media:
+
+Untuk kredibilitas
+
+Bukan fokus growth organik awal
+
+
+Tidak perlu follower besar untuk MVP. Yang penting: Conversion dan retention.
+
+
+---
+
+🔟 LANDING STRATEGY
+
+Gunakan landing khusus ads. Bukan home page.
+
+Struktur:
+
+1. Masalah (overchoice & stagnasi).
+
+
+2. Kenapa solusi umum gagal.
+
+
+3. Sistem profiling sebagai solusi.
+
+
+4. 3 langkah kerja.
+
+
+5. CTA langsung profiling.
+
+
+
+Tujuan: Minimal friction.
+
+
+---
+
+1️⃣1️⃣ DIFFERENTIATION
+
+INTENT berbeda karena:
+
+Menghapus pilihan tidak relevan.
+
+Tidak mengejar tren.
+
+Fokus pada 1 jalur utama.
+
+Menggabungkan skill offline dan digital.
+
+Adaptif terhadap perubahan user.
+
+
+
+---
+
+1️⃣2️⃣ RISIKO UTAMA
+
+1. Output terlalu umum.
+
+
+2. Terlalu banyak opsi.
+
+
+3. Blueprint berubah terlalu cepat.
+
+
+4. Profiling terlalu berat di awal.
+
+
+5. Terlihat seperti AI biasa.
+
+
+
+Solusi: Sembunyikan kompleksitas. Tampilkan kesederhanaan.
+
+
+---
+
+1️⃣3️⃣ KPI MVP
+
+Ukuran keberhasilan:
+
+Profiling completion rate > 40%
+
+Blueprint activation rate
+
+Retention 3 hari > 25%
+
+Feedback positif minimal 20%
+
+
+Bukan: Jumlah follower. Bukan vanity metric.
+
+
+---
+
+1️⃣4️⃣ LONG TERM VISION
+
+INTENT berkembang menjadi:
+
+Living Skill Intelligence System.
+
+Dimana:
+
+Profil hidup dan adaptif.
+
+Arah semakin presisi seiring waktu.
+
+Sistem berani menolak skill lemah.
+
+Blueprint makin spesifik.
+
+
+
+---
+
+1️⃣5️⃣ SUMMARY SINGKAT
+
+INTENT adalah sistem:
+
+Menggali skill →
+Menyaring peluang →
+Memberi arah fokus →
+Mengoptimalkan kapasitas →
+Mengurangi trial & error.
+
+Fokus awal: Traffic + data + validation.
+
+Bukan monetisasi cepat. Bukan follower besar.

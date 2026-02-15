@@ -1,7 +1,7 @@
 /**
- * Workspace Generator Service — AI Content Generation Engine
+ * Workspace Generator Service — Execution Material Engine
  * =============================================================
- * Generates execution content inside the platform:
+ * Generates execution materials inside the workspace:
  * - Caption generator
  * - Hook generator
  * - Script generator (video/podcast)
@@ -326,14 +326,14 @@ export function getAvailableGenerators(economicModel: string): GeneratorType[] {
 
 /** Labels for generator types */
 export const GENERATOR_LABELS: Record<GeneratorType, { emoji: string; label: string; description: string }> = {
-  caption: { emoji: "✍️", label: "Caption Generator", description: "Buat caption engaging untuk posting" },
-  hook: { emoji: "🪝", label: "Hook Generator", description: "Kalimat pembuka yang bikin stop scroll" },
-  script: { emoji: "🎬", label: "Script Generator", description: "Script video/podcast terstruktur" },
+  caption: { emoji: "✍️", label: "Caption", description: "Caption untuk posting sesuai profil" },
+  hook: { emoji: "🪝", label: "Hook", description: "Kalimat pembuka yang menghentikan scroll" },
+  script: { emoji: "🎬", label: "Script", description: "Script video/podcast terstruktur" },
   visual_prompt: { emoji: "🎨", label: "Visual Prompt", description: "Prompt untuk AI image generator" },
-  hashtag: { emoji: "#️⃣", label: "Hashtag Generator", description: "Set hashtag optimal per platform" },
-  cta: { emoji: "📢", label: "CTA Generator", description: "Call to Action yang persuasif" },
-  bio: { emoji: "👤", label: "Bio Generator", description: "Bio optimized untuk platform" },
-  content_pillars: { emoji: "🏛️", label: "Content Pillars", description: "4-5 pilar konten strategis" },
-  content_calendar: { emoji: "📅", label: "Content Calendar", description: "Kalender posting 1 minggu" },
-  first_post: { emoji: "🚀", label: "First Post", description: "Package post pertama sempurna" },
+  hashtag: { emoji: "#️⃣", label: "Hashtag Set", description: "Hashtag optimal per platform" },
+  cta: { emoji: "📢", label: "CTA", description: "Call to Action yang presisi" },
+  bio: { emoji: "👤", label: "Bio", description: "Bio yang dikalibrasi untuk platform" },
+  content_pillars: { emoji: "🏛️", label: "Content Pillars", description: "Pilar konten strategis" },
+  content_calendar: { emoji: "📅", label: "Jadwal Eksekusi", description: "Jadwal posting 1 minggu" },
+  first_post: { emoji: "🚀", label: "First Post", description: "Material post pertama" },
 };

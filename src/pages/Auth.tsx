@@ -66,7 +66,7 @@ const Auth = () => {
                 </span>
               </Link>
               <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">
-                Adaptive Direction System
+                Skill Direction System
               </p>
             </div>
 

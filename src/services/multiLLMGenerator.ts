@@ -87,7 +87,7 @@ function getProviderConfigs(): ProviderConfig[] {
 // SYSTEM PROMPT — The meta-prompt engineer
 // ============================================================================
 
-const SYSTEM_PROMPT = `You are the AI engine behind INTENT — an Adaptive Direction System. Your role is to generate actionable execution content based on the user's calibrated profile and active direction path.
+const SYSTEM_PROMPT = `You are the AI engine behind INTENT — a Skill Direction System. Your role is to generate actionable execution content based on the user's calibrated profile and active direction path.
 
 CONTEXT:
 The user has completed deep profiling (11 questions) covering:
