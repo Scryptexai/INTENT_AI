@@ -1,43 +1,31 @@
-/**
- * QuickOnboarding — Level 1 Quick Mapping (2–4 menit)
- * =====================================================
- * 6 pertanyaan, 1 per layar, progress bar jelas.
- * Bahasa sederhana. Tidak ada jargon. Tidak ada "tes kompetensi".
- *
- * User merasa: "Sistem cepat memahami saya."
- *
- * Hidden strategy: Dari 6 pertanyaan, sistem mendapat:
- *   skill_category, interest_cluster, confidence_bias,
- *   intent_direction, time_availability, current_stage
- *
- * Setelah selesai → langsung ke Dashboard dengan preview arah awal.
- */
-
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft, Check, Loader2, Compass,
-} from "lucide-react";
+import { ArrowLeft, Check, Loader2, Compass } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/contexts/AuthContext";
 import {
-  QUICK_QUESTIONS,
+  Q_SKILLS,
+  Q_EXPERIENCE,
+  Q_TARGET,
+  Q_TIME,
+  Q_LANGUAGE,
+  Q_STAGE,
+  getSubSkillOptions,
   buildAnswerTags,
-  mapDirectionToModel,
-  mapToSubSector,
-  mapToPlatform,
-  mapQuickToLegacyPath,
-  inferSkillLevel,
+  inferEconomicModel,
+  inferSubSector,
+  inferPlatform,
+  inferLegacyPath,
+  inferRisk,
+  inferCapital,
   mapTimeToScore,
-  inferRiskFromStage,
   type QuickProfileResult,
-  type QuickQuestion,
+  type QuickOption,
 } from "@/utils/quickProfileConfig";
 import {
   mapToLegacyScores,
   mapToLegacySegment,
-  generateWorkflowId,
   type ContextScores,
 } from "@/utils/branchingProfileConfig";
 import type { PathId } from "@/utils/profilingConfig";
@@ -56,93 +44,196 @@ import { fetchRealMarketContext } from "@/services/realMarketData";
 import { runFullPipeline } from "@/services/trendPipelineScheduler";
 import { hasAnyDataSource } from "@/services/trendDataFetcher";
 
-// ============================================================================
-// COMPONENT
-// ============================================================================
+const TOTAL_STEPS = 7;
+
+type StepId =
+  | "skills"
+  | "sub_skill"
+  | "experience"
+  | "target"
+  | "time"
+  | "language"
+  | "stage";
+
+const STEP_IDS: StepId[] = [
+  "skills",
+  "sub_skill",
+  "experience",
+  "target",
+  "time",
+  "language",
+  "stage",
+];
 
 const QuickOnboarding = () => {
   const navigate = useNavigate();
   const { user, profile: authProfile } = useAuth();
 
-  // ── STATE ──
   const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedSubSkill, setSelectedSubSkill] = useState<string>("");
+  const [experienceLevel, setExperienceLevel] = useState<number>(1);
+  const [selectedTarget, setSelectedTarget] = useState<string>("");
+  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+  const [selectedStage, setSelectedStage] = useState<string>("");
   const [phase, setPhase] = useState<"questions" | "processing">("questions");
   const [processingStep, setProcessingStep] = useState("");
 
-  const totalSteps = QUICK_QUESTIONS.length;
-  const question = QUICK_QUESTIONS[currentStep];
-  const progress = ((currentStep + 1) / totalSteps) * 100;
+  const stepId = STEP_IDS[currentStep];
+  const progress = ((currentStep + 1) / TOTAL_STEPS) * 100;
 
-  // ── GET CURRENT ANSWER ──
-  const getCurrentAnswer = useCallback((): string | string[] | undefined => {
-    return answers[question?.id];
-  }, [answers, question]);
+  // Q2 options BRANCH from Q1
+  const subSkillOptions = useMemo(() => {
+    const primarySkill = selectedSkills[0] || "none";
+    return getSubSkillOptions(primarySkill);
+  }, [selectedSkills]);
 
-  // ── HANDLE SINGLE SELECT ──
-  const handleSelect = useCallback((optionId: string) => {
-    if (!question) return;
+  // Q3 title includes sub-skill name from Q2
+  const experienceTitle = useMemo(() => {
+    if (!selectedSubSkill) return "Berapa lama pengalaman kamu?";
+    const primarySkill = selectedSkills[0] || "none";
+    const options = getSubSkillOptions(primarySkill);
+    const found = options.find((o) => o.id === selectedSubSkill);
+    return found
+      ? `Berapa lama pengalaman kamu di ${found.label}?`
+      : "Berapa lama pengalaman kamu?";
+  }, [selectedSubSkill, selectedSkills]);
 
-    if (question.multiSelect) {
-      // Multi-select: toggle
-      const current = (answers[question.id] as string[]) || [];
-      const maxSelect = question.maxSelect || 99;
-
-      let updated: string[];
-      if (optionId === "none") {
-        // "Belum punya skill" — deselect everything else
-        updated = current.includes("none") ? [] : ["none"];
-      } else {
-        // Remove "none" if selecting a real skill
-        const withoutNone = current.filter(id => id !== "none");
-        if (withoutNone.includes(optionId)) {
-          updated = withoutNone.filter(id => id !== optionId);
-        } else if (withoutNone.length < maxSelect) {
-          updated = [...withoutNone, optionId];
-        } else {
-          return; // max reached
-        }
+  // Current question config — changes per step
+  const currentQuestion = useMemo(() => {
+    switch (stepId) {
+      case "skills":
+        return { ...Q_SKILLS };
+      case "sub_skill": {
+        const primaryLabel =
+          Q_SKILLS.options.find((o) => o.id === selectedSkills[0])?.label ||
+          "skill ini";
+        return {
+          id: "sub_skill",
+          title: `Lebih spesifik di ${primaryLabel}?`,
+          subtitle: "Pilih yang paling mendekati.",
+          options: subSkillOptions,
+        };
       }
-
-      setAnswers(prev => ({ ...prev, [question.id]: updated }));
-    } else {
-      // Single select: set and auto-advance
-      setAnswers(prev => ({ ...prev, [question.id]: optionId }));
-
-      setTimeout(() => {
-        if (currentStep < totalSteps - 1) {
-          setCurrentStep(i => i + 1);
-        } else {
-          processProfile({ ...answers, [question.id]: optionId });
-        }
-      }, 250);
+      case "experience":
+        return { ...Q_EXPERIENCE, title: experienceTitle };
+      case "target":
+        return Q_TARGET;
+      case "time":
+        return Q_TIME;
+      case "language":
+        return Q_LANGUAGE;
+      case "stage":
+        return Q_STAGE;
+      default:
+        return Q_SKILLS;
     }
-  }, [question, answers, currentStep, totalSteps]);
+  }, [stepId, selectedSkills, subSkillOptions, experienceTitle]);
 
-  // ── MULTI-SELECT NEXT ──
-  const handleMultiNext = useCallback(() => {
-    const selected = (answers[question?.id] as string[]) || [];
-    if (selected.length === 0) return;
+  const isMultiSelect = stepId === "skills";
+  const isSlider = stepId === "experience";
 
-    if (currentStep < totalSteps - 1) {
-      setCurrentStep(i => i + 1);
-    } else {
-      processProfile(answers);
+  const goNext = useCallback(() => {
+    if (currentStep < TOTAL_STEPS - 1) {
+      setCurrentStep((i) => i + 1);
     }
-  }, [answers, question, currentStep, totalSteps]);
-
-  // ── BACK ──
-  const handleBack = useCallback(() => {
-    if (currentStep > 0) setCurrentStep(i => i - 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
+  const handleSelect = useCallback(
+    (optionId: string) => {
+      switch (stepId) {
+        case "skills": {
+          setSelectedSkills((prev) => {
+            if (optionId === "none") {
+              return prev.includes("none") ? [] : ["none"];
+            }
+            const withoutNone = prev.filter((id) => id !== "none");
+            if (withoutNone.includes(optionId)) {
+              return withoutNone.filter((id) => id !== optionId);
+            }
+            if (withoutNone.length < (Q_SKILLS.maxSelect || 3)) {
+              return [...withoutNone, optionId];
+            }
+            return prev;
+          });
+          break;
+        }
+        case "sub_skill":
+          setSelectedSubSkill(optionId);
+          setTimeout(goNext, 250);
+          break;
+        case "target":
+          setSelectedTarget(optionId);
+          setTimeout(goNext, 250);
+          break;
+        case "time":
+          setSelectedTime(optionId);
+          setTimeout(goNext, 250);
+          break;
+        case "language":
+          setSelectedLanguage(optionId);
+          setTimeout(goNext, 250);
+          break;
+        case "stage":
+          setSelectedStage(optionId);
+          break;
+      }
+    },
+    [stepId, goNext]
+  );
+
+  const handleMultiNext = useCallback(() => {
+    if (selectedSkills.length === 0) return;
+    goNext();
+  }, [selectedSkills, goNext]);
+
+  const handleBack = useCallback(() => {
+    if (currentStep > 0) {
+      if (stepId === "sub_skill") {
+        setSelectedSubSkill("");
+      }
+      setCurrentStep((i) => i - 1);
+    }
+  }, [currentStep, stepId]);
+
+  const isOptionSelected = useCallback(
+    (optionId: string): boolean => {
+      switch (stepId) {
+        case "skills":
+          return selectedSkills.includes(optionId);
+        case "sub_skill":
+          return selectedSubSkill === optionId;
+        case "target":
+          return selectedTarget === optionId;
+        case "time":
+          return selectedTime === optionId;
+        case "language":
+          return selectedLanguage === optionId;
+        case "stage":
+          return selectedStage === optionId;
+        default:
+          return false;
+      }
+    },
+    [
+      stepId,
+      selectedSkills,
+      selectedSubSkill,
+      selectedTarget,
+      selectedTime,
+      selectedLanguage,
+      selectedStage,
+    ]
+  );
+
   // ── PROCESS PROFILE ──
-  const processProfile = async (finalAnswers: Record<string, string | string[]>) => {
+  const processProfile = async () => {
     if (!user) return;
 
     const userPlan = (authProfile?.plan || "free") as PlanType;
 
-    // Check reprofiling gate
     const reprofileGate = await canReprofile(user.id, userPlan);
     if (!reprofileGate.allowed) {
       navigate("/dashboard");
@@ -152,41 +243,49 @@ const QuickOnboarding = () => {
     setPhase("processing");
     setProcessingStep("Memahami profil kamu...");
 
-    // Build QuickProfileResult
-    const skills = (finalAnswers.skills as string[]) || ["none"];
-    const direction = (finalAnswers.direction as string) || "unsure";
-    const time = (finalAnswers.time as string) || "1-2h";
-    const stage = (finalAnswers.stage as string) || "employee";
-    const incomeTarget = (finalAnswers.income_target as string) || "500k-2m";
-    const challenge = (finalAnswers.challenge as string) || "no_direction";
-
+    const skills = selectedSkills.length > 0 ? selectedSkills : ["none"];
     const quickProfile: QuickProfileResult = {
-      skills, direction, time, stage, incomeTarget, challenge,
+      skills,
+      subSkill: selectedSubSkill || "explore_anything",
+      experience: experienceLevel,
+      target: selectedTarget || "first_income",
+      time: selectedTime || "1-2h",
+      language: selectedLanguage || "id_only",
+      stage: selectedStage || "employee",
     };
 
-    // Build answer tags (maps to all downstream systems)
     const answerTags = buildAnswerTags(quickProfile);
 
-    // Derived values
-    const economicModel = mapDirectionToModel(direction);
-    const subSector = mapToSubSector(direction, skills);
-    const niche = subSector; // Level 1 uses sub-sector as niche
-    const platform = mapToPlatform(direction, skills);
-    const legacyPathId = mapQuickToLegacyPath(direction);
-    const skillLevel = inferSkillLevel(skills);
-    const timeScore = mapTimeToScore(time);
-    const riskScore = inferRiskFromStage(stage);
+    const primarySkill = skills[0] || "none";
+    const economicModel = inferEconomicModel(
+      quickProfile.target,
+      primarySkill,
+      quickProfile.subSkill
+    );
+    const subSector = inferSubSector(primarySkill, quickProfile.subSkill);
+    const niche = subSector;
+    const platform = inferPlatform(
+      primarySkill,
+      quickProfile.subSkill,
+      quickProfile.language
+    );
+    const legacyPathId = inferLegacyPath(
+      primarySkill,
+      quickProfile.subSkill,
+      quickProfile.target
+    );
+    const timeScore = mapTimeToScore(quickProfile.time);
+    const riskScore = inferRisk(quickProfile.stage);
+    const capitalScore = inferCapital(quickProfile.stage);
 
-    // Context scores for downstream
     const contextScores: ContextScores = {
       time: timeScore,
-      capital: 0,
+      capital: capitalScore,
       risk: riskScore,
-      skillLevel: skillLevel,
+      skillLevel: quickProfile.experience,
       audience: 0,
     };
 
-    // Legacy scores for DB compat
     const legacyScores = mapToLegacyScores(
       contextScores,
       {},
@@ -197,22 +296,20 @@ const QuickOnboarding = () => {
     );
     const segment = mapToLegacySegment(economicModel, contextScores);
 
-    // Legacy answers format
     const legacyAnswers: Record<string, string> = {
-      time: time,
-      capital: "zero",
-      target_speed: skillLevel >= 2 ? "2w" : "1mo",
+      time: quickProfile.time,
+      capital: capitalScore === 0 ? "zero" : "lt50",
+      target_speed: quickProfile.experience >= 2 ? "2w" : "1mo",
       work_style: "silent_build",
       risk: riskScore <= 2 ? "low" : "medium",
-      skill_primary: skillLevel <= 1 ? "none" : "writing",
-      skill_secondary: "none",
+      skill_primary: primarySkill === "none" ? "none" : primarySkill,
+      skill_secondary: skills[1] || "none",
       interest_market: "business",
       audience_access: "zero",
       daily_routine: timeScore <= 2 ? "evening" : "flexible",
-      preferred_platform: "marketplace",
+      preferred_platform: platform,
     };
 
-    // Save to Supabase
     setProcessingStep("Menyimpan profil...");
     const { profileId, error } = await saveProfilingResult(
       user.id,
@@ -238,10 +335,12 @@ const QuickOnboarding = () => {
       return;
     }
 
-    // Sub-specialization
-    generateSubSpecialization(legacyPathId, legacyScores, legacyAnswers as any);
+    generateSubSpecialization(
+      legacyPathId,
+      legacyScores,
+      legacyAnswers as any
+    );
 
-    // Check AI gate
     const aiGate = canUseAIPersonalization(userPlan);
     if (!aiGate.allowed) {
       if (hasAnyDataSource()) {
@@ -251,41 +350,65 @@ const QuickOnboarding = () => {
       return;
     }
 
-    // AI Personalization (parallel)
     setProcessingStep("Menyusun rekomendasi personal...");
 
-    const marketDataPromise = fetchRealMarketContext(niche, platform).catch(() => null);
+    const marketDataPromise = fetchRealMarketContext(niche, platform).catch(
+      () => null
+    );
 
-    // Build deep profile placeholder for job research
     const deepProfileForResearch: Record<string, string> = {
       skill_level: answerTags.skill_level || "basic",
       risk: answerTags.risk || "low",
-      digital_experience: "never", // Level 1 default
-      current_stage: stage,
-      language_skill: "passive", // Level 1 default
-      tools_familiarity: "basic", // Level 1 default
+      digital_experience: "never",
+      current_stage: quickProfile.stage,
+      language_skill: answerTags.language_skill || "passive",
+      tools_familiarity: "basic",
       weekly_commitment: timeScore >= 3 ? "1_month" : "2_weeks",
-      income_target: incomeTarget,
-      learning_style: "practice", // Level 1 default
-      biggest_challenge: challenge,
+      income_target: answerTags.income_target || "500k-2m",
+      learning_style: "practice",
+      biggest_challenge: answerTags.biggest_challenge || "no_direction",
     };
 
     await Promise.all([
-      generateAIWhyText(user.id, profileId, legacyScores, segment, primaryPath),
-      generateAINicheSuggestion(user.id, profileId, legacyScores, segment, primaryPath),
-      generateAICustomTasks(user.id, profileId, legacyScores, segment, primaryPath),
+      generateAIWhyText(
+        user.id,
+        profileId,
+        legacyScores,
+        segment,
+        primaryPath
+      ),
+      generateAINicheSuggestion(
+        user.id,
+        profileId,
+        legacyScores,
+        segment,
+        primaryPath
+      ),
+      generateAICustomTasks(
+        user.id,
+        profileId,
+        legacyScores,
+        segment,
+        primaryPath
+      ),
       generateJobResearch(
-        economicModel, subSector, niche, platform,
-        contextScores, deepProfileForResearch, {}
-      ).then(async (jobResult) => {
-        if (jobResult) {
-          await saveJobResearchToDB(profileId, user.id, jobResult);
-        }
-      }).catch(console.warn),
+        economicModel,
+        subSector,
+        niche,
+        platform,
+        contextScores,
+        deepProfileForResearch,
+        {}
+      )
+        .then(async (jobResult) => {
+          if (jobResult) {
+            await saveJobResearchToDB(profileId, user.id, jobResult);
+          }
+        })
+        .catch(console.warn),
       marketDataPromise,
     ]);
 
-    // Fire-and-forget: background pipeline
     if (hasAnyDataSource()) {
       runFullPipeline(legacyPathId, niche, subSector).catch(console.warn);
     }
@@ -293,19 +416,13 @@ const QuickOnboarding = () => {
     navigate("/dashboard");
   };
 
-  // ============================================================================
-  // RENDER
-  // ============================================================================
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
 
       <main className="pt-20 pb-16 px-4">
-        {/* QUESTIONS PHASE */}
-        {phase === "questions" && question && (
+        {phase === "questions" && (
           <div className="max-w-md mx-auto">
-            {/* Header — only on first question */}
             {currentStep === 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
@@ -319,16 +436,15 @@ const QuickOnboarding = () => {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground/50">
-                  6 pertanyaan. 2 menit. Sistem langsung paham arah kamu.
+                  7 pertanyaan. 2 menit. Sistem langsung paham arah kamu.
                 </p>
               </motion.div>
             )}
 
-            {/* Progress Bar */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/40 font-medium">
-                  {currentStep + 1} dari {totalSteps}
+                  {currentStep + 1} dari {TOTAL_STEPS}
                 </span>
                 <span className="text-[10px] text-muted-foreground/30">
                   {Math.round(progress)}%
@@ -344,7 +460,6 @@ const QuickOnboarding = () => {
               </div>
             </div>
 
-            {/* Question */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={`q-${currentStep}`}
@@ -353,98 +468,186 @@ const QuickOnboarding = () => {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.2 }}
               >
-                {/* Title */}
                 <h2 className="text-xl font-bold text-foreground mb-1 leading-tight">
-                  {question.title}
+                  {currentQuestion.title}
                 </h2>
-                {question.subtitle && (
+                {currentQuestion.subtitle && (
                   <p className="text-xs text-muted-foreground/50 mb-6">
-                    {question.subtitle}
+                    {currentQuestion.subtitle}
                   </p>
                 )}
-                {!question.subtitle && <div className="mb-6" />}
+                {!currentQuestion.subtitle && <div className="mb-6" />}
 
-                {/* Multi-select hint */}
-                {question.multiSelect && (
-                  <p className="text-[10px] text-muted-foreground/40 mb-4 uppercase tracking-wider">
-                    Pilih {question.maxSelect ? `maks ${question.maxSelect}` : "beberapa"}
-                  </p>
-                )}
+                {isSlider && (
+                  <div className="space-y-6">
+                    <div className="px-2">
+                      <input
+                        type="range"
+                        min={0}
+                        max={4}
+                        step={1}
+                        value={experienceLevel}
+                        onChange={(e) =>
+                          setExperienceLevel(Number(e.target.value))
+                        }
+                        className="w-full h-2 bg-border/30 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-foreground [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-background [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-foreground [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-background [&::-moz-range-thumb]:cursor-pointer"
+                      />
+                      <div className="flex justify-between mt-1 px-1">
+                        {[0, 1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                              i <= experienceLevel
+                                ? "bg-foreground/50"
+                                : "bg-border/30"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
 
-                {/* Options */}
-                <div className="space-y-2">
-                  {question.options.map((opt, idx) => {
-                    const currentAnswer = getCurrentAnswer();
-                    const isSelected = question.multiSelect
-                      ? (currentAnswer as string[] || []).includes(opt.id)
-                      : currentAnswer === opt.id;
+                    <motion.div
+                      key={`exp-${experienceLevel}`}
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-center p-4 border border-foreground/15 bg-foreground/[0.02]"
+                    >
+                      <p className="text-sm font-semibold text-foreground">
+                        {Q_EXPERIENCE.sliderLabels?.[experienceLevel] || ""}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/40 mt-1 uppercase tracking-wider">
+                        Level {experienceLevel}/4
+                      </p>
+                    </motion.div>
 
-                    return (
-                      <motion.button
-                        key={opt.id}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.03 }}
-                        onClick={() => handleSelect(opt.id)}
-                        className={`w-full text-left px-4 py-3 border transition-all duration-150 flex items-center gap-3 group ${
-                          isSelected
-                            ? "bg-foreground/5 border-foreground/30"
-                            : "bg-transparent border-border/30 hover:border-foreground/20"
-                        }`}
-                      >
-                        {/* Emoji */}
-                        <span className="text-lg shrink-0">{opt.emoji}</span>
-
-                        {/* Label + Hint */}
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-sm font-medium ${
-                            isSelected ? "text-foreground" : "text-foreground/70"
-                          }`}>
-                            {opt.label}
-                          </p>
-                          {opt.hint && (
-                            <p className="text-[10px] text-muted-foreground/40 mt-0.5">
-                              {opt.hint}
-                            </p>
-                          )}
+                    <div className="space-y-1">
+                      {Q_EXPERIENCE.sliderLabels?.map((label, i) => (
+                        <div
+                          key={i}
+                          className={`flex items-center gap-2 text-[10px] transition-all ${
+                            i === experienceLevel
+                              ? "text-foreground font-medium"
+                              : "text-muted-foreground/30"
+                          }`}
+                        >
+                          <div
+                            className={`w-1 h-1 rounded-full ${
+                              i === experienceLevel
+                                ? "bg-foreground"
+                                : "bg-muted-foreground/20"
+                            }`}
+                          />
+                          {label}
                         </div>
+                      ))}
+                    </div>
 
-                        {/* Checkbox / Radio */}
-                        <div className={`w-5 h-5 shrink-0 border flex items-center justify-center transition-all ${
-                          question.multiSelect ? "rounded" : "rounded-full"
-                        } ${
-                          isSelected
-                            ? "bg-foreground border-foreground"
-                            : "border-muted-foreground/20"
-                        }`}>
-                          {isSelected && (
-                            <Check className="w-3 h-3 text-background" />
-                          )}
-                        </div>
-                      </motion.button>
-                    );
-                  })}
-                </div>
-
-                {/* Multi-select: Next button */}
-                {question.multiSelect && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="mt-6"
-                  >
                     <button
-                      onClick={handleMultiNext}
-                      disabled={((answers[question.id] as string[]) || []).length === 0}
-                      className="w-full py-3 text-sm font-medium border border-foreground/20 hover:border-foreground/40 text-foreground/70 hover:text-foreground transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                      onClick={goNext}
+                      className="w-full py-3 text-sm font-medium border border-foreground/20 hover:border-foreground/40 text-foreground/70 hover:text-foreground transition-all"
                     >
                       Lanjut →
                     </button>
-                  </motion.div>
+                  </div>
                 )}
 
-                {/* Back */}
+                {!isSlider && (
+                  <>
+                    {isMultiSelect && (
+                      <p className="text-[10px] text-muted-foreground/40 mb-4 uppercase tracking-wider">
+                        Pilih maks {Q_SKILLS.maxSelect || 3}
+                      </p>
+                    )}
+
+                    <div className="space-y-2">
+                      {currentQuestion.options.map(
+                        (opt: QuickOption, idx: number) => {
+                          const selected = isOptionSelected(opt.id);
+                          return (
+                            <motion.button
+                              key={opt.id}
+                              initial={{ opacity: 0, y: 8 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: idx * 0.03 }}
+                              onClick={() => handleSelect(opt.id)}
+                              className={`w-full text-left px-4 py-3 border transition-all duration-150 flex items-center gap-3 group ${
+                                selected
+                                  ? "bg-foreground/5 border-foreground/30"
+                                  : "bg-transparent border-border/30 hover:border-foreground/20"
+                              }`}
+                            >
+                              <span className="text-lg shrink-0">
+                                {opt.emoji}
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <p
+                                  className={`text-sm font-medium ${
+                                    selected
+                                      ? "text-foreground"
+                                      : "text-foreground/70"
+                                  }`}
+                                >
+                                  {opt.label}
+                                </p>
+                                {opt.hint && (
+                                  <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+                                    {opt.hint}
+                                  </p>
+                                )}
+                              </div>
+                              <div
+                                className={`w-5 h-5 shrink-0 border flex items-center justify-center transition-all ${
+                                  isMultiSelect ? "rounded" : "rounded-full"
+                                } ${
+                                  selected
+                                    ? "bg-foreground border-foreground"
+                                    : "border-muted-foreground/20"
+                                }`}
+                              >
+                                {selected && (
+                                  <Check className="w-3 h-3 text-background" />
+                                )}
+                              </div>
+                            </motion.button>
+                          );
+                        }
+                      )}
+                    </div>
+
+                    {isMultiSelect && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="mt-6"
+                      >
+                        <button
+                          onClick={handleMultiNext}
+                          disabled={selectedSkills.length === 0}
+                          className="w-full py-3 text-sm font-medium border border-foreground/20 hover:border-foreground/40 text-foreground/70 hover:text-foreground transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                        >
+                          Lanjut →
+                        </button>
+                      </motion.div>
+                    )}
+
+                    {stepId === "stage" && selectedStage && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-6"
+                      >
+                        <button
+                          onClick={processProfile}
+                          className="w-full py-3 text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-all"
+                        >
+                          Selesai — Lihat Hasil →
+                        </button>
+                      </motion.div>
+                    )}
+                  </>
+                )}
+
                 {currentStep > 0 && (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -465,7 +668,6 @@ const QuickOnboarding = () => {
           </div>
         )}
 
-        {/* PROCESSING PHASE */}
         {phase === "processing" && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -475,14 +677,12 @@ const QuickOnboarding = () => {
             <div className="mb-8">
               <Loader2 className="w-8 h-8 animate-spin text-muted-foreground/30 mx-auto" />
             </div>
-
             <p className="text-sm font-medium text-foreground/70 mb-2">
               {processingStep}
             </p>
             <p className="text-[10px] text-muted-foreground/30 uppercase tracking-wider">
               Membangun workspace personal kamu
             </p>
-
             <div className="mt-10 space-y-1.5 max-w-xs mx-auto">
               {[
                 "Menganalisis skill & arah",

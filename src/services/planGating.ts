@@ -41,13 +41,14 @@ export interface GateResult {
 // PLAN LIMITS CONFIGURATION
 // ============================================================================
 
+// DEV MODE: All plans unlocked for testing. Revert for production.
 const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
   free: {
-    maxReprofiles: 1,
-    aiPersonalization: false,
-    aiWeeklyFeedback: false,
-    aiAdaptation: false,
-    unlimitedReprofiling: false,
+    maxReprofiles: Infinity,
+    aiPersonalization: true,
+    aiWeeklyFeedback: true,
+    aiAdaptation: true,
+    unlimitedReprofiling: true,
   },
   pro: {
     maxReprofiles: Infinity,

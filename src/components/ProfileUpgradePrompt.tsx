@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, Check, ArrowLeft, Sparkles, X,
 } from "lucide-react";
-import { UPGRADE_QUESTIONS, type QuickQuestion } from "@/utils/quickProfileConfig";
+import { UPGRADE_QUESTIONS, type UpgradeQuestion } from "@/utils/quickProfileConfig";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Props {

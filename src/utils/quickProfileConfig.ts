@@ -1,61 +1,32 @@
-/**
- * Quick Profile Configuration — Level 1 Quick Mapping (2–4 menit)
- * ================================================================
- * MVP profiling: 6 pertanyaan → output arah awal.
- *
- * Hidden strategy — dari 6 pertanyaan, sistem sudah dapat:
- *   1. Skill category (multi-select)
- *   2. Interest cluster / arah (intent direction)
- *   3. Time availability
- *   4. Current stage / kondisi
- *   5. Target income (confidence bias)
- *   6. Biggest challenge
- *
- * Cukup untuk MVP. Level 2 (upgrade profil) muncul setelah 3-7 hari.
- *
- * UI rules:
- *   - 1 pertanyaan per layar
- *   - Progress bar jelas
- *   - Bahasa sederhana
- *   - Tidak ada teks panjang
- *   - Tidak ada istilah teknis
- *   - Tidak ada "tes kompetensi" atau "validasi"
- */
-
-// ============================================================================
-// TYPES
-// ============================================================================
-
 export interface QuickOption {
   id: string;
   emoji: string;
   label: string;
-  hint?: string; // short contextual hint, max 1 line
+  hint?: string;
 }
 
 export interface QuickQuestion {
   id: string;
-  title: string;        // simple, direct
-  subtitle?: string;    // max 1 short sentence
-  multiSelect?: boolean; // allow multiple selections
-  maxSelect?: number;    // max items if multi-select
+  title: string;
+  subtitle?: string;
+  multiSelect?: boolean;
+  maxSelect?: number;
+  isSlider?: boolean;
+  sliderLabels?: string[];
   options: QuickOption[];
 }
 
 export interface QuickProfileResult {
-  skills: string[];           // multi-select skill IDs
-  direction: string;          // intent direction ID
-  time: string;               // time availability ID
-  stage: string;              // current life stage ID
-  incomeTarget: string;       // income target ID
-  challenge: string;          // biggest challenge ID
+  skills: string[];
+  subSkill: string;
+  experience: number;
+  target: string;
+  time: string;
+  language: string;
+  stage: string;
 }
 
-// ============================================================================
-// QUESTION 1 — SKILL UTAMA (multi-select, max 3)
-// ============================================================================
-// Hidden output: skill_category + interest_cluster partial
-
+// Q1 — SKILL UTAMA
 export const Q_SKILLS: QuickQuestion = {
   id: "skills",
   title: "Skill apa yang kamu punya?",
@@ -63,46 +34,123 @@ export const Q_SKILLS: QuickQuestion = {
   multiSelect: true,
   maxSelect: 3,
   options: [
-    { id: "writing", emoji: "✍️", label: "Menulis", hint: "Artikel, copywriting, script" },
-    { id: "design", emoji: "🎨", label: "Desain", hint: "Canva, Figma, visual" },
+    { id: "writing", emoji: "✍️", label: "Menulis", hint: "Artikel, copy, script" },
+    { id: "design", emoji: "🎨", label: "Desain", hint: "Visual, grafis, UI" },
     { id: "video", emoji: "🎬", label: "Video", hint: "Edit, rekam, motion" },
     { id: "coding", emoji: "💻", label: "Coding / Tech", hint: "Web, app, automation" },
-    { id: "marketing", emoji: "📢", label: "Marketing", hint: "Ads, SEO, socmed" },
-    { id: "speaking", emoji: "🎤", label: "Ngomong / Presentasi", hint: "Live, podcast, video" },
+    { id: "marketing", emoji: "📢", label: "Marketing", hint: "Ads, SEO, social media" },
+    { id: "speaking", emoji: "🎤", label: "Ngomong / Tampil", hint: "Live, podcast, presentasi" },
     { id: "analysis", emoji: "📊", label: "Analisis / Riset", hint: "Data, trend, report" },
-    { id: "selling", emoji: "🛒", label: "Jualan", hint: "Online, offline, negosiasi" },
-    { id: "none", emoji: "🌱", label: "Belum punya skill khusus", hint: "Tidak masalah, kita mulai dari sini" },
+    { id: "selling", emoji: "🛒", label: "Jualan", hint: "Negosiasi, closing, marketplace" },
+    { id: "none", emoji: "🌱", label: "Belum punya skill khusus", hint: "Sistem akan bantu temukan arah" },
   ],
 };
 
-// ============================================================================
-// QUESTION 2 — ARAH / INTENT DIRECTION
-// ============================================================================
-// Hidden output: intent_direction → determines economic model mapping
+// Q2 — TURUNAN SKILL (BRANCHING dari Q1)
+export const SUB_SKILLS: Record<string, QuickOption[]> = {
+  writing: [
+    { id: "copywriting", emoji: "💰", label: "Copywriting / Sales", hint: "Landing page, email, ads" },
+    { id: "seo_content", emoji: "🔍", label: "SEO & Blog", hint: "Artikel ranking Google" },
+    { id: "script", emoji: "🎬", label: "Script Video", hint: "YouTube, TikTok, podcast" },
+    { id: "ghostwriting", emoji: "👻", label: "Ghostwriting", hint: "Nulis untuk orang lain" },
+    { id: "technical", emoji: "📝", label: "Technical Writing", hint: "Dokumentasi, SOP, tutorial" },
+    { id: "creative", emoji: "📖", label: "Creative Writing", hint: "Cerita, ebook, narrative" },
+  ],
+  design: [
+    { id: "social_media", emoji: "📱", label: "Social Media Design", hint: "Post, story, carousel" },
+    { id: "branding", emoji: "🎨", label: "Branding & Logo", hint: "Identitas visual brand" },
+    { id: "ui_ux", emoji: "🖥️", label: "UI/UX Design", hint: "Interface web & app" },
+    { id: "thumbnail", emoji: "🖼️", label: "Thumbnail & Banner", hint: "YouTube, blog, ads" },
+    { id: "template", emoji: "📋", label: "Template Design", hint: "Canva, Notion, PowerPoint" },
+  ],
+  video: [
+    { id: "short_form", emoji: "📱", label: "Short-Form", hint: "Reels, TikTok, Shorts" },
+    { id: "long_form", emoji: "🎬", label: "Long-Form Editing", hint: "YouTube, documentary" },
+    { id: "motion", emoji: "✨", label: "Motion Graphics", hint: "Animasi, intro, explainer" },
+    { id: "faceless", emoji: "🙈", label: "Faceless Content", hint: "Tanpa tampil muka" },
+    { id: "live", emoji: "📺", label: "Live & Streaming", hint: "Live selling, podcast" },
+  ],
+  coding: [
+    { id: "web_dev", emoji: "🌐", label: "Web Development", hint: "Website, landing page" },
+    { id: "app_dev", emoji: "📱", label: "App Development", hint: "Mobile, cross-platform" },
+    { id: "automation", emoji: "⚙️", label: "Automation & Bots", hint: "Scraper, workflow, API" },
+    { id: "ai_tools", emoji: "🤖", label: "AI Tools / Agents", hint: "Chatbot, AI workflow" },
+    { id: "nocode", emoji: "🧩", label: "No-Code Builder", hint: "Bubble, Softr, Glide" },
+  ],
+  marketing: [
+    { id: "ads", emoji: "📢", label: "Ads / Paid Media", hint: "Meta, Google, TikTok Ads" },
+    { id: "seo", emoji: "🔍", label: "SEO", hint: "Ranking di Google" },
+    { id: "social_mgmt", emoji: "📱", label: "Social Media Management", hint: "Planning, posting, engage" },
+    { id: "email", emoji: "📧", label: "Email Marketing", hint: "Newsletter, sequence, nurture" },
+    { id: "funnel", emoji: "🔄", label: "Funnel & Conversion", hint: "Landing page, lead gen" },
+  ],
+  speaking: [
+    { id: "youtube_face", emoji: "🎥", label: "YouTube / Face Content", hint: "Talking head, vlog" },
+    { id: "podcast", emoji: "🎙️", label: "Podcast", hint: "Audio content, interview" },
+    { id: "live_selling", emoji: "🛍️", label: "Live Selling", hint: "TikTok Live, Shopee Live" },
+    { id: "coaching", emoji: "🎓", label: "Coaching / Mentoring", hint: "1-on-1, group session" },
+    { id: "mc_host", emoji: "🎤", label: "MC / Host Online", hint: "Webinar, event online" },
+  ],
+  analysis: [
+    { id: "market_research", emoji: "📈", label: "Market Research", hint: "Trend, kompetitor, opportunity" },
+    { id: "data_analysis", emoji: "📊", label: "Data Analysis", hint: "Spreadsheet, dashboard, report" },
+    { id: "newsletter", emoji: "📧", label: "Riset Newsletter", hint: "Curated insights, paid newsletter" },
+    { id: "crypto_finance", emoji: "💰", label: "Finance / Crypto", hint: "Trading signals, analisis" },
+    { id: "ai_curation", emoji: "🤖", label: "AI / Tech Curation", hint: "Review tools, tutorial AI" },
+  ],
+  selling: [
+    { id: "marketplace", emoji: "🛒", label: "Marketplace Online", hint: "Shopee, Tokopedia, dll" },
+    { id: "dropship", emoji: "📦", label: "Dropship / Reseller", hint: "Tanpa stok, supplier kirim" },
+    { id: "affiliate", emoji: "🔗", label: "Affiliate Marketing", hint: "Komisi dari referral" },
+    { id: "social_selling", emoji: "📱", label: "Social Commerce", hint: "Jualan via IG, TikTok Shop" },
+    { id: "b2b_sales", emoji: "💼", label: "B2B / Corporate Sales", hint: "Jual ke bisnis" },
+  ],
+  none: [
+    { id: "explore_content", emoji: "📱", label: "Coba buat konten", hint: "Mulai dari social media" },
+    { id: "explore_freelance", emoji: "🛠️", label: "Coba jadi freelancer", hint: "Jual jasa sederhana" },
+    { id: "explore_selling", emoji: "🛒", label: "Coba jualan online", hint: "Resell, dropship, affiliate" },
+    { id: "explore_tech", emoji: "💻", label: "Belajar tech / coding", hint: "Masa depan di teknologi" },
+    { id: "explore_anything", emoji: "🧭", label: "Apapun yang menghasilkan", hint: "Sistem pilihkan untuk saya" },
+  ],
+};
 
-export const Q_DIRECTION: QuickQuestion = {
-  id: "direction",
-  title: "Kamu mau ke arah mana?",
-  subtitle: "Pilih yang paling menarik sekarang.",
+export function getSubSkillOptions(primarySkill: string): QuickOption[] {
+  return SUB_SKILLS[primarySkill] || SUB_SKILLS.none;
+}
+
+// Q3 — PENGALAMAN (Slider 0-4)
+export const Q_EXPERIENCE: QuickQuestion = {
+  id: "experience",
+  title: "",
+  subtitle: "Geser sesuai level kamu.",
+  isSlider: true,
+  sliderLabels: [
+    "Baru mulai belajar",
+    "Pernah coba, belum mahir",
+    "Bisa eksekusi sendiri",
+    "Sudah mahir, punya hasil",
+    "Expert, sudah dibayar",
+  ],
+  options: [],
+};
+
+// Q4 — TARGET
+export const Q_TARGET: QuickQuestion = {
+  id: "target",
+  title: "Apa target kamu dari skill ini?",
   options: [
-    { id: "freelance", emoji: "🛠️", label: "Jual skill jadi jasa", hint: "Freelance, client-based" },
-    { id: "content", emoji: "📱", label: "Bangun audience & konten", hint: "YouTube, TikTok, Instagram" },
-    { id: "product", emoji: "📦", label: "Buat & jual produk digital", hint: "Ebook, template, course" },
-    { id: "commerce", emoji: "🛒", label: "Jualan online", hint: "Dropship, affiliate, marketplace" },
-    { id: "automate", emoji: "⚙️", label: "Bangun sistem otomatis", hint: "No-code, AI, automation" },
-    { id: "unsure", emoji: "🧭", label: "Belum tahu — bantu saya", hint: "Sistem akan arahkan berdasarkan skill kamu" },
+    { id: "first_income", emoji: "💵", label: "Dapat income pertama", hint: "Belum pernah dapat uang dari ini" },
+    { id: "side_income", emoji: "💰", label: "Tambahan income sampingan", hint: "Sudah kerja, mau tambahan" },
+    { id: "full_income", emoji: "🏆", label: "Jadikan income utama", hint: "Mau full-time dari ini" },
+    { id: "scale", emoji: "📈", label: "Scale / besarkan yang sudah ada", hint: "Sudah jalan, mau grow" },
+    { id: "pivot", emoji: "🔄", label: "Pindah arah karir", hint: "Mau ganti bidang" },
   ],
 };
 
-// ============================================================================
-// QUESTION 3 — WAKTU TERSEDIA
-// ============================================================================
-// Hidden output: time_availability (affects intensity & model fit)
-
+// Q5 — WAKTU
 export const Q_TIME: QuickQuestion = {
   id: "time",
-  title: "Berapa waktu luang kamu per hari?",
-  subtitle: "Waktu yang benar-benar bisa kamu pakai.",
+  title: "Berapa waktu yang bisa kamu dedikasikan per hari?",
   options: [
     { id: "lt1h", emoji: "⏰", label: "Kurang dari 1 jam" },
     { id: "1-2h", emoji: "🕐", label: "1–2 jam" },
@@ -111,294 +159,203 @@ export const Q_TIME: QuickQuestion = {
   ],
 };
 
-// ============================================================================
-// QUESTION 4 — STATUS / KONDISI SEKARANG
-// ============================================================================
-// Hidden output: current_stage (affects risk tolerance, intensity, urgency)
+// Q6 — BAHASA KERJA
+export const Q_LANGUAGE: QuickQuestion = {
+  id: "language",
+  title: "Bahasa kerja kamu?",
+  subtitle: "Ini menentukan market yang bisa dijangkau.",
+  options: [
+    { id: "id_only", emoji: "🇮🇩", label: "Indonesia saja", hint: "Market lokal" },
+    { id: "id_en_passive", emoji: "📖", label: "Bisa baca Inggris", hint: "Consume English, produce Indo" },
+    { id: "id_en_active", emoji: "💬", label: "Bisa kerja dalam Inggris", hint: "Market lokal + global" },
+    { id: "en_fluent", emoji: "��", label: "Inggris lancar", hint: "Full akses market global" },
+  ],
+};
 
+// Q7 — KONDISI SEKARANG
 export const Q_STAGE: QuickQuestion = {
   id: "stage",
-  title: "Apa situasi kamu sekarang?",
+  title: "Kondisi kamu sekarang?",
   options: [
-    { id: "student", emoji: "🎓", label: "Pelajar / Mahasiswa" },
-    { id: "employee", emoji: "👔", label: "Karyawan" },
-    { id: "freelancer", emoji: "🧑‍💻", label: "Freelancer" },
-    { id: "unemployed", emoji: "🔍", label: "Belum kerja / cari kerja" },
-    { id: "entrepreneur", emoji: "🚀", label: "Punya bisnis sendiri" },
-    { id: "parent", emoji: "🏠", label: "Ibu/Bapak rumah tangga" },
+    { id: "student", emoji: "🎓", label: "Pelajar / Mahasiswa", hint: "Banyak waktu, minim modal" },
+    { id: "employee", emoji: "👔", label: "Karyawan", hint: "Stabil, cari sampingan" },
+    { id: "freelancer", emoji: "🧑‍💻", label: "Freelancer", hint: "Sudah di game, mau scale" },
+    { id: "unemployed", emoji: "🔍", label: "Sedang cari kerja", hint: "Butuh income segera" },
+    { id: "entrepreneur", emoji: "🚀", label: "Punya bisnis", hint: "Mau tambah stream" },
+    { id: "parent", emoji: "🏠", label: "Dari rumah", hint: "Waktu fleksibel, cari income" },
   ],
 };
 
 // ============================================================================
-// QUESTION 5 — TARGET INCOME
-// ============================================================================
-// Hidden output: income_target (confidence bias indicator)
-
-export const Q_INCOME: QuickQuestion = {
-  id: "income_target",
-  title: "Target income per bulan dari ini?",
-  subtitle: "Jangan terlalu rendah, jangan terlalu tinggi.",
-  options: [
-    { id: "lt500k", emoji: "🪙", label: "< Rp 500 ribu", hint: "Uang jajan tambahan" },
-    { id: "500k-2m", emoji: "💵", label: "Rp 500rb – 2 juta", hint: "Sampingan lumayan" },
-    { id: "2m-5m", emoji: "💰", label: "Rp 2 – 5 juta", hint: "Setara part-time" },
-    { id: "5m-15m", emoji: "🏆", label: "Rp 5 – 15 juta", hint: "Income utama" },
-    { id: "gt15m", emoji: "🚀", label: "> Rp 15 juta", hint: "Full-time digital" },
-  ],
-};
-
-// ============================================================================
-// QUESTION 6 — HAMBATAN TERBESAR
-// ============================================================================
-// Hidden output: biggest_challenge (determines coaching approach)
-
-export const Q_CHALLENGE: QuickQuestion = {
-  id: "challenge",
-  title: "Hambatan terbesar kamu sekarang?",
-  subtitle: "Jujur saja. Ini penting.",
-  options: [
-    { id: "no_direction", emoji: "🧭", label: "Tidak tahu harus mulai dari mana" },
-    { id: "no_skill", emoji: "🎯", label: "Merasa belum punya skill" },
-    { id: "no_time", emoji: "⏰", label: "Waktu sangat terbatas" },
-    { id: "no_confidence", emoji: "😰", label: "Kurang percaya diri" },
-    { id: "tried_failed", emoji: "😤", label: "Sudah coba tapi gagal" },
-  ],
-};
-
-// ============================================================================
-// ALL QUESTIONS IN ORDER
-// ============================================================================
-
-export const QUICK_QUESTIONS: QuickQuestion[] = [
-  Q_SKILLS,
-  Q_DIRECTION,
-  Q_TIME,
-  Q_STAGE,
-  Q_INCOME,
-  Q_CHALLENGE,
-];
-
-// ============================================================================
-// MAPPING: Quick Profile → Economic Model + Sub-sector
+// MAPPING FUNCTIONS
 // ============================================================================
 
 import type { EconomicModelId } from "./branchingProfileConfig";
 import type { PathId } from "./profilingConfig";
 
-/** Map direction → economic model */
-export function mapDirectionToModel(direction: string): EconomicModelId {
-  const map: Record<string, EconomicModelId> = {
-    freelance: "skill_service",
-    content: "audience_based",
-    product: "digital_product",
-    commerce: "commerce_arbitrage",
-    automate: "automation_builder",
-    unsure: "skill_service", // default safe choice
-  };
-  return map[direction] || "skill_service";
-}
+export function inferEconomicModel(target: string, skill: string, subSkill: string): EconomicModelId {
+  if (target === "scale" && skill === "coding") return "automation_builder";
+  if (target === "scale") return "digital_product";
 
-/** Map direction + skills → best sub-sector */
-export function mapToSubSector(direction: string, skills: string[]): string {
-  // If direction is "unsure", infer from skills
-  if (direction === "unsure") {
-    if (skills.includes("writing")) return "writing";
-    if (skills.includes("design")) return "design";
-    if (skills.includes("video")) return "content_creator";
-    if (skills.includes("coding")) return "development";
-    if (skills.includes("marketing")) return "marketing";
-    if (skills.includes("speaking")) return "content_creator";
-    if (skills.includes("analysis")) return "trend_researcher";
-    if (skills.includes("selling")) return "dropship";
-    return "writing"; // safest default
-  }
-
-  const skillPriority = skills[0] || "none";
-
-  const directionSkillMap: Record<string, Record<string, string>> = {
-    freelance: {
-      writing: "writing",
-      design: "design",
-      video: "video",
-      coding: "development",
-      marketing: "marketing",
-      speaking: "marketing",
-      analysis: "ai_operator",
-      selling: "marketing",
-      none: "writing",
-    },
-    content: {
-      writing: "niche_page",
-      design: "niche_page",
-      video: "content_creator",
-      coding: "content_creator",
-      marketing: "micro_influencer",
-      speaking: "content_creator",
-      analysis: "niche_page",
-      selling: "micro_influencer",
-      none: "niche_page",
-    },
-    product: {
-      writing: "ebook",
-      design: "template",
-      video: "course_mini",
-      coding: "saas_micro",
-      marketing: "course_mini",
-      speaking: "course_mini",
-      analysis: "ebook",
-      selling: "template",
-      none: "ebook",
-    },
-    commerce: {
-      writing: "affiliate",
-      design: "print_on_demand",
-      video: "tiktok_shop",
-      coding: "digital_resell",
-      marketing: "affiliate",
-      speaking: "tiktok_shop",
-      analysis: "affiliate",
-      selling: "dropship",
-      none: "dropship",
-    },
-    automate: {
-      writing: "funnel_builder",
-      design: "nocode_builder",
-      video: "ai_workflow",
-      coding: "ai_workflow",
-      marketing: "zapier_automation",
-      speaking: "funnel_builder",
-      analysis: "ai_workflow",
-      selling: "crm_setup",
-      none: "nocode_builder",
-    },
+  const skillModelMap: Record<string, EconomicModelId> = {
+    writing: "skill_service",
+    design: "skill_service",
+    video: "audience_based",
+    coding: "automation_builder",
+    marketing: "skill_service",
+    speaking: "audience_based",
+    analysis: "data_research",
+    selling: "commerce_arbitrage",
+    none: "skill_service",
   };
 
-  return directionSkillMap[direction]?.[skillPriority] ||
-         directionSkillMap[direction]?.none ||
-         "writing";
+  if (subSkill === "affiliate" || subSkill === "dropship" || subSkill === "marketplace") return "commerce_arbitrage";
+  if (subSkill === "youtube_face" || subSkill === "podcast" || subSkill === "short_form" || subSkill === "faceless") return "audience_based";
+  if (subSkill === "newsletter" || subSkill === "market_research") return "data_research";
+  if (subSkill === "ai_tools" || subSkill === "automation" || subSkill === "nocode") return "automation_builder";
+  if (subSkill === "template" || subSkill === "creative") return "digital_product";
+
+  return skillModelMap[skill] || "skill_service";
 }
 
-/** Map to best niche based on direction + skills + sub-sector */
-export function mapToNiche(direction: string, skills: string[], subSector: string): string {
-  // Use sub-sector as niche for Quick Mapping (Level 1)
-  // Detailed niche drilling happens in Level 2
-  return subSector;
-}
-
-/** Map direction to default platform */
-export function mapToPlatform(direction: string, skills: string[]): string {
+export function inferSubSector(skill: string, subSkill: string): string {
   const map: Record<string, string> = {
-    freelance: skills.includes("coding") ? "upwork" : "fiverr",
-    content: skills.includes("video") ? "tiktok" : "instagram",
-    product: "gumroad",
-    commerce: skills.includes("selling") ? "shopee" : "tiktok_shop_plat",
-    automate: "linkedin_auto",
-    unsure: "instagram",
+    copywriting: "writing", seo_content: "writing", script: "writing",
+    ghostwriting: "writing", technical: "writing", creative: "writing",
+    social_media: "design", branding: "design", ui_ux: "design",
+    thumbnail: "design", template: "template",
+    short_form: "content_creator", long_form: "video", motion: "video",
+    faceless: "niche_page", live: "content_creator",
+    web_dev: "development", app_dev: "development", automation: "ai_workflow",
+    ai_tools: "ai_operator", nocode: "nocode_builder",
+    ads: "marketing", seo: "marketing", social_mgmt: "marketing",
+    email: "marketing", funnel: "funnel_builder",
+    youtube_face: "content_creator", podcast: "content_creator",
+    live_selling: "tiktok_shop", coaching: "course_mini", mc_host: "content_creator",
+    market_research: "trend_researcher", data_analysis: "market_analyst",
+    newsletter: "newsletter_writer", crypto_finance: "crypto_analyst",
+    ai_curation: "ai_curator",
+    marketplace: "dropship", dropship: "dropship", affiliate: "affiliate",
+    social_selling: "tiktok_shop", b2b_sales: "marketing",
+    explore_content: "niche_page", explore_freelance: "writing",
+    explore_selling: "dropship", explore_tech: "development",
+    explore_anything: "writing",
   };
-  return map[direction] || "instagram";
+  return map[subSkill] || skill;
 }
 
-/** Map quick profile to legacy PathId */
-export function mapQuickToLegacyPath(direction: string): PathId {
-  const map: Record<string, PathId> = {
-    freelance: "micro_service",
-    content: "niche_content",
-    product: "digital_product",
-    commerce: "arbitrage_skill",
-    automate: "freelance_upgrade",
-    unsure: "micro_service",
+export function inferPlatform(skill: string, subSkill: string, language: string): string {
+  if (language === "en_fluent" || language === "id_en_active") {
+    if (skill === "writing" || skill === "design" || skill === "coding") return "upwork";
+    if (skill === "marketing") return "linkedin";
+  }
+  const map: Record<string, string> = {
+    short_form: "tiktok", long_form: "youtube", faceless: "tiktok",
+    youtube_face: "youtube", podcast: "youtube", live_selling: "tiktok",
+    social_media: "instagram", social_mgmt: "instagram", social_selling: "instagram",
+    seo_content: "own_website", seo: "own_website", newsletter: "substack",
+    marketplace: "shopee", dropship: "shopee", affiliate: "instagram",
+    nocode: "direct_client", ai_tools: "upwork",
+    writing: "fiverr", design: "fiverr", video: "tiktok",
+    coding: "upwork", marketing: "linkedin", speaking: "youtube",
+    analysis: "substack", selling: "shopee",
   };
-  return map[direction] || "micro_service";
+  return map[subSkill] || map[skill] || "instagram";
 }
 
-/** Map quick profile to skill level (simplified) */
-export function inferSkillLevel(skills: string[]): number {
-  if (skills.includes("none") || skills.length === 0) return 0;
-  if (skills.length === 1) return 1;
-  if (skills.length === 2) return 2;
-  return 3; // 3 skills = intermediate+
+export function inferLegacyPath(skill: string, subSkill: string, target: string): PathId {
+  if (target === "scale" || subSkill === "template" || subSkill === "creative") return "digital_product";
+  if (skill === "selling" || subSkill === "dropship" || subSkill === "affiliate" || subSkill === "marketplace") return "arbitrage_skill";
+  if (skill === "video" || skill === "speaking" || subSkill === "short_form" || subSkill === "faceless") return "niche_content";
+  if (skill === "analysis" || subSkill === "newsletter") return "freelance_upgrade";
+  return "micro_service";
 }
 
-/** Map time to numeric */
+export function inferRisk(stage: string): number {
+  const map: Record<string, number> = {
+    student: 3, employee: 2, freelancer: 3,
+    unemployed: 2, entrepreneur: 4, parent: 1,
+  };
+  return map[stage] || 2;
+}
+
+export function inferCapital(stage: string): number {
+  const map: Record<string, number> = {
+    student: 0, employee: 1, freelancer: 1,
+    unemployed: 0, entrepreneur: 2, parent: 0,
+  };
+  return map[stage] || 0;
+}
+
 export function mapTimeToScore(time: string): number {
   const map: Record<string, number> = { "lt1h": 1, "1-2h": 2, "3-4h": 3, "gt4h": 4 };
   return map[time] || 2;
 }
 
-/** Map stage to risk tolerance (hidden) */
-export function inferRiskFromStage(stage: string): number {
-  const map: Record<string, number> = {
-    student: 3,       // lots of time, can experiment
-    employee: 2,      // safe job, low risk preference
-    freelancer: 3,    // already in game, moderate risk
-    unemployed: 2,    // needs safe income fast
-    entrepreneur: 4,  // used to risk
-    parent: 1,        // very risk-averse
-  };
-  return map[stage] || 2;
+export function mapLanguageToScore(language: string): number {
+  const map: Record<string, number> = { id_only: 0, id_en_passive: 1, id_en_active: 2, en_fluent: 3 };
+  return map[language] || 0;
 }
 
-/** Build complete answer tags from quick profile */
-export function buildAnswerTags(profile: QuickProfileResult): Record<string, string> {
-  const model = mapDirectionToModel(profile.direction);
-  const subSector = mapToSubSector(profile.direction, profile.skills);
-  const niche = mapToNiche(profile.direction, profile.skills, subSector);
-  const platform = mapToPlatform(profile.direction, profile.skills);
+export function buildAnswerTags(p: QuickProfileResult): Record<string, string> {
+  const model = inferEconomicModel(p.target, p.skills[0] || "none", p.subSkill);
+  const subSector = inferSubSector(p.skills[0] || "none", p.subSkill);
+  const platform = inferPlatform(p.skills[0] || "none", p.subSkill, p.language);
 
   return {
-    // Core mappings
     economic_model: model,
     sub_sector: subSector,
-    niche: niche,
+    niche: subSector,
     platform: platform,
-    workflow_id: `${model}__${subSector}__${niche}__${platform}`,
-    // Quick profile answers (raw)
-    skills: profile.skills.join(","),
-    direction: profile.direction,
-    time: profile.time,
-    current_stage: profile.stage,
-    income_target: profile.incomeTarget,
-    biggest_challenge: profile.challenge,
-    // Inferred values (hidden strategy)
-    skill_level: inferSkillLevel(profile.skills) <= 1 ? "basic" : "intermediate",
-    capital: "zero", // default for MVP, refined in Level 2
-    risk: inferRiskFromStage(profile.stage) <= 2 ? "low" : "medium",
-    audience: "zero", // default, refined in Level 2
-    // Level 2 placeholders (will be filled when user upgrades profile)
-    profile_level: "quick", // "quick" | "upgraded"
+    workflow_id: `${model}__${subSector}__${p.subSkill}__${platform}`,
+    skills: p.skills.join(","),
+    sub_skill: p.subSkill,
+    experience_level: String(p.experience),
+    target: p.target,
+    time: p.time,
+    language_skill: p.language === "en_fluent" ? "fluent" :
+                    p.language === "id_en_active" ? "moderate" :
+                    p.language === "id_en_passive" ? "passive" : "none",
+    current_stage: p.stage,
+    skill_level: p.experience <= 1 ? "basic" : p.experience <= 2 ? "intermediate" : "advanced",
+    capital: inferCapital(p.stage) === 0 ? "zero" : "lt50",
+    risk: inferRisk(p.stage) <= 2 ? "low" : "medium",
+    audience: "zero",
+    income_target: p.target === "full_income" ? "5m-15m" :
+                   p.target === "scale" ? "gt15m" :
+                   p.target === "side_income" ? "2m-5m" :
+                   p.target === "first_income" ? "500k-2m" : "2m-5m",
+    biggest_challenge: p.experience === 0 ? "no_direction" : "no_time",
+    profile_level: "quick",
   };
 }
 
 // ============================================================================
-// LEVEL 2 — UPGRADE PROFIL QUESTIONS (shown after 3-7 days)
+// LEVEL 2 UPGRADE
 // ============================================================================
 
-export const UPGRADE_QUESTIONS: QuickQuestion[] = [
+export interface UpgradeQuestion {
+  id: string;
+  title: string;
+  subtitle?: string;
+  options: QuickOption[];
+}
+
+export const UPGRADE_QUESTIONS: UpgradeQuestion[] = [
   {
     id: "digital_experience",
-    title: "Pengalaman digital kamu sebelumnya?",
+    title: "Pengalaman digital sebelumnya?",
     options: [
-      { id: "never", emoji: "🆕", label: "Belum pernah sama sekali" },
-      { id: "tried_failed", emoji: "😤", label: "Pernah coba tapi berhenti" },
-      { id: "side_project", emoji: "🌙", label: "Pernah sebagai sampingan" },
-      { id: "working_digital", emoji: "💼", label: "Sekarang kerja di digital" },
-      { id: "experienced", emoji: "🏆", label: "Sudah berpengalaman" },
-    ],
-  },
-  {
-    id: "language_skill",
-    title: "Kemampuan bahasa Inggris?",
-    subtitle: "Ini membuka akses ke market global.",
-    options: [
-      { id: "none", emoji: "🇮🇩", label: "Indonesia saja" },
-      { id: "passive", emoji: "📖", label: "Bisa baca, sulit nulis" },
-      { id: "moderate", emoji: "💬", label: "Cukup untuk komunikasi" },
-      { id: "fluent", emoji: "🌍", label: "Lancar" },
+      { id: "never", emoji: "🆕", label: "Belum pernah" },
+      { id: "tried", emoji: "😤", label: "Pernah coba, berhenti" },
+      { id: "side", emoji: "🌙", label: "Pernah sampingan" },
+      { id: "active", emoji: "💼", label: "Aktif di digital" },
+      { id: "expert", emoji: "🏆", label: "Berpengalaman" },
     ],
   },
   {
     id: "tools_familiarity",
-    title: "Tools digital yang kamu kuasai?",
+    title: "Tools digital yang dikuasai?",
     options: [
       { id: "none", emoji: "🚫", label: "Belum familiar" },
       { id: "basic", emoji: "📱", label: "Canva, Google Docs" },
@@ -408,11 +365,11 @@ export const UPGRADE_QUESTIONS: QuickQuestion[] = [
   },
   {
     id: "weekly_commitment",
-    title: "Berapa lama kamu bisa komitmen?",
+    title: "Berapa lama bisa komitmen?",
     options: [
-      { id: "1_week", emoji: "⚡", label: "1 minggu — coba dulu" },
+      { id: "1_week", emoji: "⚡", label: "1 minggu coba" },
       { id: "2_weeks", emoji: "📅", label: "2 minggu" },
-      { id: "1_month", emoji: "📆", label: "1 bulan penuh" },
+      { id: "1_month", emoji: "📆", label: "1 bulan" },
       { id: "3_months", emoji: "🏔️", label: "3 bulan+" },
     ],
   },
@@ -427,48 +384,24 @@ export const UPGRADE_QUESTIONS: QuickQuestion[] = [
   },
   {
     id: "audience",
-    title: "Sudah punya audience / followers?",
+    title: "Sudah punya audience?",
     options: [
       { id: "zero", emoji: "🚫", label: "Belum ada" },
       { id: "micro", emoji: "🌱", label: "< 200" },
-      { id: "small", emoji: "📱", label: "200–1.000" },
-      { id: "medium", emoji: "👥", label: "1.000–5.000" },
-      { id: "large", emoji: "🌟", label: "> 5.000" },
-    ],
-  },
-  {
-    id: "capital",
-    title: "Modal yang siap dikeluarkan?",
-    options: [
-      { id: "zero", emoji: "🚫", label: "$0 — gratis" },
-      { id: "lt50", emoji: "💵", label: "< $50" },
-      { id: "50-200", emoji: "💰", label: "$50–200" },
-      { id: "200-500", emoji: "🏦", label: "$200–500" },
+      { id: "small", emoji: "📱", label: "200 - 1.000" },
+      { id: "medium", emoji: "👥", label: "1K - 5K" },
+      { id: "large", emoji: "🌟", label: "> 5K" },
     ],
   },
 ];
 
-// ============================================================================
-// PROFILE LEVEL CHECK
-// ============================================================================
-
-/** Check if user should see Level 2 upgrade prompt */
 export function shouldShowUpgradePrompt(
   answerTags: Record<string, string>,
   createdAt: string | Date
 ): boolean {
-  // Already upgraded
   if (answerTags.profile_level === "upgraded") return false;
-
-  // Check if 3+ days have passed since profiling
   const created = new Date(createdAt);
   const now = new Date();
   const daysSince = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
-
   return daysSince >= 3;
-}
-
-/** Get human-readable label for upgrade benefit */
-export function getUpgradeBenefit(): string {
-  return "Tingkatkan profil untuk rekomendasi yang lebih presisi — berdasarkan pengalaman, tools, dan kondisi spesifik kamu.";
 }
