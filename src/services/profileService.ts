@@ -583,7 +583,7 @@ FORMAT: 4 paragraf pendek. Bahasa Indonesia. Tanpa heading/markdown.`;
 // ============================================================================
 
 // ── DEV MODE: must match AuthContext DEV_BYPASS_AUTH ──
-const DEV_BYPASS_AUTH = true;
+const DEV_BYPASS_AUTH = false;
 
 const DEV_MOCK_SAVED_PROFILE: SavedProfile = {
   id: "dev-profile-00000000",

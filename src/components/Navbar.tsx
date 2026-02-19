@@ -56,10 +56,10 @@ const Navbar = () => {
     >
       {/* Status strip */}
       <div className="h-14 flex items-center justify-between px-6 md:px-10 max-w-[1400px] mx-auto">
-        {/* Mark — not a logo, a system identifier */}
-        <Link to="/" className="flex items-center gap-1 shrink-0">
-          <img src="/logo.jpg" alt="INTENT" className="h-8 w-auto" />
-          <span className="text-sm font-semibold tracking-wider uppercase text-foreground/60">
+        {/* Logo — clean, no background */}
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <img src="/logo.jpg" alt="INTENT" className="h-10 w-auto" />
+          <span className="text-sm font-bold tracking-wider uppercase text-foreground">
             INTENT
           </span>
         </Link>

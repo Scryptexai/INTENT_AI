@@ -22,95 +22,137 @@ export interface QuickProfileResult {
   experience: number;
   target: string;
   time: string;
+  timeline: string;
   language: string;
   stage: string;
 }
 
-// Q1 — SKILL UTAMA
+// Q1 — MINAT KERJA (Single select untuk fokus!)
 export const Q_SKILLS: QuickQuestion = {
   id: "skills",
-  title: "Skill apa yang kamu punya?",
-  subtitle: "Pilih yang paling kuat. Boleh lebih dari satu.",
-  multiSelect: true,
-  maxSelect: 3,
+  title: "Minat kerja apa yang ingin kamu pelajari atau coba?",
+  subtitle: "Pilih satu bidang utama. Q2 akan breakdown lebih spesifik.",
+  multiSelect: false,
+  maxSelect: 1,
   options: [
-    { id: "writing", emoji: "✍️", label: "Menulis", hint: "Artikel, copy, script" },
-    { id: "design", emoji: "🎨", label: "Desain", hint: "Visual, grafis, UI" },
-    { id: "video", emoji: "🎬", label: "Video", hint: "Edit, rekam, motion" },
-    { id: "coding", emoji: "💻", label: "Coding / Tech", hint: "Web, app, automation" },
-    { id: "marketing", emoji: "📢", label: "Marketing", hint: "Ads, SEO, social media" },
-    { id: "speaking", emoji: "🎤", label: "Ngomong / Tampil", hint: "Live, podcast, presentasi" },
-    { id: "analysis", emoji: "📊", label: "Analisis / Riset", hint: "Data, trend, report" },
-    { id: "selling", emoji: "🛒", label: "Jualan", hint: "Negosiasi, closing, marketplace" },
-    { id: "none", emoji: "🌱", label: "Belum punya skill khusus", hint: "Sistem akan bantu temukan arah" },
+    // CREATIVE & DESIGN
+    { id: "design", emoji: "🎨", label: "Design", hint: "Graphic, UI/UX, Illustration" },
+    { id: "video_photo", emoji: "🎬", label: "Video & Photo", hint: "Editing, Photography, Motion" },
+
+    // CONTENT & WRITING
+    { id: "content_creator", emoji: "🎯", label: "Content Creator", hint: "Influencer, Personal Brand" },
+    { id: "writing", emoji: "✍️", label: "Writing", hint: "Copywriting, Blog, Script" },
+
+    // TECH & DATA
+    { id: "tech", emoji: "💻", label: "Tech & Development", hint: "Web, App, AI, Data, No-code" },
+
+    // MARKETING
+    { id: "marketing", emoji: "📢", label: "Marketing", hint: "Social Media, SEO, Ads, Email" },
+
+    // BUSINESS & OPS
+    { id: "business", emoji: "💼", label: "Business & Ops", hint: "Project Mgmt, VA, Sales" },
+
+    // EDUCATION
+    { id: "education", emoji: "🎓", label: "Education & Coaching", hint: "Tutoring, Courses, Consulting" },
   ],
 };
 
 // Q2 — TURUNAN SKILL (BRANCHING dari Q1)
 export const SUB_SKILLS: Record<string, QuickOption[]> = {
-  writing: [
-    { id: "copywriting", emoji: "💰", label: "Copywriting / Sales", hint: "Landing page, email, ads" },
-    { id: "seo_content", emoji: "🔍", label: "SEO & Blog", hint: "Artikel ranking Google" },
-    { id: "script", emoji: "🎬", label: "Script Video", hint: "YouTube, TikTok, podcast" },
-    { id: "ghostwriting", emoji: "👻", label: "Ghostwriting", hint: "Nulis untuk orang lain" },
-    { id: "technical", emoji: "📝", label: "Technical Writing", hint: "Dokumentasi, SOP, tutorial" },
-    { id: "creative", emoji: "📖", label: "Creative Writing", hint: "Cerita, ebook, narrative" },
-  ],
+  // DESIGN
   design: [
-    { id: "social_media", emoji: "📱", label: "Social Media Design", hint: "Post, story, carousel" },
-    { id: "branding", emoji: "🎨", label: "Branding & Logo", hint: "Identitas visual brand" },
-    { id: "ui_ux", emoji: "🖥️", label: "UI/UX Design", hint: "Interface web & app" },
-    { id: "thumbnail", emoji: "🖼️", label: "Thumbnail & Banner", hint: "YouTube, blog, ads" },
-    { id: "template", emoji: "📋", label: "Template Design", hint: "Canva, Notion, PowerPoint" },
+    { id: "graphic_design", emoji: "🎨", label: "Graphic Design", hint: "Logo, branding, identity, print" },
+    { id: "ui_ux_design", emoji: "🖥️", label: "UI/UX Design", hint: "Website & app interface" },
+    { id: "illustration", emoji: "✏️", label: "Illustration", hint: "Digital art, character, vector" },
+    { id: "social_media_design", emoji: "📱", label: "Social Media Design", hint: "Post, story, carousel" },
+    { id: "presentation_design", emoji: "📊", label: "Presentation Design", hint: "Pitch deck, slides, infographic" },
+    { id: "print_design", emoji: "📄", label: "Print Design", hint: "Brochure, packaging, merchandise" },
+    { id: "motion_graphics", emoji: "✨", label: "Motion Graphics", hint: "Animation, intro, explainer" },
   ],
-  video: [
-    { id: "short_form", emoji: "📱", label: "Short-Form", hint: "Reels, TikTok, Shorts" },
-    { id: "long_form", emoji: "🎬", label: "Long-Form Editing", hint: "YouTube, documentary" },
-    { id: "motion", emoji: "✨", label: "Motion Graphics", hint: "Animasi, intro, explainer" },
-    { id: "faceless", emoji: "🙈", label: "Faceless Content", hint: "Tanpa tampil muka" },
-    { id: "live", emoji: "📺", label: "Live & Streaming", hint: "Live selling, podcast" },
+
+  // VIDEO & PHOTO
+  video_photo: [
+    { id: "video_editing_reels", emoji: "📱", label: "Short-Form Video", hint: "Reels, TikTok, Shorts" },
+    { id: "video_editing_youtube", emoji: "🎬", label: "Long-Form Video", hint: "YouTube, documentary, vlog" },
+    { id: "motion_graphics_video", emoji: "✨", label: "Motion Graphics", hint: "Animation, intro, explainer" },
+    { id: "photography_product", emoji: "📷", label: "Product Photography", hint: "E-commerce, catalog, food" },
+    { id: "photography_portrait", emoji: "📸", label: "Portrait Photography", hint: "Personal, corporate, events" },
+    { id: "photo_editing", emoji: "🖼️", label: "Photo Editing", hint: "Retouching, color grading, manipulation" },
+    { id: "live_streaming", emoji: "📺", label: "Live Streaming", hint: "Live selling, events, gaming" },
   ],
-  coding: [
-    { id: "web_dev", emoji: "🌐", label: "Web Development", hint: "Website, landing page" },
-    { id: "app_dev", emoji: "📱", label: "App Development", hint: "Mobile, cross-platform" },
-    { id: "automation", emoji: "⚙️", label: "Automation & Bots", hint: "Scraper, workflow, API" },
-    { id: "ai_tools", emoji: "🤖", label: "AI Tools / Agents", hint: "Chatbot, AI workflow" },
-    { id: "nocode", emoji: "🧩", label: "No-Code Builder", hint: "Bubble, Softr, Glide" },
+
+  // CONTENT CREATOR
+  content_creator: [
+    { id: "influencer_lifestyle", emoji: "✨", label: "Lifestyle Influencer", hint: "Daily life, fashion, travel" },
+    { id: "influencer_edu", emoji: "🎓", label: "Education Creator", hint: "Tutorials, tips, how-to" },
+    { id: "influencer_review", emoji: "⭐", label: "Review Creator", hint: "Product reviews, unboxing" },
+    { id: "influencer_entertainment", emoji: "🎭", label: "Entertainment Creator", hint: "Comedy, skits, reactions" },
+    { id: "influencer_business", emoji: "💼", label: "Business Creator", hint: "Entrepreneurship, money, career" },
+    { id: "influencer_faceless", emoji: "🎨", label: "Faceless Creator", hint: "Without showing face, voiceover" },
+    { id: "personal_brand", emoji: "🎯", label: "Personal Brand", hint: "Build authority in niche" },
   ],
+
+  // WRITING
+  writing: [
+    { id: "copywriting_ads", emoji: "💰", label: "Copywriting", hint: "Ads, landing page, sales page" },
+    { id: "email_copywriting", emoji: "📧", label: "Email Copywriting", hint: "Newsletter, sequences, automation" },
+    { id: "blog_writing_seo", emoji: "📝", label: "Blog & SEO Writing", hint: "Articles, ranking content" },
+    { id: "scriptwriting_video", emoji: "🎬", label: "Scriptwriting", hint: "YouTube, TikTok, podcast" },
+    { id: "technical_writing", emoji: "📖", label: "Technical Writing", hint: "Documentation, manuals, SOPs" },
+    { id: "creative_writing", emoji: "✍️", label: "Creative Writing", hint: "Stories, ebooks, fiction" },
+    { id: "ghostwriting", emoji: "👻", label: "Ghostwriting", hint: "For others, under their name" },
+    { id: "ux_writing", emoji: "💬", label: "UX Writing", hint: "Interface copy, microcopy" },
+  ],
+
+  // TECH
+  tech: [
+    { id: "web_dev_frontend", emoji: "🌐", label: "Frontend Dev", hint: "React, Vue, HTML/CSS/JS" },
+    { id: "web_dev_backend", emoji: "⚙️", label: "Backend Dev", hint: "Node.js, Python, API" },
+    { id: "web_dev_fullstack", emoji: "💻", label: "Fullstack Dev", hint: "Frontend + Backend" },
+    { id: "app_dev_mobile", emoji: "📱", label: "Mobile App Dev", hint: "React Native, Flutter" },
+    { id: "data_analysis", emoji: "📊", label: "Data Analysis", hint: "Excel, BI, insights" },
+    { id: "ai_prompting", emoji: "🤖", label: "AI & Prompting", hint: "ChatGPT, Midjourney, automation" },
+    { id: "nocode_builder", emoji: "🧩", label: "No-Code Builder", hint: "Bubble, Softr, Webflow" },
+    { id: "wordpress_dev", emoji: "🎨", label: "WordPress Dev", hint: "Themes, plugins, Woo" },
+  ],
+
+  // MARKETING
   marketing: [
-    { id: "ads", emoji: "📢", label: "Ads / Paid Media", hint: "Meta, Google, TikTok Ads" },
-    { id: "seo", emoji: "🔍", label: "SEO", hint: "Ranking di Google" },
-    { id: "social_mgmt", emoji: "📱", label: "Social Media Management", hint: "Planning, posting, engage" },
-    { id: "email", emoji: "📧", label: "Email Marketing", hint: "Newsletter, sequence, nurture" },
-    { id: "funnel", emoji: "🔄", label: "Funnel & Conversion", hint: "Landing page, lead gen" },
+    { id: "social_media_marketing", emoji: "📱", label: "Social Media Marketing", hint: "Strategy, content, growth" },
+    { id: "social_media_management", emoji: "📅", label: "Social Media Mgmt", hint: "Manage accounts, scheduling" },
+    { id: "seo_specialist", emoji: "🔍", label: "SEO", hint: "Ranking, organic traffic, keywords" },
+    { id: "paid_ads_meta", emoji: "📣", label: "Paid Ads (Meta)", hint: "Facebook & Instagram Ads" },
+    { id: "paid_ads_google", emoji: "🎯", label: "Paid Ads (Google)", hint: "Search, Display, YouTube Ads" },
+    { id: "email_marketing", emoji: "📧", label: "Email Marketing", hint: "Newsletter, flows, automation" },
+    { id: "community_management", emoji: "👥", label: "Community Management", hint: "Engagement, moderation, growth" },
+    { id: "influencer_marketing", emoji: "⭐", label: "Influencer Marketing", hint: "Collabs, partnerships" },
   ],
-  speaking: [
-    { id: "youtube_face", emoji: "🎥", label: "YouTube / Face Content", hint: "Talking head, vlog" },
-    { id: "podcast", emoji: "🎙️", label: "Podcast", hint: "Audio content, interview" },
-    { id: "live_selling", emoji: "🛍️", label: "Live Selling", hint: "TikTok Live, Shopee Live" },
-    { id: "coaching", emoji: "🎓", label: "Coaching / Mentoring", hint: "1-on-1, group session" },
-    { id: "mc_host", emoji: "🎤", label: "MC / Host Online", hint: "Webinar, event online" },
+
+  // BUSINESS & OPS
+  business: [
+    { id: "project_management", emoji: "📋", label: "Project Management", hint: "Planning, coordination, tools" },
+    { id: "virtual_assistant", emoji: "🗂️", label: "Virtual Assistant", hint: "Admin, support, operations" },
+    { id: "customer_service", emoji: "💬", label: "Customer Service", hint: "Support, success, retention" },
+    { id: "business_development", emoji: "📈", label: "Business Development", hint: "Sales, partnerships" },
+    { id: "ecommerce_management", emoji: "🛒", label: "E-commerce Management", hint: "Store ops, inventory, logistics" },
+    { id: "accounting_finance", emoji: "💰", label: "Accounting & Finance", hint: "Bookkeeping, reports" },
+    { id: "hr_recruiting", emoji: "👥", label: "HR & Recruiting", hint: "Hiring, onboarding, people ops" },
   ],
-  analysis: [
-    { id: "market_research", emoji: "📈", label: "Market Research", hint: "Trend, kompetitor, opportunity" },
-    { id: "data_analysis", emoji: "📊", label: "Data Analysis", hint: "Spreadsheet, dashboard, report" },
-    { id: "newsletter", emoji: "📧", label: "Riset Newsletter", hint: "Curated insights, paid newsletter" },
-    { id: "crypto_finance", emoji: "💰", label: "Finance / Crypto", hint: "Trading signals, analisis" },
-    { id: "ai_curation", emoji: "🤖", label: "AI / Tech Curation", hint: "Review tools, tutorial AI" },
+
+  // EDUCATION & COACHING
+  education: [
+    { id: "online_tutoring", emoji: "🎓", label: "Online Tutoring", hint: "Academic subjects, skills" },
+    { id: "course_creation", emoji: "📚", label: "Course Creation", hint: "Online courses, workshops" },
+    { id: "consulting", emoji: "💼", label: "Consulting", hint: "Expert advice, strategy" },
+    { id: "coaching_life", emoji: "🌟", label: "Life Coaching", hint: "Personal development, goals" },
+    { id: "coaching_career", emoji: "💼", label: "Career Coaching", hint: "Job search, interviews" },
+    { id: "coaching_fitness", emoji: "💪", label: "Fitness Coaching", hint: "Health, nutrition, training" },
+    { id: "workshop_facilitation", emoji: "🎯", label: "Workshop Facilitation", hint: "Live training, events" },
   ],
-  selling: [
-    { id: "marketplace", emoji: "🛒", label: "Marketplace Online", hint: "Shopee, Tokopedia, dll" },
-    { id: "dropship", emoji: "📦", label: "Dropship / Reseller", hint: "Tanpa stok, supplier kirim" },
-    { id: "affiliate", emoji: "🔗", label: "Affiliate Marketing", hint: "Komisi dari referral" },
-    { id: "social_selling", emoji: "📱", label: "Social Commerce", hint: "Jualan via IG, TikTok Shop" },
-    { id: "b2b_sales", emoji: "💼", label: "B2B / Corporate Sales", hint: "Jual ke bisnis" },
-  ],
+
+  // DEFAULT (fallback)
   none: [
-    { id: "explore_content", emoji: "📱", label: "Coba buat konten", hint: "Mulai dari social media" },
-    { id: "explore_freelance", emoji: "🛠️", label: "Coba jadi freelancer", hint: "Jual jasa sederhana" },
-    { id: "explore_selling", emoji: "🛒", label: "Coba jualan online", hint: "Resell, dropship, affiliate" },
-    { id: "explore_tech", emoji: "💻", label: "Belajar tech / coding", hint: "Masa depan di teknologi" },
-    { id: "explore_anything", emoji: "🧭", label: "Apapun yang menghasilkan", hint: "Sistem pilihkan untuk saya" },
+    { id: "explore_flexible", emoji: "🧭", label: "Flexible Exploration", hint: "Sistem pilihkan untuk saya" },
   ],
 };
 
@@ -134,16 +176,20 @@ export const Q_EXPERIENCE: QuickQuestion = {
   options: [],
 };
 
-// Q4 — TARGET
+// Q4 — GOAL + TIMELINE (Merged from Q4 + Q6 for efficiency)
 export const Q_TARGET: QuickQuestion = {
   id: "target",
-  title: "Apa target kamu dari skill ini?",
+  title: "Apa target utama kamu dalam 3-6 bulan ke depan?",
+  subtitle: "Ini menentukan strategi & milestones yang AI buat.",
   options: [
-    { id: "first_income", emoji: "💵", label: "Dapat income pertama", hint: "Belum pernah dapat uang dari ini" },
-    { id: "side_income", emoji: "💰", label: "Tambahan income sampingan", hint: "Sudah kerja, mau tambahan" },
-    { id: "full_income", emoji: "🏆", label: "Jadikan income utama", hint: "Mau full-time dari ini" },
-    { id: "scale", emoji: "📈", label: "Scale / besarkan yang sudah ada", hint: "Sudah jalan, mau grow" },
-    { id: "pivot", emoji: "🔄", label: "Pindah arah karir", hint: "Mau ganti bidang" },
+    { id: "quick_income", emoji: "⚡", label: "Income Cepat (30 hari)", hint: "Rp 500rb-2juta, fokus eksekusi cepat" },
+    { id: "side_income", emoji: "💰", label: "Side Income (3 bulan)", hint: "Rp 2-5juta, sampingan kerja" },
+    { id: "fulltime", emoji: "🏆", label: "Full-Time (6 bulan)", hint: "Rp 5-10juta, transition karir" },
+    { id: "scale", emoji: "🚀", label: "Scale Business (6 bulan)", hint: "Rp 10juta+, growth existing income" },
+    { id: "portfolio", emoji: "📁", label: "Bangun Portfolio", hint: "Skill dulu, fokus long-term" },
+    { id: "brand", emoji: "⭐", label: "Personal Brand", hint: "Audience dulu, monetize later" },
+    { id: "passive", emoji: "🤖", label: "Passive Income", hint: "Products, automation, systems" },
+    { id: "agency", emoji: "🏢", label: "Scale with Team", hint: "Buat agency, hire team" },
   ],
 };
 
@@ -152,37 +198,57 @@ export const Q_TIME: QuickQuestion = {
   id: "time",
   title: "Berapa waktu yang bisa kamu dedikasikan per hari?",
   options: [
-    { id: "lt1h", emoji: "⏰", label: "Kurang dari 1 jam" },
-    { id: "1-2h", emoji: "🕐", label: "1–2 jam" },
-    { id: "3-4h", emoji: "🕒", label: "3–4 jam" },
-    { id: "gt4h", emoji: "🕕", label: "Lebih dari 4 jam" },
+    { id: "lt30m", emoji: "⚡", label: "< 30 menit", hint: "Sangat sibuk, weekend only" },
+    { id: "30m-1h", emoji: "🕐", label: "30–60 menit", hint: "Sampingan santai" },
+    { id: "1-2h", emoji: "🕑", label: "1–2 jam", hint: "Part-time serius" },
+    { id: "2-4h", emoji: "🕒", label: "2–4 jam", hint: "Hampir full-time" },
+    { id: "gt4h", emoji: "🕕", label: "4+ jam", hint: "Full-time commitment" },
+    { id: "weekend", emoji: "📅", label: "Weekend only", hint: "Kerja weekday, belajar weekend" },
+    { id: "flexible", emoji: "🔄", label: "Tidak menentu", hint: "Sesuaikan mingguan" },
   ],
 };
 
-// Q6 — BAHASA KERJA
+// Q6 — TARGET JANGKA WAKTU (NEW!)
+export const Q_TIMELINE: QuickQuestion = {
+  id: "timeline",
+  title: "Dalam berapa lama kamu mau mencapai target?",
+  subtitle: "AI akan set milestones yang realistis.",
+  options: [
+    { id: "30_days", emoji: "🎯", label: "30 Hari", hint: "Sprint cepat, fokus eksekusi" },
+    { id: "3_months", emoji: "📅", label: "3 Bulan", hint: "Build foundation + first income" },
+    { id: "6_months", emoji: "🗓️", label: "6 Bulan", hint: "Comprehensive skill + consistent income" },
+    { id: "12_months", emoji: "📈", label: "12 Bulan", hint: "Career transition, full mastery" },
+  ],
+};
+
+// Q7 — MARKET REACH (Bahasa kerja)
 export const Q_LANGUAGE: QuickQuestion = {
   id: "language",
-  title: "Bahasa kerja kamu?",
-  subtitle: "Ini menentukan market yang bisa dijangkau.",
+  title: "Market mana yang bisa kamu jangkau?",
+  subtitle: "Ini menentukan job & client yg tersedia.",
   options: [
-    { id: "id_only", emoji: "🇮🇩", label: "Indonesia saja", hint: "Market lokal" },
-    { id: "id_en_passive", emoji: "📖", label: "Bisa baca Inggris", hint: "Consume English, produce Indo" },
-    { id: "id_en_active", emoji: "💬", label: "Bisa kerja dalam Inggris", hint: "Market lokal + global" },
-    { id: "en_fluent", emoji: "🌍", label: "Inggris lancar", hint: "Full akses market global" },
+    { id: "id_only", emoji: "🇮🇩", label: "Indonesia Only", hint: "Bahasa Indonesia, market lokal" },
+    { id: "id_en_passive", emoji: "📖", label: "Bisa Baca Inggris", hint: "Consume English, produce Indo" },
+    { id: "id_en_active", emoji: "💬", label: "Bisa Kerja dalam Inggris", hint: "Market lokal + global" },
+    { id: "en_fluent", emoji: "🌍", label: "English Fluent", hint: "Full akses market global" },
   ],
 };
 
-// Q7 — KONDISI SEKARANG
+// Q8 — KONDISI SEKARANG
 export const Q_STAGE: QuickQuestion = {
   id: "stage",
   title: "Kondisi kamu sekarang?",
+  subtitle: "AI akan pertimbangkan constraints kamu.",
   options: [
     { id: "student", emoji: "🎓", label: "Pelajar / Mahasiswa", hint: "Banyak waktu, minim modal" },
+    { id: "fresh_grad", emoji: "🎓", label: "Fresh Graduate", hint: "Baru lulus, cari jalan" },
     { id: "employee", emoji: "👔", label: "Karyawan", hint: "Stabil, cari sampingan" },
     { id: "freelancer", emoji: "🧑‍💻", label: "Freelancer", hint: "Sudah di game, mau scale" },
     { id: "unemployed", emoji: "🔍", label: "Sedang cari kerja", hint: "Butuh income segera" },
     { id: "entrepreneur", emoji: "🚀", label: "Punya bisnis", hint: "Mau tambah stream" },
     { id: "parent", emoji: "🏠", label: "Dari rumah", hint: "Waktu fleksibel, cari income" },
+    { id: "career_break", emoji: "🔄", label: "Career break", hint: "Istirahat, mau switch direction" },
+    { id: "retiree", emoji: "🌴", label: "Pensiunan", hint: "Income tambahan di usia senja" },
   ],
 };
 

@@ -100,6 +100,15 @@ export const PATH_TEMPLATES: PathTemplate[] = [
               { label: "Fiverr — Lihat jasa yang laku", url: "https://www.fiverr.com/categories", type: "platform" },
               { label: "ChatGPT", url: "https://chat.openai.com", type: "tool" },
               { label: "Claude AI", url: "https://claude.ai", type: "tool" },
+              { label: "Gemini (Google AI)", url: "https://gemini.google.com", type: "tool" },
+              { label: "Grok AI (X)", url: "https://grok.x.ai", type: "tool" },
+              { label: "Jasper AI (Copy)", url: "https://www.jasper.ai", type: "tool" },
+              { label: "Copy.ai", url: "https://www.copy.ai", type: "tool" },
+              { label: "Pippit AI (Marketplace)", url: "https://pippit.ai", type: "platform" },
+              { label: "Dreamina (AI Visual)", url: "https://dreamina.com", type: "tool" },
+              { label: "Midjourney (AI Visual)", url: "https://www.midjourney.com", type: "tool" },
+              { label: "DALL-E (OpenAI Visual)", url: "https://labs.openai.com", type: "tool" },
+              { label: "Notion AI", url: "https://www.notion.so/product/ai", type: "tool" },
             ],
           },
           {
@@ -110,6 +119,9 @@ export const PATH_TEMPLATES: PathTemplate[] = [
             difficulty: "mudah",
             resources: [
               { label: "Canva — Polish visual output", url: "https://www.canva.com", type: "tool" },
+              { label: "Dreamina (AI Visual)", url: "https://dreamina.com", type: "tool" },
+              { label: "Midjourney (AI Visual)", url: "https://www.midjourney.com", type: "tool" },
+              { label: "DALL-E (OpenAI Visual)", url: "https://labs.openai.com", type: "tool" },
               { label: "Google Docs — Format portfolio", url: "https://docs.google.com", type: "tool" },
             ],
           },
@@ -122,6 +134,7 @@ export const PATH_TEMPLATES: PathTemplate[] = [
             resources: [
               { label: "Carrd — Landing page gratis", url: "https://carrd.co", type: "platform" },
               { label: "Notion — Buat portfolio", url: "https://www.notion.so", type: "platform" },
+              { label: "Notion AI", url: "https://www.notion.so/product/ai", type: "tool" },
               { label: "Bio.link — Bio link gratis", url: "https://bio.link", type: "platform" },
             ],
           },

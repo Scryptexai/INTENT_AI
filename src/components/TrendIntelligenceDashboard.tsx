@@ -151,67 +151,10 @@ export default function TrendIntelligenceDashboard({
     );
   }
 
+  // HIDE technical details - if no data, don't show anything
+  // Users shouldn't see API errors or .env instructions
   if (!insight || insight.scores.length === 0) {
-    const health = checkPipelineHealth();
-    return (
-      <div className="border border-border p-6">
-        <div className="flex items-center gap-3 mb-3">
-          <Database className="w-5 h-5 text-muted-foreground/40" />
-          <h3 className="text-foreground/60 font-medium">Trend Intelligence</h3>
-        </div>
-        <p className="text-muted-foreground text-sm mb-3">
-          Belum ada data trend untuk niche ini. Klik refresh untuk fetch data real dari API.
-        </p>
-
-        {/* API Status */}
-        <div className="mb-4 p-3 border border-border">
-          <p className="text-xs text-muted-foreground/60 mb-2 font-medium">
-            Data Sources ({health.apis_configured}/{health.apis_total} configured)
-          </p>
-          {health.sources.map((src) => (
-            <div key={src.name} className="flex items-center gap-2 text-xs py-0.5">
-              <span className={src.available ? "text-foreground/60" : "text-foreground/30"}>
-                {src.available ? "●" : "○"}
-              </span>
-              <span className={src.available ? "text-foreground/70" : "text-muted-foreground"}>{src.name}</span>
-              {!src.available && src.reason && (
-                <span className="text-muted-foreground/40 ml-auto">{src.reason}</span>
-              )}
-            </div>
-          ))}
-          {!health.has_minimum_setup && (
-            <p className="text-foreground/50 text-xs mt-2">
-              Tambahkan minimal 1 API key ke file .env untuk data real
-            </p>
-          )}
-        </div>
-
-        {/* Pipeline Progress */}
-        {refreshing && refreshProgress && (
-          <div className="mb-3 p-3 border border-border">
-            <div className="flex items-center gap-2 mb-1">
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-foreground/40" />
-              <span className="text-foreground/60 text-xs">{refreshProgress.message}</span>
-            </div>
-            <div className="w-full bg-border h-px">
-              <div
-                className="bg-foreground/40 h-px transition-all duration-500"
-                style={{ width: `${refreshProgress.progress}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing || !health.has_minimum_setup}
-          className="cmd-action text-xs disabled:opacity-50"
-        >
-          {refreshing ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-          {refreshing ? "Fetching Real Data..." : "Fetch Data Trend"}
-        </button>
-      </div>
-    );
+    return null;
   }
 
   if (compact) {

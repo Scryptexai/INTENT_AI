@@ -7,8 +7,8 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Onboarding from "./pages/Onboarding";
+import HybridOnboarding from "./pages/HybridOnboarding";
 import BranchingOnboarding from "./pages/BranchingOnboarding";
-import QuickOnboarding from "./pages/QuickOnboarding";
 import PathDetail from "./pages/PathDetail";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
@@ -28,29 +28,29 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route 
-              path="/onboarding" 
+            <Route
+              path="/onboarding"
               element={
                 <ProtectedRoute>
-                  <QuickOnboarding />
+                  <HybridOnboarding />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/onboarding/full" 
+            <Route
+              path="/onboarding/full"
               element={
                 <ProtectedRoute>
                   <BranchingOnboarding />
                 </ProtectedRoute>
-              } 
+              }
             />
-            <Route 
-              path="/onboarding/legacy" 
+            <Route
+              path="/onboarding/legacy"
               element={
                 <ProtectedRoute>
                   <Onboarding />
                 </ProtectedRoute>
-              } 
+              }
             />
             <Route 
               path="/path/:pathId" 

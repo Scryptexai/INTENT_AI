@@ -34,7 +34,7 @@ export const useAuth = () => {
 };
 
 // ── DEV MODE: set to true to bypass auth entirely ──
-const DEV_BYPASS_AUTH = true;
+const DEV_BYPASS_AUTH = false;
 
 const DEV_MOCK_USER = {
   id: "dev-user-00000000-0000-0000-0000-000000000000",
