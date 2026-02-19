@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const navItems = [
+  { label: "About", path: "/about" },
   { label: "Profiling", path: "/onboarding" },
   { label: "Workspace", path: "/dashboard" },
 ];
